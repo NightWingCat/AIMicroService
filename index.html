@@ -223,7 +223,7 @@
 /* =========================================================
    1. 한국어 조사
    ========================================================= */
-const JOSA = { '은': ['은', '는'], '이': ['이', '가'], '을': ['을', '를'], '과': ['과', '와'], '으로': ['으로', '로'], '도': ['도', '도'], '의': ['의', '의'] };
+const JOSA = { '은': ['은', '는'], '이': ['이', '가'], '을': ['을', '를'], '과': ['과', '와'], '으로': ['으로', '로'], '도': ['도', '도'], '의': ['의', '의'], '이었다': ['이었다', '였다'] };
 function lastJong(word) {
   const s = String(word).replace(/[\s\)\]\}"'”’.!?~]+$/g, '');
   const ch = s.charAt(s.length - 1), code = ch.charCodeAt(0);
@@ -271,78 +271,155 @@ function detectArchetype(team) { const t = normTeam(team); return (t && ARCHETYP
 const arcByKey = k => ARCHETYPES.find(a => a.key === k) || FALLBACK;
 
 /* =========================================================
-   3. 전생 장면 — 대사 한 줄 + 설명 한두 문장
+   3. 전생 장면 — 대사 한 줄 + 설명 한두 문장 + 구도(pose)
    ========================================================= */
 const SCENARIOS = [
-  { tone: 'serious', scene: 'battle', era: '북국과 남국의 국경 · 900년 전', title: '마지막 결투', tag: '적국의 전사 → 평생의 맞수',
+  /* ---------- 진중 ---------- */
+  { tone: 'serious', scene: 'battle', pose: 'faceoff', era: '북국과 남국의 국경 · 900년 전', title: '마지막 결투', tag: '적국의 전사 → 평생의 맞수',
     quote: '“너를 용서하지 않겠다!”',
     desc: '과거 {a|과} {b|은} 서로 적국의 용맹한 전사로 만나, 전장에서 칼끝을 마주 겨누며 끝까지 싸워 나갔다. 전쟁이 끝난 날, 둘은 같은 모닥불 앞에서 처음으로 웃었다.',
     roleA: '북국의 전사', roleB: '남국의 전사', extras: ['양군의 북잡이', '휴전을 외친 전령', '전장의 군의관', '깃발을 지킨 기수'] },
-  { tone: 'serious', scene: 'clock', era: '안개 도시 벨모어 · 400년 전', title: '멈춘 시계탑의 밤', tag: '하룻밤의 약속 → 평생의 벗',
+  { tone: 'serious', scene: 'arena', pose: 'faceoff', era: '고대 로마 콜로세움 · 1900년 전', title: '검투사의 약속', tag: '적으로 세워진 둘 → 함께 얻은 자유',
+    quote: '“오늘은 둘 다 살아서 나간다.”',
+    desc: '콜로세움에서 맞붙게 된 검투사 {a|과} {b|은} 끝내 서로를 쓰러뜨리지 않았다. 침묵하던 관중이 하나둘 일어나 박수를 쳤고, 둘은 그날 함께 자유를 얻었다.',
+    roleA: '북쪽 문의 검투사', roleB: '남쪽 문의 검투사', extras: ['엄지를 든 원로원 의원', '박수를 처음 친 관중', '문을 연 문지기', '모래를 고르던 노예 소년'] },
+  { tone: 'serious', scene: 'clock', pose: 'shoulders', era: '안개 도시 벨모어 · 400년 전', title: '멈춘 시계탑의 밤', tag: '하룻밤의 약속 → 평생의 벗',
     quote: '“동이 트기 전까지, 반드시.”',
-    desc: '삼백 년 만에 시계탑이 멈춘 밤, {a|과} {b|은} 서로 이름도 모른 채 함께 탑에 올라 밤새 톱니를 맞췄다. 첫 햇살과 함께 종이 다시 울렸다.',
-    roleA: '시계탑의 수리공', roleB: '등불을 든 조수', extras: ['탑 아래의 파수꾼', '부품을 나른 심부름꾼', '종지기', '소란을 잠재운 이웃'] },
-  { tone: 'serious', scene: 'palace', era: '조선 · 한양 도성 · 300년 전', title: '대문 앞의 사흘', tag: '스승과 제자 → 서로의 자랑',
-    quote: '“들어와서 빗자루부터 잡게.”',
-    desc: '{b|은} 첫눈 오던 날부터 사흘 동안 {a|의} 공방 앞에서 기다렸고, 끝내 제자가 되었다. 십 년 뒤, 스승은 제자의 이름을 먼저 자랑하고 다녔다.',
-    roleA: '도성 최고의 장인', roleB: '사흘을 기다린 견습생', extras: ['공방의 선배', '주먹밥을 건넨 이웃', '첫 단골손님', '소문을 낸 장꾼'] },
-  { tone: 'serious', scene: 'snow', era: '북방 설원의 역참 · 500년 전', title: '눈보라 속의 등불', tag: '목숨을 주고받은 사이',
+    desc: '삼백 년 만에 시계탑이 멈춘 밤, {a|과} {b|은} 서로 이름도 모른 채 탑에 올라 밤새 톱니를 맞췄다. 첫 햇살과 함께 종이 다시 울렸다.',
+    roleA: '사다리가 되어 준 수리공', roleB: '어깨 위의 수리공', extras: ['탑 아래의 파수꾼', '부품을 나른 심부름꾼', '종지기', '소란을 잠재운 이웃'] },
+  { tone: 'serious', scene: 'snow', pose: 'carry', era: '북방 설원의 역참 · 500년 전', title: '눈보라 속의 등불', tag: '목숨을 주고받은 사이',
     quote: '“조금만 더… 저 불빛까지만.”',
     desc: '{a|은} 눈보라 속에 쓰러진 {b|을} 업고 밤새 역참까지 걸었다. 십 년 뒤, {b|은} 같은 눈보라 속에서 {a|의} 마을을 구해 그 빚을 갚았다.',
     roleA: '길을 아는 나그네', roleB: '눈 속에 쓰러진 여행자', extras: ['역참지기', '썰매를 내준 사냥꾼', '불을 지핀 주막 주인', '이 이야기를 노래한 소리꾼'] },
-  { tone: 'serious', scene: 'desert', era: '비단길의 오아시스 · 1000년 전', title: '마지막 우물', tag: '경쟁자 → 같은 길을 걷는 동맹',
+  { tone: 'serious', scene: 'desert', pose: 'facing', center: 'well', era: '비단길의 오아시스 · 1000년 전', title: '마지막 우물', tag: '경쟁자 → 같은 길을 걷는 동맹',
     quote: '“…나눕시다.”',
     desc: '{a|과} {b|은} 비단길에서 가장 치열하게 겨루던 두 대상단의 우두머리였다. 마지막 남은 우물 앞에서 물을 나누기로 한 그날부터, 둘은 같은 길을 걸었다.',
     roleA: '동쪽 대상단의 우두머리', roleB: '서쪽 대상단의 우두머리', extras: ['물을 나눈 셈꾼', '새 길을 그린 길잡이', '낙타몰이꾼', '모닥불을 피운 요리사'] },
-  { tone: 'serious', scene: 'library', era: '별을 기록하는 섬 아스테리온 · 700년 전', title: '폭풍 속의 서고', tag: '이름도 모른 채 등을 맡긴 사이',
+  { tone: 'serious', scene: 'library', pose: 'run', center: 'books', era: '별을 기록하는 섬 아스테리온 · 700년 전', title: '폭풍 속의 서고', tag: '이름도 모른 채 등을 맡긴 사이',
     quote: '“이름은 나중에! 일단 이것부터!”',
-    desc: '폭풍이 섬의 대도서관을 덮친 밤, {a|과} {b|은} 서로의 등을 받치며 별의 기록을 끝까지 지켜 냈다. 이름은 새벽이 되어서야 처음 물었다.',
+    desc: '폭풍이 섬의 대도서관을 덮친 밤, {a|과} {b|은} 책을 한 아름씩 안고 계단을 오르내리며 별의 기록을 끝까지 지켜 냈다. 이름은 새벽에야 처음 물었다.',
     roleA: '마지막까지 남은 사서', roleB: '뒤따라 들어온 낯선 이', extras: ['책을 나른 사슬의 고리', '등불을 든 안내자', '젖은 책을 말린 필경사', '탑 위의 파수꾼'] },
-  { tone: 'funny', scene: 'palace', era: '조선 · 한양 운종가 · 250년 전', title: '마지막 인절미', center: 'ricecake', tag: '인절미 앙숙 → 30년 동업자',
+  { tone: 'serious', scene: 'forest', pose: 'run', center: 'fire', era: '고대 숲의 왕국 · 1500년 전', title: '마지막 고목', tag: '나무꾼과 숲지기 → 숲의 수호자',
+    quote: '“이 숲은, 우리가 지킨다.”',
+    desc: '산불이 숲을 덮친 밤, 나무꾼 {a|과} 숲지기 {b|은} 물동이를 들고 밤새 개울과 불길 사이를 오갔다. 둘이 지켜 낸 마지막 고목은 지금도 그 자리에 서 있다.',
+    roleA: '물동이를 든 나무꾼', roleB: '앞장선 숲지기', extras: ['개울에서 물을 퍼 올린 사냥꾼', '새들을 날려 보낸 피리꾼', '바람의 방향을 읽은 노인', '물동이를 이어 나른 아이'] },
+  { tone: 'serious', scene: 'indoor', pose: 'facing', era: '조선 · 과거 시험장 · 330년 전', title: '두 개의 장원', tag: '평생의 라이벌 → 공동 장원',
+    quote: '“다음엔, 내가 이긴다.”',
+    desc: '과거 시험마다 일 등과 이 등을 나눠 갖던 {a|과} {b|은} 마지막 시험 날 같은 점수로 함께 장원이 되었다. 둘은 평생 서로의 글을 가장 먼저 읽어 주었다.',
+    roleA: '늘 일 등을 다투던 선비', roleB: '늘 이 등을 다투던 선비', extras: ['채점에 사흘을 쓴 시험관', '먹을 갈아 준 서동', '합격 방을 붙인 관리', '두 사람의 글을 베껴 간 유생'] },
+  { tone: 'serious', scene: 'sea', pose: 'carry', era: '남해 외딴섬의 등대 · 200년 전', title: '꺼지지 않은 불빛', tag: '등대지기와 표류자 → 삼십 년 등대 동료',
+    quote: '“불빛이 보였어요. 그래서 살았어요.”',
+    desc: '폭풍 속에 표류하던 {b|은} 하룻밤도 꺼지지 않던 {a|의} 등댓불을 보고 섬에 닿았다. {a|은} 지친 {b|을} 업고 등대까지 올라갔고, 둘은 그 뒤로 삼십 년 동안 함께 불을 지켰다.',
+    roleA: '섬의 등대지기', roleB: '폭풍에 떠밀려 온 표류자', extras: ['기름을 가져다준 어부', '구조 소식을 전한 사공', '등대 계단을 고친 목수', '매일 생선을 나눠 준 이웃'] },
+  { tone: 'serious', scene: 'palace', pose: 'facing', era: '조선 · 한양 도성 · 300년 전', title: '대문 앞의 사흘', tag: '스승과 제자 → 서로의 자랑',
+    quote: '“들어와서 빗자루부터 잡게.”',
+    desc: '{b|은} 첫눈 오던 날부터 사흘 동안 {a|의} 공방 앞에서 기다렸고, 끝내 제자가 되었다. 십 년 뒤, 스승은 제자의 이름을 먼저 자랑하고 다녔다.',
+    roleA: '도성 최고의 장인', roleB: '사흘을 기다린 견습생', extras: ['공방의 선배', '주먹밥을 건넨 이웃', '첫 단골손님', '소문을 낸 장꾼'] },
+
+  /* ---------- 유쾌 ---------- */
+  { tone: 'funny', scene: 'palace', pose: 'tug', center: 'ricecake', era: '조선 · 한양 운종가 · 250년 전', title: '마지막 인절미', tag: '인절미 앙숙 → 30년 동업자',
     quote: '“이 인절미는… 내가 먼저 잡았소!”',
-    desc: '{a|과} {b|은} 운종가의 마지막 인절미 한 접시를 두고 한 시진 동안 대치했다. 구경꾼이 너무 몰리자, 둘은 아예 떡집을 함께 차렸다.',
+    desc: '{a|과} {b|은} 운종가의 마지막 인절미 한 접시를 두고 한 시진 동안 줄다리기를 했다. 구경꾼이 너무 몰리자, 둘은 아예 떡집을 함께 차렸다.',
     roleA: '새벽부터 줄 선 손님', roleB: '같은 접시를 잡은 손님', extras: ['"반씩 나누시오!"를 외친 구경꾼', '식혜를 판 장사꾼', '동업 약조문을 써 준 서생', '떡집 주인'] },
-  { tone: 'funny', scene: 'sea', era: '고려 · 벽란도 항구 · 800년 전', title: '벽란도 고양이 추격전', center: 'cat', tag: '고양이가 맺어 준 석 달 항해',
+  { tone: 'funny', scene: 'sea', pose: 'chase', center: 'cat', era: '고려 · 벽란도 항구 · 800년 전', title: '벽란도 고양이 추격전', tag: '고양이가 맺어 준 석 달 항해',
     quote: '“내 고양이야!” “아니, 내 고양이라고!”',
-    desc: '같은 얼룩 고양이를 쫓던 {a|과} {b|은} 그대로 송나라행 배에 올라타 버렸다. 석 달 뒤, 고양이의 진짜 주인은 그 배의 요리사로 밝혀졌다.',
+    desc: '생선을 문 얼룩 고양이를 쫓던 {a|과} {b|은} 그대로 송나라행 배에 올라타 버렸다. 석 달 뒤, 고양이의 진짜 주인은 그 배의 요리사로 밝혀졌다.',
     roleA: '생선을 도둑맞은 상인', roleB: '고양이 주인이라 믿은 사람', extras: ['난감한 선원', '고양이 이름 짓기 회의 의장', '진짜 주인을 찾아 준 승객', '배의 요리사와 친한 사람'] },
-  { tone: 'funny', scene: 'desert', era: '비단길 오아시스 · 900년 전', title: '손짓으로 나눈 사흘', center: 'question', tag: '외국인인 줄 → 알고 보니 이웃',
+  { tone: 'funny', scene: 'desert', pose: 'gesture', center: 'question', era: '비단길 오아시스 · 900년 전', title: '손짓으로 나눈 사흘', tag: '외국인인 줄 → 알고 보니 이웃',
     quote: '“…혹시, 고향이 어디요?”',
-    desc: '{a|과} {b|은} 서로를 먼 나라 사람으로 알고 사흘 내내 손짓으로만 대화했다. 사흘째 밤, 같은 고향 노래를 흥얼거리다 한 골목 이웃이었음을 알았다.',
+    desc: '{a|과} {b|은} 서로를 먼 나라 사람으로 알고 사흘 내내 온몸으로 손짓 대화를 했다. 사흘째 밤, 같은 고향 노래를 흥얼거리다 한 골목 이웃이었음을 알았다.',
     roleA: '손짓에 진심인 여행자', roleB: '손짓으로 계약까지 한 상인', extras: ['엉터리 통역사', '웃음을 참던 숙소 주인', '잠꼬대를 들은 사람', '오해를 푼 낙타몰이꾼'] },
-  { tone: 'funny', scene: 'snow', era: '눈의 왕국 노르헤임 · 600년 전', title: '바뀐 냄비', center: 'pots', tag: '냄비가 바뀐 공동 우승자',
+  { tone: 'funny', scene: 'snow', pose: 'jump', center: 'pots', era: '눈의 왕국 노르헤임 · 600년 전', title: '바뀐 냄비', tag: '냄비가 바뀐 공동 우승자',
     quote: '“잠깐… 이거 내 냄비 아니잖아?”',
     desc: '겨울 수프 대회에서 냄비가 뒤바뀐 {a|과} {b|은} 서로의 수프로 사상 첫 공동 우승을 차지했다. 이듬해부터는 아예 한 냄비로 출전했다.',
     roleA: '비법 수프의 요리사', roleB: '똑같은 냄비의 요리사', extras: ['만점을 준 심사위원', '냄비를 나란히 놓은 사람', '첫 시식 손님', '시상식 사회자'] },
-  { tone: 'funny', scene: 'battle', era: '어느 왕국의 기사 시험장 · 700년 전', title: '세 번 미뤄진 결투', center: 'lunch', tag: '결투 상대 → 평생 밥친구',
+  { tone: 'funny', scene: 'battle', pose: 'facing', center: 'lunch', era: '어느 왕국의 기사 시험장 · 700년 전', title: '세 번 미뤄진 결투', tag: '결투 상대 → 평생 밥친구',
     quote: '“결투는… 점심 먹고 합시다.”',
     desc: '기사 시험에서 결투 상대로 만난 {a|과} {b|은} 비 때문에, 점심 때문에, 낮잠 때문에 결투를 세 번 미뤘다. 결국 결투 대신 평생 같이 밥을 먹었다.',
     roleA: '시험에 나선 기사 지망생', roleB: '맞은편 기사 지망생', extras: ['한숨 쉬는 심판', '도시락을 싸 온 시종', '구경 온 마을 사람', '결과를 기록한 서기'] },
-  { tone: 'funny', scene: 'snow', center: 'dragon', era: '용의 산맥 · 1100년 전', title: '생각보다 작은 용', tag: '용 사냥꾼 → 아기 용 공동 집사',
+  { tone: 'funny', scene: 'snow', pose: 'recoil', center: 'dragon', era: '용의 산맥 · 1100년 전', title: '생각보다 작은 용', tag: '용 사냥꾼 → 아기 용 공동 집사',
     quote: '“…생각보다 용이 작은데요?”',
     desc: '전설의 용을 잡으러 떠난 {a|과} {b|은} 사흘 만에 용을 찾았지만, 도마뱀만 한 아기 용이었다. 둘은 그 용을 데려와 평생 번갈아 밥을 챙겼다.',
     roleA: '용 사냥에 나선 원정대장', roleB: '용 사냥에 따라나선 원정대원', extras: ['지도를 잘못 읽은 길잡이', '용 먹이를 구해 온 사냥꾼', '용 이름을 지어 준 시인', '원정 비용을 댄 마을 이장'] },
-  { tone: 'funny', scene: 'sea', center: 'map', era: '남쪽 바다의 섬들 · 450년 전', title: '엑스 표시의 비밀', tag: '보물 사냥꾼 → 엿 나눠 먹는 사이',
+  { tone: 'funny', scene: 'sea', pose: 'huddle', center: 'map', era: '남쪽 바다의 섬들 · 450년 전', title: '엑스 표시의 비밀', tag: '보물 사냥꾼 → 엿 나눠 먹는 사이',
     quote: '“엑스 표시가… 우리 집 마당인데?”',
     desc: '{a|과} {b|은} 보물지도 한 장을 따라 십 년 동안 세 바다를 건넜다. 엑스 표시는 {a|의} 집 마당이었고, 파 보니 어릴 적 묻어 둔 엿 한 단지가 나왔다.',
     roleA: '보물지도를 가진 선장', roleB: '보물지도를 해독한 항해사', extras: ['삽을 든 선원', '엿을 알아본 이웃', '십 년 내내 노를 저은 사공', '지도를 판 수상한 상인'] },
-  { tone: 'funny', scene: 'palace', center: 'question', era: '조선 · 궁궐 연회장 · 280년 전', title: '같은 시를 쓴 두 사람', tag: '표절 시비 → 평생의 글벗',
+  { tone: 'funny', scene: 'indoor', pose: 'point', era: '조선 · 궁궐 연회장 · 280년 전', title: '같은 시를 쓴 두 사람', tag: '표절 시비 → 평생의 글벗',
     quote: '“…자네, 내 시를 훔쳐 갔는가?”',
-    desc: '왕의 연회 백일장에서 {a|과} {b|은} 토씨 하나 다르지 않은 시를 동시에 냈다. 사흘간 다툰 끝에, 둘 다 같은 꿈에서 그 시를 봤다는 걸 알았다.',
-    roleA: '백일장에 나선 선비', roleB: '같은 시를 낸 선비', extras: ['고개를 갸웃한 심사관', '두 시를 나란히 붙인 내관', '꿈 이야기를 믿어 준 왕', '구경하던 연회 손님'] }
+    desc: '왕의 연회 백일장에서 {a|과} {b|은} 토씨 하나 다르지 않은 시를 동시에 냈다. 사흘간 서로를 손가락질한 끝에, 둘 다 같은 꿈에서 그 시를 봤다는 걸 알았다.',
+    roleA: '백일장에 나선 선비', roleB: '같은 시를 낸 선비', extras: ['고개를 갸웃한 심사관', '두 시를 나란히 붙인 내관', '꿈 이야기를 믿어 준 왕', '구경하던 연회 손님'] },
+  { tone: 'funny', scene: 'pyramid', pose: 'push', center: 'block', era: '고대 이집트 기자 · 4500년 전', title: '거꾸로 놓인 꼭대기 돌', tag: '피라미드 공범 → 4500년 비밀 동맹',
+    quote: '“그거… 거꾸로 놓은 거 아니에요?”',
+    desc: '{a|과} {b|은} 이십 년 걸려 쌓은 피라미드의 마지막 꼭대기 돌을 양쪽에서 함께 밀어 올렸다. 다 올리고 보니 거꾸로였고, 둘은 지금까지 그걸 비밀로 하고 있다.',
+    roleA: '왼쪽에서 민 석공', roleB: '오른쪽에서 민 석공', extras: ['한숨 쉰 감독관', '물을 나르던 소년', '모래 위에 설계도를 그린 서기', '못 본 척한 파라오의 시종'] },
+  { tone: 'funny', scene: 'arena', pose: 'collide', era: '고대 로마 전차 경기장 · 1900년 전', title: '전차 경주 역주행 사건', tag: '역주행 듀오 → 경기장의 스타',
+    quote: '“왜 다들 반대로 달려요?!”',
+    desc: '전차 경주에서 출발 신호를 잘못 들은 {a|과} {b|은} 둘만 반대 방향으로 달려 정면으로 마주쳤다. 관중은 그날 우승자보다 둘의 아슬아슬한 엇갈림에 더 열광했다.',
+    roleA: '빨간 전차의 마부', roleB: '파란 전차의 마부', extras: ['깃발을 떨어뜨린 심판', '과일을 던진 관중', '말에게 당근을 준 마구간지기', '다음 경주를 기다리던 선수'] },
+  { tone: 'funny', scene: 'forest', pose: 'tug', center: 'acorns', era: '원시 시대의 숲 · 1만 년 전', title: '도토리 전쟁', tag: '도토리 라이벌 → 다람쥐 공동 피해자',
+    quote: '“이 도토리 산은 우리 동굴 거다!”',
+    desc: '옆 동굴에 사는 {a|과} {b|은} 겨울 내내 도토리 더미를 두고 밀고 당겼다. 봄이 오자 도토리는 전부 다람쥐가 가져가 있었고, 둘은 그날 처음 같이 웃었다.',
+    roleA: '왼쪽 동굴의 사냥꾼', roleB: '오른쪽 동굴의 채집꾼', extras: ['동굴 벽에 이 일을 그린 화가', '불을 처음 피운 이웃', '도토리 수를 센 노인', '다람쥐를 목격한 아이'] },
+  { tone: 'funny', scene: 'sea', pose: 'shoulders', center: 'flag', era: '카리브해의 해적선 · 300년 전', title: '하루살이 선장들', tag: '번갈아 선장 → 삼 년째 같은 섬',
+    quote: '“오늘은 내가 선장 할 차례야!”',
+    desc: '해적선에서 {a|과} {b|은} 하루씩 번갈아 선장을 맡기로 했다. 매일 방향이 바뀌는 바람에 배는 삼 년째 같은 섬 주위만 돌았지만, 아무도 불평하지 않았다.',
+    roleA: '월수금의 선장', roleB: '화목토의 선장', extras: ['일요일 담당 앵무새 주인', '항로를 포기한 항해사', '갑판을 닦던 선원', '섬에서 손 흔든 원주민'] },
+  { tone: 'funny', scene: 'indoor', pose: 'facing', center: 'pots', era: '조선 · 궁중 수라간 · 300년 전', title: '싱겁다와 짜다', tag: '입맛 앙숙 → 수라간 황금 콤비',
+    quote: '“…싱거운데?” “짠데?”',
+    desc: '수라간의 {a|과} {b|은} 같은 국을 맛보고 매번 정반대의 평을 냈다. 결국 둘이 반씩 간을 맞춘 국이 임금이 가장 아끼는 국이 되었다.',
+    roleA: '싱겁다고 한 숙수', roleB: '짜다고 한 숙수', extras: ['국을 저은 견습생', '기미를 본 상궁', '간장을 나른 심부름꾼', '두 번 먹은 임금님'] },
+  { tone: 'funny', scene: 'forest', pose: 'aim', era: '중세 셔우드 숲 · 800년 전', title: '사과 말고 모자', tag: '활과 사과 → 의적단 창립 멤버',
+    quote: '“…사과 말고 제 모자를 맞히셨는데요.”',
+    desc: '의적단 입단 시험에서 {a|은} 활을 쏘고 {b|은} 머리에 사과를 올렸다. 화살은 사과 대신 모자에 꽂혔고, 둘은 그 모자를 의적단의 깃발로 삼았다.',
+    roleA: '활을 쏜 지원자', roleB: '사과를 올린 지원자', extras: ['눈을 감아 버린 심사관', '사과를 고른 시종', '모자를 꿰매 준 재단사', '박수를 친 숲속 다람쥐 조련사'] },
+  { tone: 'funny', scene: 'clock', pose: 'blast', center: 'boom', era: '중세 연금술사의 도시 · 500년 전', title: '금 대신 불꽃', tag: '폭발 콤비 → 불꽃놀이 창시자',
+    quote: '“분명히 금이 될 거라고 했잖아!”',
+    desc: '연금술사 {a|과} 조수 {b|은} 납을 금으로 바꾸려다 실험실을 통째로 날려 버렸다. 금은 못 만들었지만, 그 폭발에서 세상 최초의 불꽃놀이가 탄생했다.',
+    roleA: '자신만만한 연금술사', roleB: '불안했던 조수', extras: ['창문으로 날아간 고양이 주인', '불을 끈 이웃', '하늘을 보고 감탄한 영주', '그을린 문을 고친 목수'] },
+  { tone: 'funny', scene: 'sea', pose: 'row', era: '북해의 바이킹 배 · 1100년 전', title: '제자리 항해', tag: '엇박자 노잡이 → 유일한 생존 콤비',
+    quote: '“왼쪽! 아니, 너의 왼쪽!”',
+    desc: '바이킹 배에서 {a|과} {b|은} 서로 반대 방향으로 노를 젓는 바람에 사흘 동안 제자리를 빙빙 돌았다. 그 덕에 폭풍을 피해 함대에서 유일하게 무사히 돌아왔다.',
+    roleA: '왼쪽 노잡이', roleB: '오른쪽 노잡이', extras: ['북을 치던 박자꾼', '멀미한 족장', '돛을 꿰매던 선원', '항구에서 기다린 대장장이'] },
+  { tone: 'funny', scene: 'indoor', pose: 'recoil', center: 'easel', era: '르네상스 피렌체의 공방 · 520년 전', title: '걸작 위의 포도주', tag: '사고뭉치 견습생 → 걸작의 숨은 화가',
+    quote: '“…방금 걸작에 포도주 쏟은 거 맞죠?”',
+    desc: '피렌체 공방의 {a|과} {b|은} 스승의 걸작에 포도주를 쏟고 밤새 덧칠을 했다. 다음 날 스승은 "드디어 내가 원하던 색"이라며 둘을 끌어안았다.',
+    roleA: '포도주 잔을 든 견습생', roleB: '붓을 든 견습생', extras: ['모른 척한 선배 화가', '물감을 갈던 소년', '그림을 주문한 귀족', '창밖에서 본 비둘기 주인'] },
+  { tone: 'funny', scene: 'library', pose: 'chase', center: 'books', era: '알렉산드리아 대도서관 · 2000년 전', title: '300년 늦은 반납', tag: '사서와 연체자 → 독서 모임 창립자',
+    quote: '“이 책, 반납이 너무 늦었습니다!”',
+    desc: '대도서관 사서 {a|은} 책을 빌려 간 {b|을} 평생 쫓아다녔다. 둘은 결국 그 책을 함께 끝까지 읽고, 나란히 연체료를 낸 뒤 도서관 첫 독서 모임을 만들었다.',
+    roleA: '끈질긴 사서', roleB: '도망친 연체자', extras: ['연체 장부를 쓴 서기', '책을 숨겨 준 이웃', '독서 모임 첫 손님', '파피루스 장수'] },
+  { tone: 'funny', scene: 'battle', pose: 'jump', center: 'ball', era: '두 성 사이의 들판 · 700년 전', title: '휴전 중의 공놀이', tag: '적군 병사 → 영원한 공놀이 맞수',
+    quote: '“전쟁은… 이 판 끝나고 하죠.”',
+    desc: '포위전 중이던 두 성의 병사 {a|과} {b|은} 휴전일에 공놀이를 시작했다. 판이 너무 재밌어서, 전쟁은 끝내 다시 시작되지 않았다.',
+    roleA: '왼쪽 성의 병사', roleB: '오른쪽 성의 병사', extras: ['점수를 센 성직자', '공을 꿰맨 갖바치', '응원가를 만든 나팔수', '경기를 구경한 두 영주'] },
+  { tone: 'funny', scene: 'clock', pose: 'shout', era: '안개 도시 벨모어 · 400년 전', title: '사람이 친 자정의 종', tag: '종지기 대타 → 도시의 명물',
+    quote: '“뎅—! 뎅—!”',
+    desc: '시계탑 종이 고장 난 밤, {a|과} {b|은} 꼭대기에 올라가 열두 번 "뎅"을 직접 외쳤다. 다음 날 도시 사람들은 올해 종소리가 유난히 정겹다고 했다.',
+    roleA: '목청 큰 종지기 대타', roleB: '박자 맞춘 종지기 대타', extras: ['숫자를 세 준 이웃', '목캔디를 건넨 약방 주인', '자다 깬 시장', '종을 고친 대장장이'] },
+  { tone: 'funny', scene: 'forest', pose: 'jump', center: 'bear', era: '유랑 서커스단의 숲길 · 400년 전', title: '곰에게 배운 춤', tag: '곰 조련사 → 곰의 제자들',
+    quote: '“…곰이 춤을 더 잘 추는데요?”',
+    desc: '유랑 서커스단의 {a|과} {b|은} 곰에게 춤을 가르치려다, 거꾸로 곰에게 춤을 배웠다. 셋의 춤은 그해 가장 많은 관객을 모았다.',
+    roleA: '곰 조련사', roleB: '곰 조련사 조수', extras: ['북을 친 악사', '천막을 친 단장', '표를 판 매표원', '곰에게 꿀을 준 요리사'] },
+  { tone: 'funny', scene: 'indoor', pose: 'sneak', center: 'easel', era: '조선 · 도화서 · 260년 전', title: '웃음 참는 어진', tag: '화원과 광대 → 궁궐 최고 콤비',
+    quote: '“전하, 웃지 마시옵소서!”',
+    desc: '어진을 그리던 화원 {a|은} 왕이 자꾸 웃는 바람에 사흘째 입꼬리를 못 그렸다. 원인은 화원 등 뒤에서 몰래 표정을 짓던 광대 {b|이었다}.',
+    roleA: '진땀 흘린 화원', roleB: '등 뒤의 광대', extras: ['웃음을 참던 내관', '붓을 씻던 견습생', '결국 웃어 버린 왕', '문틈으로 본 궁녀'] }
 ];
-const SCENE_KEYS = ['battle', 'clock', 'palace', 'snow', 'desert', 'library', 'sea'];
-const CENTERS = ['ricecake', 'cat', 'pots', 'lunch', 'dragon', 'map', 'question'];
+const SCENE_KEYS = ['battle', 'clock', 'palace', 'snow', 'desert', 'library', 'sea', 'arena', 'forest', 'indoor', 'pyramid'];
+const CENTERS = ['ricecake', 'cat', 'pots', 'lunch', 'dragon', 'map', 'question', 'well', 'books', 'fire', 'block', 'acorns', 'flag', 'boom', 'easel', 'ball', 'bear'];
+const POSES = ['faceoff', 'facing', 'tug', 'chase', 'run', 'collide', 'shoulders', 'carry', 'jump', 'recoil', 'huddle', 'point', 'push', 'aim', 'blast', 'row', 'gesture', 'shout', 'sneak'];
 const GENERIC_EXTRAS = ['그 자리에 있던 증인', '소식을 듣고 달려온 이웃', '이 일을 기록한 사람', '끝까지 곁을 지킨 동행'];
 
 /* =========================================================
-   4. 명화 액자 속 하찮은 그림 (SVG)
+   4. 명화 액자 속 하찮은 그림 (SVG) — 구도·동작·효과
    ========================================================= */
 const INK = '#1d1712';
 const SKIN = ['#f6d7b8', '#eec39c', '#e0ad84', '#f8dfc8', '#d29c74'];
 const HAIR = ['#2b1d14', '#4a2f1e', '#151110', '#6b4426', '#8a5a2e', '#2a2433'];
 const SK = `stroke="${INK}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"`;
 const SKt = `stroke="${INK}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"`;
+const hairStroke = c => `stroke="${c}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"`;
 
 function propSvg(p) {
   switch (p) {
@@ -361,8 +438,11 @@ function propSvg(p) {
     case 'shield': return `<g transform="translate(27 84)"><path d="M-10 -11 H10 V0 Q10 9 0 13 Q-10 9 -10 0Z" fill="#9aa6b2" ${SK}/></g>`;
     case 'note': return `<g transform="translate(27 78)"><path d="M-2 8 V-10 L7 -12 V5" fill="none" ${SK}/><circle cx="-5" cy="8" r="3.4" fill="${INK}"/><circle cx="4" cy="5" r="3.4" fill="${INK}"/></g>`;
     case 'quill': return `<g transform="translate(25 86) rotate(25)"><path d="M0 8 Q-9 -8 5 -24 Q6 -6 0 8Z" fill="#fff6e2" ${SK}/></g>`;
-    case 'flag': return `<g transform="translate(24 94)"><path d="M0 0 V-46" ${SK}/><path d="M0 -46 L18 -40 L0 -34Z" fill="#e0402f" ${SK}/></g>`;
+    case 'flag': return `<g transform="translate(24 94)"><path d="M0 0 V-50" ${SK}/><path d="M0 -50 L22 -43 L0 -36Z" fill="#1d1712" ${SK}/><circle cx="8" cy="-43" r="2.4" fill="#fff"/></g>`;
     case 'sword': return `<g transform="translate(25 86) rotate(-35)"><path d="M0 0 V-34" stroke="#c9d1da" stroke-width="4.5" stroke-linecap="round"/><path d="M0 0 V-34" fill="none" stroke="${INK}" stroke-width="1.4"/><path d="M-7 -2 H7 M0 -2 V7" ${SK}/></g>`;
+    case 'bow': return `<g transform="translate(30 76)"><path d="M0 -22 Q16 0 0 22" fill="none" stroke="#8a5a2e" stroke-width="3.4" stroke-linecap="round"/><path d="M0 -22 V22" stroke="${INK}" stroke-width="1.2"/></g>`;
+    case 'oar': return `<g transform="translate(27 82) rotate(35)"><path d="M0 -30 V34" stroke="#a0703f" stroke-width="4" stroke-linecap="round"/><path d="M-5 30 Q0 46 5 30Z" fill="#a0703f" ${SKt}/></g>`;
+    case 'bucket': return `<g transform="translate(28 88)"><path d="M-8 -6 L8 -6 L6 8 L-6 8Z" fill="#8a9aa8" ${SK}/><path d="M-8 -6 Q0 -16 8 -6" fill="none" ${SKt}/><path d="M-4 -7 q2 -5 5 0" fill="#6ab0f0"/></g>`;
     default: return `<path d="M24 100 L28 58" ${SK}/>`;
   }
 }
@@ -374,134 +454,245 @@ function hatSvg(h, color, top) {
     case 'captain': return `<path d="M-15 ${top + 6} L-11 ${top - 8} L11 ${top - 8} L15 ${top + 6}Z" fill="#2c3448" ${SK}/>`;
     case 'cap': return `<path d="M-14 ${top + 6} Q0 ${top - 12} 14 ${top + 6}Z M14 ${top + 6} H24" fill="#c08850" ${SK}/>`;
     case 'goggles': return `<circle cx="-7" cy="${top + 9}" r="5" fill="#bfe8f2" ${SKt}/><circle cx="7" cy="${top + 9}" r="5" fill="#bfe8f2" ${SKt}/><path d="M-2 ${top + 9} H2" ${SKt}/>`;
+    case 'apple': return `<circle cx="0" cy="${top - 7}" r="7" fill="#e0402f" ${SK}/><path d="M0 ${top - 14} q3 -5 7 -4" fill="none" ${SKt}/>`;
     default: return '';
   }
 }
-/* 하찮은 등장인물 한 명 · 중심 x=0, 발끝 y=122 */
+
+/* 하찮은 등장인물 · 발끝 (0,122) 기준
+   opts.arms: 'up' | 'reach' | 'down' · opts.face: 'shock' | 'angry' | 'happy' | 'sleep' | 'shout' */
 function figureSvg(p, opts = {}) {
   const arc = arcByKey(p.arc), h = hashStr(p.name + '|' + p.team);
   const q = k => ((h >>> k) & 15) / 15;
   const skin = SKIN[h % SKIN.length], hair = HAIR[(h >>> 3) % HAIR.length];
   const bw = 13 + q(5) * 7, hx = q(9) * 4 - 2, hy = 38 + q(13) * 4, rx = 15 + q(4) * 6, ry = 13 + q(8) * 4;
   const top = hy - ry;
+  const arms = opts.arms;
   const body = `<path d="M${-bw} 64 Q${-bw - 7} 90 ${-bw + 2} 108 Q0 ${113 + q(17) * 4} ${bw - 1} 107 Q${bw + 6} 88 ${bw} 63 Q0 ${55 + q(21) * 3} ${-bw} 64Z" fill="${arc.color}" ${SK}/>`;
   const legs = `<path d="M-6 109 L${-9 - q(6) * 3} 122 H${-15 - q(6) * 3} M6 109 L${9 + q(7) * 3} 122 H${15 + q(7) * 3}" fill="none" ${SK}/>`;
-  const armL = `<path d="M${-bw + 1} 72 L${-bw - 11} ${82 + q(10) * 14}" ${SK}/>`;
-  const armR = `<path d="M${bw - 1} 72 L24 ${80 + q(11) * 4}" ${SK}/>`;
+  let armL, armR, propPos = '0 0', showProp = true;
+  if (arms === 'up') { armL = `M${-bw + 1} 70 L${-bw - 9} 40`; armR = `M${bw - 1} 70 L${bw + 9} 40`; propPos = `${bw + 9 - 26} -42`; showProp = !!opts.prop; }
+  else if (arms === 'reach') { armL = `M${-bw + 1} 72 L${-bw - 8} ${92 + q(10) * 6}`; armR = `M${bw - 1} 72 L34 66`; propPos = '7 -14'; }
+  else if (arms === 'down') { armL = `M${-bw + 1} 72 L${-bw - 3} 98`; armR = `M${bw - 1} 72 L${bw + 3} 98`; showProp = false; }
+  else { armL = `M${-bw + 1} 72 L${-bw - 11} ${82 + q(10) * 14}`; armR = `M${bw - 1} 72 L24 ${80 + q(11) * 4}`; }
   const head = `<ellipse cx="${hx}" cy="${hy}" rx="${rx}" ry="${ry}" fill="${skin}" ${SK}/>`;
-  const ex1 = hx - 6, ex2 = hx + 6 + q(15) * 2, ey = hy + 1;
-  const eyes = [
-    `<circle cx="${ex1}" cy="${ey}" r="2.2" fill="${INK}"/><circle cx="${ex2}" cy="${ey}" r="2.2" fill="${INK}"/>`,
-    `<circle cx="${ex1}" cy="${ey}" r="1.6" fill="${INK}"/><circle cx="${ex2}" cy="${ey - 1}" r="3.2" fill="${INK}"/>`,
-    `<path d="M${ex1 - 3} ${ey} H${ex1 + 3} M${ex2 - 3} ${ey} H${ex2 + 3}" ${SKt}/>`,
-    `<path d="M${ex1 - 3} ${ey - 3} L${ex1 + 2} ${ey} L${ex1 - 3} ${ey + 3} M${ex2 + 3} ${ey - 3} L${ex2 - 2} ${ey} L${ex2 + 3} ${ey + 3}" fill="none" ${SKt}/>`,
-    `<circle cx="${ex1}" cy="${ey}" r="2.2" fill="${INK}"/><path d="M${ex2 - 2.5} ${ey - 2.5} L${ex2 + 2.5} ${ey + 2.5} M${ex2 + 2.5} ${ey - 2.5} L${ex2 - 2.5} ${ey + 2.5}" ${SKt}/>`,
-    `<circle cx="${ex1}" cy="${ey}" r="3.4" fill="#fff" ${SKt}/><circle cx="${ex1 + .6}" cy="${ey}" r="1.3" fill="${INK}"/><circle cx="${ex2}" cy="${ey}" r="3.4" fill="#fff" ${SKt}/><circle cx="${ex2 - .6}" cy="${ey}" r="1.3" fill="${INK}"/>`
-  ][(h >>> 14) % 6];
-  const my = hy + 7, mx = hx + 1;
-  const mouth = [
-    `<path d="M${mx - 4} ${my} H${mx + 4}" ${SKt}/>`,
-    `<ellipse cx="${mx}" cy="${my}" rx="2.2" ry="2.8" fill="#7a2a22" ${SKt}/>`,
-    `<path d="M${mx - 5} ${my} q2.5 -2.5 5 0 q2.5 2.5 5 0" fill="none" ${SKt}/>`,
-    `<path d="M${mx - 3} ${my + 2} L${mx} ${my - 1} L${mx + 3} ${my + 2}" fill="none" ${SKt}/>`,
-    `<path d="M${mx - 5} ${my - 1} Q${mx} ${my + 6} ${mx + 5} ${my - 1}Z" fill="#7a2a22" ${SKt}/>`,
-    `<path d="M${mx - 3} ${my} Q${mx} ${my + 3} ${mx + 3} ${my}" fill="none" ${SKt}/>`
-  ][(h >>> 17) % 6];
+  const ex1 = hx - 6, ex2 = hx + 6 + q(15) * 2, ey = hy + 1, my = hy + 7, mx = hx + 1;
+  const EYES = {
+    dot: `<circle cx="${ex1}" cy="${ey}" r="2.2" fill="${INK}"/><circle cx="${ex2}" cy="${ey}" r="2.2" fill="${INK}"/>`,
+    uneven: `<circle cx="${ex1}" cy="${ey}" r="1.6" fill="${INK}"/><circle cx="${ex2}" cy="${ey - 1}" r="3.2" fill="${INK}"/>`,
+    line: `<path d="M${ex1 - 3} ${ey} H${ex1 + 3} M${ex2 - 3} ${ey} H${ex2 + 3}" ${SKt}/>`,
+    squint: `<path d="M${ex1 - 3} ${ey - 3} L${ex1 + 2} ${ey} L${ex1 - 3} ${ey + 3} M${ex2 + 3} ${ey - 3} L${ex2 - 2} ${ey} L${ex2 + 3} ${ey + 3}" fill="none" ${SKt}/>`,
+    wink: `<circle cx="${ex1}" cy="${ey}" r="2.2" fill="${INK}"/><path d="M${ex2 - 2.5} ${ey - 2.5} L${ex2 + 2.5} ${ey + 2.5} M${ex2 + 2.5} ${ey - 2.5} L${ex2 - 2.5} ${ey + 2.5}" ${SKt}/>`,
+    big: `<circle cx="${ex1}" cy="${ey}" r="3.6" fill="#fff" ${SKt}/><circle cx="${ex1 + .6}" cy="${ey}" r="1.3" fill="${INK}"/><circle cx="${ex2}" cy="${ey}" r="3.6" fill="#fff" ${SKt}/><circle cx="${ex2 - .6}" cy="${ey}" r="1.3" fill="${INK}"/>`,
+    angry: `<path d="M${ex1 - 4} ${ey - 5} L${ex1 + 3} ${ey - 2} M${ex2 + 4} ${ey - 5} L${ex2 - 3} ${ey - 2}" ${SKt}/><circle cx="${ex1}" cy="${ey + 1}" r="2" fill="${INK}"/><circle cx="${ex2}" cy="${ey + 1}" r="2" fill="${INK}"/>`,
+    happy: `<path d="M${ex1 - 3} ${ey + 1} Q${ex1} ${ey - 3} ${ex1 + 3} ${ey + 1} M${ex2 - 3} ${ey + 1} Q${ex2} ${ey - 3} ${ex2 + 3} ${ey + 1}" fill="none" ${SKt}/>`
+  };
+  const MOUTH = {
+    flat: `<path d="M${mx - 4} ${my} H${mx + 4}" ${SKt}/>`,
+    o: `<ellipse cx="${mx}" cy="${my}" rx="2.2" ry="2.8" fill="#7a2a22" ${SKt}/>`,
+    wave: `<path d="M${mx - 5} ${my} q2.5 -2.5 5 0 q2.5 2.5 5 0" fill="none" ${SKt}/>`,
+    v: `<path d="M${mx - 3} ${my + 2} L${mx} ${my - 1} L${mx + 3} ${my + 2}" fill="none" ${SKt}/>`,
+    grin: `<path d="M${mx - 5} ${my - 1} Q${mx} ${my + 6} ${mx + 5} ${my - 1}Z" fill="#7a2a22" ${SKt}/>`,
+    smile: `<path d="M${mx - 3} ${my} Q${mx} ${my + 3} ${mx + 3} ${my}" fill="none" ${SKt}/>`,
+    shout: `<ellipse cx="${mx}" cy="${my + 1}" rx="4.6" ry="5.6" fill="#7a2a22" ${SKt}/>`,
+    teeth: `<rect x="${mx - 5}" y="${my - 2}" width="10" height="5" fill="#fff" ${SKt}/><path d="M${mx - 2} ${my - 2} V${my + 3} M${mx + 1.5} ${my - 2} V${my + 3}" stroke="${INK}" stroke-width="1"/>`
+  };
+  const defEyes = ['dot', 'uneven', 'line', 'squint', 'wink', 'big'][(h >>> 14) % 6];
+  const defMouth = ['flat', 'o', 'wave', 'v', 'grin', 'smile'][(h >>> 17) % 6];
+  const faceMap = { shock: ['big', 'shout'], angry: ['angry', 'teeth'], happy: ['happy', 'grin'], sleep: ['line', 'flat'], shout: ['squint', 'shout'] };
+  const [eK, mK] = faceMap[opts.face] || [defEyes, defMouth];
   const hairs = [
-    `<path d="M${hx - 4} ${top + 1} L${hx - 7} ${top - 8} M${hx} ${top} L${hx + 1} ${top - 10} M${hx + 4} ${top + 1} L${hx + 8} ${top - 7}" stroke="${hair}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>`,
+    `<path d="M${hx - 4} ${top + 1} L${hx - 7} ${top - 8} M${hx} ${top} L${hx + 1} ${top - 10} M${hx + 4} ${top + 1} L${hx + 8} ${top - 7}" fill="none" ${hairStroke(hair)}/>`,
     `<path d="M${hx - rx + 2} ${hy - 4} L${hx - rx + 6} ${top - 3} L${hx - 4} ${top + 3} L${hx} ${top - 4} L${hx + 5} ${top + 3} L${hx + rx - 5} ${top - 3} L${hx + rx - 2} ${hy - 4}" fill="none" stroke="${hair}" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/>`,
     `<path d="M${hx - rx} ${hy - 1} Q${hx - rx} ${top - 4} ${hx} ${top - 4} Q${hx + rx} ${top - 4} ${hx + rx} ${hy - 1} Q${hx} ${hy - 9} ${hx - rx} ${hy - 1}Z" fill="${hair}" ${SK}/>`,
-    `<path d="M${hx} ${top} q-2 -8 4 -8 q5 0 3 5 q-1 3 -4 1" fill="none" stroke="${hair}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>`
+    `<path d="M${hx} ${top} q-2 -8 4 -8 q5 0 3 5 q-1 3 -4 1" fill="none" ${hairStroke(hair)}/>`
   ][(h >>> 20) % 4];
-  const blush = (h >>> 23) % 3 === 0 ? `<ellipse cx="${ex1 - 4}" cy="${ey + 6}" rx="3" ry="2" fill="#ff8a7a" opacity=".7"/><ellipse cx="${ex2 + 4}" cy="${ey + 6}" rx="3" ry="2" fill="#ff8a7a" opacity=".7"/>` : '';
+  const blush = opts.face === 'happy' || (h >>> 23) % 3 === 0 ? `<ellipse cx="${ex1 - 4}" cy="${ey + 6}" rx="3" ry="2" fill="#ff8a7a" opacity=".7"/><ellipse cx="${ex2 + 4}" cy="${ey + 6}" rx="3" ry="2" fill="#ff8a7a" opacity=".7"/>` : '';
   const prop = opts.prop || arc.prop, hat = opts.hat !== undefined ? opts.hat : arc.hat;
-  const hatPart = hat === 'helmet' || hat === 'captain' || hat === 'beret' || hat === 'feather' || hat === 'cap' ? hatSvg(hat, arc.color, top) : '';
-  return `<ellipse cx="0" cy="123" rx="20" ry="3.5" fill="rgba(0,0,0,.25)"/>${legs}${armL}${body}${armR}${propSvg(prop)}${head}${hatPart ? '' : hairs}${eyes}${mouth}${blush}${hatPart}${hat === 'goggles' ? hatSvg('goggles', arc.color, top) : ''}`;
+  const coversHair = ['helmet', 'captain', 'beret', 'feather', 'cap'].includes(hat);
+  const hatPart = coversHair ? hatSvg(hat, arc.color, top) : '';
+  const extraHat = hat === 'goggles' || hat === 'apple' ? hatSvg(hat, arc.color, top) : '';
+  const propPart = showProp ? `<g transform="translate(${propPos})">${propSvg(prop)}</g>` : '';
+  return `<ellipse cx="0" cy="123" rx="20" ry="3.5" fill="rgba(0,0,0,.22)"/>${legs}<path d="${armL}" ${SK}/>${body}<path d="${armR}" ${SK}/>${propPart}${head}${coversHair ? '' : hairs}${EYES[eK]}${MOUTH[mK]}${blush}${hatPart}${extraHat}`;
 }
 const portraitSvg = p => `<svg viewBox="-32 8 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${figureSvg(p)}</svg>`;
 
-/* 가운데 소품 (유쾌한 장면) */
+/* ---------- 효과 ---------- */
+const FX = {
+  speed: (x, y, dir = -1) => `<path d="M${x} ${y} h${dir * 22} M${x + dir * 4} ${y + 10} h${dir * 28} M${x} ${y + 20} h${dir * 18}" stroke="${INK}" stroke-width="2" stroke-linecap="round" opacity=".7"/>`,
+  dust: (x, y) => `<g fill="#efe6d4" ${SKt}><circle cx="${x}" cy="${y}" r="6"/><circle cx="${x - 9}" cy="${y + 2}" r="4.5"/><circle cx="${x + 8}" cy="${y + 3}" r="4"/></g>`,
+  sweat: (x, y) => `<path d="M${x} ${y} q-5 8 0 10 q5 -2 0 -10Z" fill="#8fd0f5" ${SKt}/>`,
+  bang: (x, y, c = '#e0402f') => `<path d="M${x} ${y} l2 18" stroke="${c}" stroke-width="5" stroke-linecap="round"/><circle cx="${x + 2.6}" cy="${y + 26}" r="2.8" fill="${c}"/>`,
+  spark: (x, y, r = 16) => `<g stroke="#f2c02f" stroke-width="3.2" stroke-linecap="round">${[0, 45, 90, 135, 180, 225, 270, 315].map(a => { const rad = a * Math.PI / 180, r1 = r * .35, r2 = a % 90 ? r * .75 : r; return `<path d="M${(x + Math.cos(rad) * r1).toFixed(1)} ${(y + Math.sin(rad) * r1).toFixed(1)} L${(x + Math.cos(rad) * r2).toFixed(1)} ${(y + Math.sin(rad) * r2).toFixed(1)}"/>`; }).join('')}</g>`,
+  anger: (x, y) => `<path d="M${x - 5} ${y - 2} q3 3 0 6 M${x + 5} ${y - 2} q-3 3 0 6 M${x - 2} ${y - 5} q3 3 6 0 M${x - 2} ${y + 7} q3 -3 6 0" fill="none" stroke="#e0402f" stroke-width="2.2" stroke-linecap="round"/>`,
+  confetti: () => Array.from({ length: 22 }, (_, i) => `<rect x="${(i * 47 + 13) % 390}" y="${(i * 31 + 9) % 110}" width="6" height="3" fill="${['#e0402f', '#2f6fe0', '#f2c02f', '#3aa85a', '#c2399b'][i % 5]}" transform="rotate(${(i * 37) % 180} ${(i * 47 + 13) % 390} ${(i * 31 + 9) % 110})"/>`).join(''),
+  hop: (x, y) => `<path d="M${x - 10} ${y} q-3 6 0 10 M${x} ${y + 2} v10 M${x + 10} ${y} q3 6 0 10" fill="none" stroke="${INK}" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>`,
+  waves: (x, y, dir = 1) => `<path d="M${x} ${y - 8} q${dir * 6} 8 0 16 M${x + dir * 8} ${y - 14} q${dir * 10} 14 0 28 M${x + dir * 16} ${y - 20} q${dir * 14} 20 0 40" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round"/>`,
+  zap: (x1, y1, x2, y2) => `<path d="M${x1} ${y1} L${(x1 + x2) / 2 - 6} ${(y1 + y2) / 2 - 8} L${(x1 + x2) / 2 + 6} ${(y1 + y2) / 2 + 8} L${x2} ${y2}" fill="none" stroke="#f2c02f" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/>`,
+  arrow: (x1, y1, x2, y2) => { const a = Math.atan2(y2 - y1, x2 - x1), c = Math.cos(a), s = Math.sin(a); return `<path d="M${x1} ${y1} L${x2} ${y2}" stroke="#8a5a2e" stroke-width="3" stroke-linecap="round"/><path d="M${x2} ${y2} L${(x2 - 9 * c + 5 * s).toFixed(1)} ${(y2 - 9 * s - 5 * c).toFixed(1)} M${x2} ${y2} L${(x2 - 9 * c - 5 * s).toFixed(1)} ${(y2 - 9 * s + 5 * c).toFixed(1)}" ${SK}/><path d="M${x1} ${y1} l${(-6 * c + 5 * s).toFixed(1)} ${(-6 * s - 5 * c).toFixed(1)} M${x1} ${y1} l${(-6 * c - 5 * s).toFixed(1)} ${(-6 * s + 5 * c).toFixed(1)}" stroke="#e0402f" stroke-width="2.4" stroke-linecap="round"/>`; },
+  circleArrow: (x, y) => `<path d="M${x - 22} ${y} a22 12 0 1 1 8 9" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/><path d="M${x - 16} ${y + 12} l2 -8 l-8 2" fill="none" ${SKt}/>`,
+  zz: (x, y) => `<path d="M${x} ${y} h8 l-8 8 h8 M${x + 12} ${y - 10} h6 l-6 6 h6" fill="none" ${SKt}/>`,
+  fireworks: () => [[70, 40], [320, 30], [210, 55]].map(([x, y], i) => `<g stroke="${['#f2c02f', '#e0402f', '#7ad0ff'][i]}" stroke-width="2.4" stroke-linecap="round">${[0, 60, 120, 180, 240, 300].map(a => { const r = a * Math.PI / 180; return `<path d="M${(x + Math.cos(r) * 5).toFixed(1)} ${(y + Math.sin(r) * 5).toFixed(1)} L${(x + Math.cos(r) * 14).toFixed(1)} ${(y + Math.sin(r) * 14).toFixed(1)}"/>`; }).join('')}</g>`).join('')
+};
+
+/* ---------- 가운데 소품 ---------- */
 function centerProp(kind, x, y) {
   const g = body => `<g transform="translate(${x} ${y})">${body}</g>`;
   switch (kind) {
     case 'ricecake': return g(`<ellipse cx="0" cy="0" rx="22" ry="7" fill="#fff" ${SK}/><g fill="#f2d27a" ${SKt}><ellipse cx="-8" cy="-5" rx="6" ry="4"/><ellipse cx="4" cy="-6" rx="6" ry="4"/><ellipse cx="-2" cy="-11" rx="6" ry="4"/></g>`);
-    case 'cat': return g(`<path d="M-14 0 Q-16 -16 0 -16 Q14 -16 12 0Z" fill="#f2a24a" ${SK}/><path d="M-10 -14 L-12 -24 L-4 -17 M4 -17 L10 -24 L9 -14" fill="#f2a24a" ${SK}/><circle cx="-5" cy="-9" r="1.6" fill="${INK}"/><circle cx="4" cy="-9" r="1.6" fill="${INK}"/><path d="M12 -4 Q22 -6 20 -16" fill="none" ${SK}/><path d="M-4 -4 L-14 -2 M-14 -2 l-4 -3 M-14 -2 l-4 3" ${SKt}/><path d="M-22 -1 L-14 -2" stroke="#9ac" stroke-width="5" stroke-linecap="round"/>`);
+    case 'cat': return g(`<path d="M-14 0 Q-16 -16 0 -16 Q14 -16 12 0Z" fill="#f2a24a" ${SK}/><path d="M-10 -14 L-12 -24 L-4 -17 M4 -17 L10 -24 L9 -14" fill="#f2a24a" ${SK}/><circle cx="-5" cy="-9" r="1.6" fill="${INK}"/><circle cx="4" cy="-9" r="1.6" fill="${INK}"/><path d="M-12 -2 Q-24 -6 -24 -16" fill="none" ${SK}/><path d="M12 -8 L24 -10 l4 -3 M24 -10 l4 3" ${SKt}/><path d="M16 -9 L24 -10" stroke="#9ac" stroke-width="5" stroke-linecap="round"/>${FX.speed(-28, -16, -1)}`);
     case 'pots': return g(`<g fill="#7d8792" ${SK}><path d="M-26 -14 H-6 V0 Q-16 6 -26 0Z"/><path d="M6 -14 H26 V0 Q16 6 6 0Z"/></g><path d="M-18 -18 q-3 -5 0 -9 q3 -4 0 -8 M16 -18 q-3 -5 0 -9 q3 -4 0 -8" fill="none" ${SKt}/>`);
     case 'lunch': return g(`<path d="M-14 -8 Q-14 6 0 6 Q14 6 14 -8Z" fill="#c8553a" ${SK}/><path d="M-12 -8 Q0 -20 12 -8Z" fill="#fff" ${SK}/><path d="M8 -26 L16 -6 M13 -27 L19 -8" ${SKt}/>`);
     case 'dragon': return g(`<path d="M-14 0 Q-12 -12 2 -10 Q12 -9 12 0Z" fill="#6cc46c" ${SK}/><path d="M10 -6 Q18 -10 20 -4 Q16 0 12 -2" fill="#6cc46c" ${SK}/><path d="M-4 -10 L0 -20 L4 -10" fill="#a8e0a8" ${SKt}/><circle cx="16" cy="-5" r="1.4" fill="${INK}"/><path d="M-14 -2 Q-22 -2 -24 -8" fill="none" ${SK}/><path d="M21 -4 q4 -2 7 0 q-3 2 -7 0" fill="#ff7a3a"/>`);
-    case 'map': return g(`<rect x="-16" y="-14" width="32" height="20" fill="#f2e2be" ${SK}/><path d="M-10 -2 q6 -8 12 -2 q4 3 6 -4" fill="none" stroke="#7a5a3a" stroke-width="1.6" stroke-dasharray="3 3"/><path d="M6 -10 L12 -4 M12 -10 L6 -4" stroke="#e0402f" stroke-width="2.6" stroke-linecap="round"/>`);
-    case 'question': return g(`<path d="M-14 -22 q0 -10 8 -10 q8 0 8 7 q0 5 -7 7 v4 M-6 -6 v1" fill="none" stroke="${INK}" stroke-width="3.2" stroke-linecap="round"/><path d="M8 -30 q0 -8 6 -8 q6 0 6 5 q0 4 -5 5 v3 M15 -17 v1" fill="none" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>`);
+    case 'map': return g(`<rect x="-18" y="-10" width="36" height="16" fill="#f2e2be" ${SK}/><path d="M-12 0 q6 -8 12 -2 q4 3 6 -4" fill="none" stroke="#7a5a3a" stroke-width="1.6" stroke-dasharray="3 3"/><path d="M8 -7 L14 -1 M14 -7 L8 -1" stroke="#e0402f" stroke-width="2.6" stroke-linecap="round"/>${FX.spark(11, -18, 9)}`);
+    case 'question': return g(`<path d="M-14 -22 q0 -10 8 -10 q8 0 8 7 q0 5 -7 7 v4 M-6 -6 v1" fill="none" stroke="${INK}" stroke-width="3.2" stroke-linecap="round"/><path d="M10 -30 q0 -8 6 -8 q6 0 6 5 q0 4 -5 5 v3 M17 -17 v1" fill="none" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>`);
+    case 'well': return g(`<path d="M-20 0 V-16 H20 V0Z" fill="#a8a09a" ${SK}/><path d="M-20 -10 H20 M-6 -16 V0 M8 -16 V0" ${SKt}/><path d="M-22 -16 V-40 M22 -16 V-40 M-26 -40 H26" ${SK}/><path d="M0 -40 V-26" ${SKt}/><path d="M-5 -26 H5 V-20 H-5Z" fill="#8a5a2e" ${SKt}/>`);
+    case 'books': return g([[-30, 0, -20, '#e0402f'], [6, -14, 15, '#2f6fe0'], [40, 4, -8, '#3aa85a']].map(([bx, by, r, c]) => `<g transform="translate(${bx} ${by}) rotate(${r})"><path d="M-10 -7 H10 V7 H-10Z" fill="${c}" ${SK}/><path d="M0 -7 V7" ${SKt}/></g>`).join('') + `<path d="M-46 -6 q-6 -6 -12 0 M-50 6 q-6 -4 -10 2" fill="none" ${SKt}/>`);
+    case 'fire': return g(`<path d="M-30 0 Q-34 -26 -18 -40 Q-16 -24 -6 -30 Q-2 -52 12 -60 Q8 -38 22 -34 Q30 -44 28 -54 Q44 -30 30 0Z" fill="#ff7a2a" ${SK}/><path d="M-14 0 Q-16 -14 -6 -20 Q0 -10 6 -18 Q14 -8 12 0Z" fill="#ffd84a" ${SKt}/>`);
+    case 'block': return g(`<path d="M-34 6 V-40 H34 V6Z" fill="#d9c08a" ${SK}/><path d="M-34 -16 H34 M-10 -40 V-16 M14 -16 V6" ${SKt}/><path d="M-6 -56 L6 -56 L0 -44Z" fill="#f2c02f" ${SKt}/>${FX.bang(-2, -86)}`);
+    case 'acorns': return g(`<path d="M-30 4 Q0 -34 30 4Z" fill="#a8703a" ${SK}/>${[[-14, -6], [0, -14], [14, -6], [-4, 0], [8, 2]].map(([ax, ay]) => `<ellipse cx="${ax}" cy="${ay}" rx="5" ry="6" fill="#c8904a" ${SKt}/><path d="M${ax - 5} ${ay - 3} H${ax + 5}" ${SKt}/>`).join('')}`);
+    case 'boom': return g(`<path d="M0 -50 L10 -24 L38 -34 L22 -10 L48 2 L18 8 L26 34 L2 16 L-14 40 L-14 12 L-44 18 L-24 -4 L-46 -24 L-16 -20Z" fill="#ffb02a" ${SK}/><path d="M0 -28 L6 -12 L22 -14 L10 0 L18 14 L0 6 L-10 18 L-8 2 L-24 -2 L-8 -10Z" fill="#fff36a" ${SKt}/><g fill="#8a8a8a" opacity=".85" ${SKt}><circle cx="-40" cy="-46" r="10"/><circle cx="-28" cy="-58" r="8"/><circle cx="36" cy="-54" r="9"/></g>`);
+    case 'easel': return g(`<path d="M-16 6 L-6 -50 M16 6 L6 -50 M0 -50 V6" ${SK}/><rect x="-22" y="-50" width="44" height="34" fill="#fff6e2" ${SK}/><path d="M-14 -24 q8 -14 16 -4 q6 -8 12 2" fill="none" stroke="#2f6fe0" stroke-width="2"/><circle cx="8" cy="-40" r="4" fill="#f2c02f"/><path d="M-4 -30 q4 6 10 2" fill="#7a2a7a" opacity=".7"/>`);
+    case 'ball': return g(`<circle r="11" fill="#fff" ${SK}/><path d="M-4 -4 L4 -4 L6 4 L0 8 L-6 4Z" fill="${INK}"/>${FX.speed(-14, -10, -1)}`);
+    case 'bear': return g(`<ellipse cx="0" cy="-22" rx="20" ry="24" fill="#8a5a2e" ${SK}/><circle cx="0" cy="-52" r="14" fill="#8a5a2e" ${SK}/><circle cx="-11" cy="-63" r="5" fill="#8a5a2e" ${SK}/><circle cx="11" cy="-63" r="5" fill="#8a5a2e" ${SK}/><ellipse cx="0" cy="-48" rx="6" ry="4" fill="#d9b48a" ${SKt}/><circle cx="-5" cy="-56" r="1.8" fill="${INK}"/><circle cx="5" cy="-56" r="1.8" fill="${INK}"/><path d="M-18 -30 L-30 -50 M18 -30 L30 -50" ${SK}/><path d="M-10 0 L-14 4 M10 0 L14 4" ${SK}/>`);
+    case 'boat': return g(`<path d="M-90 -14 H90 L70 14 H-70Z" fill="#a0603a" ${SK}/><path d="M-60 -2 H60" ${SKt}/><path d="M-90 -14 Q-100 -30 -86 -36" fill="none" ${SK}/>`);
     default: return '';
   }
 }
 
-let svgSeq = 0;
-function paintingSvg(scene, tone, people, label, center) {
-  const uid = 'pt' + (++svgSeq);
-  const sky = { battle: '#9cc6ea', clock: '#2c3a6a', palace: '#5a4a8a', snow: '#b8cde6', desert: '#f2b46a', library: '#3a4a7a', sea: '#8ec2e8' }[scene] || '#9cc6ea';
+/* ---------- 구도 ---------- */
+function layoutFor(pose, center, scene, tone) {
+  const G = 238;
+  const L = {
+    faceoff: () => ({ a: { x: 148, rot: 14, arms: 'reach', face: 'angry' }, b: { x: 252, rot: -14, flip: 1, arms: 'reach', face: 'angry' }, cheer: 1,
+      fx: () => FX.spark(200, 152, 20) + FX.dust(118, 236) + FX.dust(282, 236) + FX.speed(110, 150, -1) + FX.speed(290, 150, 1) }),
+    facing: () => ({ a: { x: 146, rot: 4 }, b: { x: 254, rot: -4, flip: 1 }, c: [200, 232] }),
+    gesture: () => ({ a: { x: 140, rot: -6, arms: 'up', face: 'shock' }, b: { x: 260, rot: 6, flip: 1, arms: 'up', face: 'happy' }, c: [200, 150],
+      fx: () => FX.waves(110, 120, -1) + FX.waves(290, 120, 1) + FX.sweat(170, 120) }),
+    tug: () => ({ a: { x: 146, rot: -18, arms: 'reach', face: 'angry' }, b: { x: 254, rot: 18, flip: 1, arms: 'reach', face: 'angry' }, c: [200, 190], cheer: 1,
+      fx: () => FX.sweat(112, 128) + FX.sweat(290, 128) + FX.dust(132, 238) + FX.dust(268, 238) + FX.anger(122, 108) + FX.anger(280, 108) }),
+    chase: () => ({ a: { x: 236, rot: 16, arms: 'reach', face: 'shock' }, b: { x: 124, rot: 18, arms: 'reach', face: 'angry' }, c: [338, 232],
+      fx: () => FX.speed(196, 150, -1) + FX.speed(86, 150, -1) + FX.dust(214, 236) + FX.dust(102, 236) + FX.bang(250, 70) }),
+    run: () => ({ a: { x: 230, rot: 12, arms: center === 'fire' ? 'reach' : 'up', face: 'shock', prop: center === 'fire' ? 'bucket' : undefined }, b: { x: 150, rot: 14, arms: center === 'fire' ? 'reach' : 'up', face: 'angry', prop: center === 'fire' ? 'bucket' : undefined },
+      c: center === 'fire' ? [350, 238] : [210, 100], fx: () => FX.speed(190, 160, -1) + FX.speed(110, 160, -1) + FX.sweat(258, 112) + FX.dust(210, 236) + FX.dust(130, 236) }),
+    collide: () => ({ a: { x: 132, rot: 20, arms: 'reach', face: 'shock' }, b: { x: 268, rot: -20, flip: 1, arms: 'reach', face: 'shock' }, cheer: 1,
+      fx: () => FX.spark(200, 168, 22) + FX.bang(128, 70) + FX.bang(262, 70) + FX.speed(94, 150, -1) + FX.speed(306, 150, 1) + FX.dust(106, 236) + FX.dust(294, 236) }),
+    shoulders: () => ({ a: { x: 200, s: .9, face: 'angry', arms: 'up' }, b: { x: 204, y: 186, s: .78, arms: 'up', face: 'happy', prop: center === 'flag' ? 'flag' : 'telescope' }, cheer: 1,
+      fx: () => FX.sweat(232, 140) + FX.sweat(170, 150) }),
+    carry: () => ({ a: { x: 205, rot: 12, arms: 'reach', face: 'angry' }, b: { x: 248, y: 166, s: .78, rot: -82, arms: 'down', face: 'sleep' },
+      fx: () => FX.sweat(240, 120) + FX.sweat(168, 132) + FX.zz(150, 128) + FX.speed(168, 210, -1) }),
+    jump: () => ({ a: { x: 152, y: 212, rot: -10, arms: 'up', face: 'happy' }, b: { x: 248, y: 206, rot: 10, flip: 1, arms: 'up', face: 'happy' }, c: center === 'ball' ? [200, 96] : [200, 234], cheer: 1,
+      fx: () => FX.hop(152, 222) + FX.hop(248, 216) + FX.confetti() }),
+    recoil: () => ({ a: { x: 128, rot: -24, arms: 'up', face: 'shock' }, b: { x: 272, rot: 24, flip: 1, arms: 'up', face: 'shock' }, c: [200, 234],
+      fx: () => FX.bang(96, 64) + FX.bang(290, 64) + FX.sweat(150, 110) + FX.sweat(250, 110) + FX.spark(200, 182, 12) }),
+    huddle: () => ({ a: { x: 158, rot: 16, face: 'shock' }, b: { x: 242, rot: -16, flip: 1 }, c: [200, 236], fx: () => FX.bang(196, 84, '#f2c02f') + FX.sweat(150, 110) }),
+    point: () => ({ a: { x: 144, rot: 8, arms: 'reach', face: 'angry' }, b: { x: 256, rot: -8, flip: 1, arms: 'reach', face: 'angry' },
+      fx: () => FX.zap(176, 130, 224, 130) + FX.anger(118, 104) + FX.anger(284, 104) + FX.bang(196, 62) }),
+    push: () => ({ a: { x: 128, rot: 26, arms: 'reach', face: 'angry' }, b: { x: 272, rot: -26, flip: 1, arms: 'reach', face: 'angry' }, c: [200, 232],
+      fx: () => FX.sweat(110, 120) + FX.sweat(292, 120) + FX.dust(100, 236) + FX.dust(300, 236) + FX.speed(92, 160, -1) + FX.speed(308, 160, 1) }),
+    aim: () => ({ a: { x: 100, rot: 0, arms: 'reach', face: 'angry', prop: 'bow' }, b: { x: 300, rot: -4, flip: 1, arms: 'down', face: 'shock', hat: 'apple' },
+      fx: () => FX.arrow(150, 152, 276, 116) + FX.speed(150, 140, -1) + FX.sweat(322, 120) + FX.bang(334, 70) }),
+    blast: () => ({ a: { x: 92, y: 230, rot: -50, arms: 'up', face: 'shock' }, b: { x: 308, y: 226, rot: 50, flip: 1, arms: 'up', face: 'shock' }, c: [200, 196],
+      fx: () => FX.fireworks() + FX.speed(150, 150, -1) + FX.speed(250, 150, 1) }),
+    row: () => ({ a: { x: 156, y: 222, s: .78, rot: -10, arms: 'reach', face: 'angry', prop: 'oar' }, b: { x: 244, y: 222, s: .78, rot: 10, flip: 1, arms: 'reach', face: 'shock', prop: 'oar' }, c: [200, 226], front: 'boat',
+      fx: () => FX.circleArrow(200, 70) + FX.sweat(126, 130) + FX.sweat(272, 130) }),
+    shout: () => ({ a: { x: 156, rot: -8, arms: 'up', face: 'shout' }, b: { x: 244, rot: 8, flip: 1, arms: 'up', face: 'shout' }, cheer: 1,
+      fx: () => FX.waves(118, 120, -1) + FX.waves(282, 120, 1) }),
+    sneak: () => ({ a: { x: 196, rot: 6, arms: 'reach', face: 'shock' }, b: { x: 116, y: 232, rot: -12, arms: 'up', face: 'happy' }, c: [262, 236],
+      fx: () => FX.sweat(222, 116) + FX.spark(92, 92, 10) })
+  };
+  const fn = L[pose] || (() => ({ a: { x: 150 }, b: { x: 250, flip: 1 }, c: [200, 232] }));
+  const lay = fn();
+  if (scene === 'battle' || scene === 'arena') {
+    if (tone === 'serious' && pose === 'faceoff') { lay.a.prop = 'sword'; lay.a.hat = 'helmet'; lay.b.prop = 'sword'; lay.b.hat = 'helmet'; }
+  }
+  lay.a.y = lay.a.y || G; lay.b.y = lay.b.y || G;
+  return lay;
+}
+
+function placeFig(p, pl, sBase) {
+  const s = pl.s || sBase;
+  const opts = { arms: pl.arms, face: pl.face, prop: pl.prop, hat: pl.hat };
+  return `<g transform="translate(${pl.x} ${pl.y}) rotate(${pl.rot || 0}) scale(${pl.flip ? -s : s} ${s}) translate(0 -122)">${figureSvg(p, opts)}</g>`;
+}
+function labelOf(p, pl, sBase) {
+  const s = pl.s || sBase, r = (pl.rot || 0) * Math.PI / 180, d = 108;
+  return { x: pl.x + s * d * Math.sin(r), y: pl.y - s * d * Math.cos(r) - 2, name: p.name, rot: (((hashStr(p.name) % 9) - 4) * 1.6) };
+}
+
+/* ---------- 배경 ---------- */
+function backdrop(scene) {
   const night = ['clock', 'palace', 'library'].includes(scene);
+  const sky = { battle: '#9cc6ea', clock: '#2c3a6a', palace: '#5a4a8a', snow: '#b8cde6', desert: '#f2b46a', library: '#3a4a7a', sea: '#8ec2e8', arena: '#a8d0f0', forest: '#bfe0c8', indoor: '#e8d2a8', pyramid: '#f6c27a' }[scene] || '#9cc6ea';
   const stars = night ? Array.from({ length: 9 }, (_, i) => { const x = 30 + i * 41 + (i % 3) * 7, y = 22 + (i * 29) % 70; return `<path d="M${x - 4} ${y} H${x + 4} M${x} ${y - 4} V${y + 4} M${x - 3} ${y - 3} L${x + 3} ${y + 3} M${x + 3} ${y - 3} L${x - 3} ${y + 3}" stroke="#fff3b0" stroke-width="1.6" stroke-linecap="round"/>`; }).join('') : '';
-  const sun = night
+  const sun = scene === 'indoor' ? '' : night
     ? `<path d="M336 26 A20 20 0 1 0 352 62 A16 16 0 1 1 336 26Z" fill="#fff3b0" ${SK}/>`
     : `<circle cx="66" cy="54" r="22" fill="#ffd84a" ${SK}/><circle cx="59" cy="51" r="2" fill="${INK}"/><circle cx="72" cy="51" r="2" fill="${INK}"/><path d="M60 60 Q66 65 72 60" fill="none" ${SKt}/><path d="M66 22 V14 M66 86 V94 M34 54 H26 M98 54 H106 M43 31 L38 26 M89 77 L94 82 M89 31 L94 26 M43 77 L38 82" ${SKt}/>`;
   let back = '', ground = '';
   switch (scene) {
     case 'battle':
-      back = `<path d="M0 170 Q70 130 150 160 Q240 130 320 155 Q370 140 400 150 V210 H0Z" fill="#7cc45a" ${SK}/>
-        <path d="M44 205 V112" ${SK}/><path d="M44 112 L84 122 L44 134Z" fill="#e0402f" ${SK}/>
-        <path d="M356 205 V108" ${SK}/><path d="M356 108 L316 118 L356 130Z" fill="#2f6fe0" ${SK}/>
-        <path d="M120 120 q10 -12 22 0 q12 -10 20 2 q-20 6 -42 -2Z" fill="#fff" ${SKt}/><path d="M250 90 q10 -12 22 0 q12 -10 20 2 q-20 6 -42 -2Z" fill="#fff" ${SKt}/>`;
-      ground = `<path d="M0 205 H400 V260 H0Z" fill="#a87a4a" ${SK}/><path d="M60 230 l4 -6 l4 6 M300 240 l4 -6 l4 6 M180 248 l4 -6 l4 6" ${SKt} fill="none"/>`;
-      break;
+      back = `<path d="M0 170 Q70 130 150 160 Q240 130 320 155 Q370 140 400 150 V210 H0Z" fill="#7cc45a" ${SK}/><path d="M24 205 V112" ${SK}/><path d="M24 112 L60 122 L24 134Z" fill="#e0402f" ${SK}/><path d="M376 205 V108" ${SK}/><path d="M376 108 L340 118 L376 130Z" fill="#2f6fe0" ${SK}/><path d="M150 100 q10 -12 22 0 q12 -10 20 2 q-20 6 -42 -2Z" fill="#fff" ${SKt}/>`;
+      ground = `<path d="M0 205 H400 V260 H0Z" fill="#a87a4a" ${SK}/>`; break;
     case 'clock':
-      back = `<path d="M10 205 V150 H60 V205 M80 205 V164 H118 V205" fill="#5a4a6a" ${SK}/><rect x="262" y="70" width="46" height="135" fill="#8a6a5a" ${SK}/><path d="M256 72 L285 32 L314 72Z" fill="#c8553a" ${SK}/>
-        <circle cx="285" cy="100" r="15" fill="#fff6e2" ${SK}/><path d="M285 100 V90 M285 100 L293 104" ${SKt}/><rect x="276" y="130" width="10" height="14" fill="#ffd84a" ${SKt}/>`;
-      ground = `<path d="M0 205 H400 V260 H0Z" fill="#7a7a8a" ${SK}/><path d="M30 225 h30 M120 238 h40 M250 226 h30 M320 244 h40" ${SKt}/>`;
-      break;
+      back = `<path d="M10 205 V150 H60 V205 M80 205 V164 H118 V205" fill="#5a4a6a" ${SK}/><rect x="292" y="70" width="46" height="135" fill="#8a6a5a" ${SK}/><path d="M286 72 L315 32 L344 72Z" fill="#c8553a" ${SK}/><circle cx="315" cy="100" r="15" fill="#fff6e2" ${SK}/><path d="M315 100 V90 M315 100 L323 104" ${SKt}/>`;
+      ground = `<path d="M0 205 H400 V260 H0Z" fill="#7a7a8a" ${SK}/>`; break;
     case 'palace':
-      back = `<rect x="230" y="128" width="130" height="77" fill="#c8553a" ${SK}/><path d="M204 132 Q222 124 232 108 H358 Q368 124 386 132 Q300 122 204 132Z" fill="#3a3a4a" ${SK}/>
-        <rect x="250" y="150" width="20" height="28" fill="#ffd84a" ${SKt}/><rect x="300" y="150" width="20" height="28" fill="#ffd84a" ${SKt}/>
-        <path d="M0 96 Q100 122 200 104 T400 98" fill="none" ${SKt}/>${[40, 100, 160, 220, 300, 360].map((x, i) => `<circle cx="${x}" cy="${103 + (i % 2) * 8}" r="7" fill="#ff6a4a" ${SKt}/>`).join('')}`;
-      ground = `<path d="M0 205 H400 V260 H0Z" fill="#b89a7a" ${SK}/>`;
-      break;
+      back = `<rect x="250" y="128" width="130" height="77" fill="#c8553a" ${SK}/><path d="M224 132 Q242 124 252 108 H378 Q388 124 400 132 Q320 122 224 132Z" fill="#3a3a4a" ${SK}/><rect x="270" y="150" width="20" height="28" fill="#ffd84a" ${SKt}/><rect x="320" y="150" width="20" height="28" fill="#ffd84a" ${SKt}/><path d="M0 96 Q100 122 200 104 T400 98" fill="none" ${SKt}/>${[40, 100, 160, 220, 300, 360].map((x, i) => `<circle cx="${x}" cy="${103 + (i % 2) * 8}" r="7" fill="#ff6a4a" ${SKt}/>`).join('')}`;
+      ground = `<path d="M0 205 H400 V260 H0Z" fill="#b89a7a" ${SK}/>`; break;
     case 'snow':
-      back = `<path d="M0 200 L70 110 L130 170 L200 92 L280 175 L340 120 L400 180 V205 H0Z" fill="#8a9ab8" ${SK}/><path d="M58 126 L70 110 L82 126 L76 122 L70 128 L64 122Z M188 108 L200 92 L212 108 L206 104 L200 110 L194 104Z" fill="#fff" ${SKt}/>
-        <rect x="300" y="152" width="48" height="40" fill="#a0603a" ${SK}/><path d="M294 154 L324 128 L354 154Z" fill="#fff" ${SK}/>
-        ${Array.from({ length: 10 }, (_, i) => `<circle cx="${20 + i * 38}" cy="${30 + (i * 23) % 80}" r="2.6" fill="#fff" ${SKt}/>`).join('')}`;
-      ground = `<path d="M0 205 H400 V260 H0Z" fill="#fff" ${SK}/>`;
-      break;
+      back = `<path d="M0 200 L70 110 L130 170 L200 92 L280 175 L340 120 L400 180 V205 H0Z" fill="#8a9ab8" ${SK}/><path d="M58 126 L70 110 L82 126 L76 122 L70 128 L64 122Z M188 108 L200 92 L212 108 L206 104 L200 110 L194 104Z" fill="#fff" ${SKt}/>${Array.from({ length: 10 }, (_, i) => `<circle cx="${20 + i * 38}" cy="${30 + (i * 23) % 80}" r="2.6" fill="#fff" ${SKt}/>`).join('')}`;
+      ground = `<path d="M0 205 H400 V260 H0Z" fill="#fff" ${SK}/>`; break;
     case 'desert':
-      back = `<path d="M0 180 Q60 140 130 175 Q200 135 280 170 Q340 145 400 165 V210 H0Z" fill="#f2c27a" ${SK}/>
-        <path d="M330 205 V150 M330 150 q-14 -6 -22 2 M330 150 q14 -8 22 0 M330 150 q-4 -14 -14 -14 M330 150 q6 -14 16 -12" fill="none" ${SK}/>
-        <path d="M60 200 q-2 -24 14 -24 q6 -14 16 0 q8 -10 14 2 q10 0 8 22" fill="#c8904a" ${SK}/><path d="M66 200 v10 M100 200 v10" ${SK}/><circle cx="108" cy="178" r="1.6" fill="${INK}"/>`;
-      ground = `<path d="M0 205 H400 V260 H0Z" fill="#e8b46a" ${SK}/>`;
-      break;
+      back = `<path d="M0 180 Q60 140 130 175 Q200 135 280 170 Q340 145 400 165 V210 H0Z" fill="#f2c27a" ${SK}/><path d="M350 205 V150 M350 150 q-14 -6 -22 2 M350 150 q14 -8 22 0 M350 150 q-4 -14 -14 -14 M350 150 q6 -14 16 -12" fill="none" ${SK}/>`;
+      ground = `<path d="M0 205 H400 V260 H0Z" fill="#e8b46a" ${SK}/>`; break;
     case 'library':
-      back = `<path d="M0 168 H400 V208 H0Z" fill="#3a6ab0" ${SK}/><path d="M20 182 q10 -6 20 0 q10 6 20 0 M150 190 q10 -6 20 0 q10 6 20 0 M300 180 q10 -6 20 0 q10 6 20 0" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-        <rect x="282" y="66" width="40" height="114" fill="#8a7a6a" ${SK}/><path d="M276 68 L302 36 L328 68Z" fill="#3a3a4a" ${SK}/><rect x="294" y="86" width="14" height="16" fill="#ffd84a" ${SKt}/><rect x="294" y="120" width="14" height="16" fill="#ffd84a" ${SKt}/>
-        <path d="M150 20 L138 48 H152 L140 76" fill="none" stroke="#ffe24a" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>`;
-      ground = `<path d="M0 205 H400 V260 H0Z" fill="#8a6a4a" ${SK}/>`;
-      break;
-    default:
-      back = `<path d="M0 150 H400 V208 H0Z" fill="#2f7ac8" ${SK}/><path d="M30 168 q10 -6 20 0 q10 6 20 0 M180 178 q10 -6 20 0 q10 6 20 0" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-        <path d="M230 150 Q290 178 350 150Z" fill="#a0603a" ${SK}/><path d="M290 150 V76" ${SK}/><path d="M292 80 L330 140 H292Z" fill="#fff" ${SK}/>
-        <path d="M120 140 q8 -12 16 0 q-8 8 -16 0Z M136 140 l6 -4 v8z" fill="#f2a24a" ${SKt}/>`;
-      ground = `<path d="M0 205 H400 V260 H0Z" fill="#b08458" ${SK}/><path d="M80 205 V260 M160 205 V260 M240 205 V260 M320 205 V260" ${SKt}/>`;
+      back = `<path d="M0 168 H400 V208 H0Z" fill="#3a6ab0" ${SK}/><rect x="300" y="66" width="40" height="114" fill="#8a7a6a" ${SK}/><path d="M294 68 L320 36 L346 68Z" fill="#3a3a4a" ${SK}/><rect x="312" y="86" width="14" height="16" fill="#ffd84a" ${SKt}/><path d="M150 20 L138 48 H152 L140 76" fill="none" stroke="#ffe24a" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>`;
+      ground = `<path d="M0 205 H400 V260 H0Z" fill="#8a6a4a" ${SK}/>`; break;
+    case 'sea':
+      back = `<path d="M0 150 H400 V208 H0Z" fill="#2f7ac8" ${SK}/><path d="M30 168 q10 -6 20 0 q10 6 20 0 M180 178 q10 -6 20 0 q10 6 20 0 M300 166 q10 -6 20 0 q10 6 20 0" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M300 150 Q340 172 380 150Z" fill="#a0603a" ${SK}/><path d="M340 150 V96" ${SK}/><path d="M342 100 L366 140 H342Z" fill="#fff" ${SK}/>`;
+      ground = `<path d="M0 205 H400 V260 H0Z" fill="#b08458" ${SK}/><path d="M80 205 V260 M160 205 V260 M240 205 V260 M320 205 V260" ${SKt}/>`; break;
+    case 'arena':
+      back = `<path d="M0 200 V100 Q200 70 400 100 V200Z" fill="#e2c49a" ${SK}/>${[30, 80, 130, 180, 230, 280, 330, 370].map(x => `<path d="M${x} 196 V150 Q${x + 12} 136 ${x + 24} 150 V196" fill="#8a6a4a" ${SKt}/>`).join('')}<path d="M0 132 Q200 104 400 132" fill="none" ${SKt}/>${Array.from({ length: 16 }, (_, i) => `<circle cx="${14 + i * 25}" cy="${112 - Math.sin(i / 15 * Math.PI) * 22 + 8}" r="4" fill="${['#e0402f', '#2f6fe0', '#f2c02f', '#3aa85a'][i % 4]}" ${SKt}/>`).join('')}`;
+      ground = `<path d="M0 200 H400 V260 H0Z" fill="#f0d49a" ${SK}/>`; break;
+    case 'forest':
+      back = [[30, 1], [100, .8], [330, 1.1], [380, .8], [260, .7]].map(([x, k]) => `<path d="M${x - 6} 205 V${205 - 70 * k} H${x + 6} V205" fill="#8a5a2e" ${SK}/><circle cx="${x - 16 * k}" cy="${200 - 84 * k}" r="${20 * k}" fill="#4caa5a" ${SK}/><circle cx="${x + 16 * k}" cy="${200 - 88 * k}" r="${22 * k}" fill="#4caa5a" ${SK}/><circle cx="${x}" cy="${200 - 108 * k}" r="${22 * k}" fill="#5cc06a" ${SK}/>`).join('');
+      ground = `<path d="M0 205 H400 V260 H0Z" fill="#7cc45a" ${SK}/><path d="M50 228 l3 -6 l3 6 M200 246 l3 -6 l3 6 M320 232 l3 -6 l3 6" fill="none" ${SKt}/>`; break;
+    case 'indoor':
+      back = `<path d="M0 0 H400 V200 H0Z" fill="#e8d2a8"/><path d="M0 30 H400 M0 60 H400" stroke="#8a5a2e" stroke-width="6"/><rect x="40" y="86" width="70" height="56" fill="#3a4a8a" ${SK}/><path d="M75 86 V142 M40 114 H110" ${SKt}/><path d="M84 98 l2 3 l3 0 l-2 2 l1 3 l-3 -2 l-3 2 l1 -3 l-2 -2 l3 0z" fill="#fff3b0"/><path d="M300 60 V92" ${SKt}/><path d="M286 92 H314 L306 108 H294Z" fill="#ffd84a" ${SK}/><path d="M0 200 H400" ${SK}/><rect x="250" y="120" width="110" height="10" fill="#8a5a2e" ${SKt}/>`;
+      ground = `<path d="M0 200 H400 V260 H0Z" fill="#b8865a" ${SK}/><path d="M0 222 H400 M0 244 H400 M70 200 V222 M210 222 V244 M330 200 V222 M140 244 V260" ${SKt}/>`; break;
+    case 'pyramid':
+      back = `<path d="M150 200 L270 60 L390 200Z" fill="#e8c27a" ${SK}/><path d="M190 154 H350 M170 178 H370 M210 130 H330 M230 106 H310 M250 82 H290" ${SKt}/><path d="M262 66 L270 50 L278 66Z" fill="#f2c02f" ${SKt}/><path d="M20 200 L80 120 L140 200Z" fill="#e0b46a" ${SK}/>`;
+      ground = `<path d="M0 200 H400 V260 H0Z" fill="#f0c88a" ${SK}/>`; break;
   }
-  const n = people.length, gap = Math.min(70, 340 / Math.max(n, 1)), sc = n > 4 ? .66 : .8;
-  const hasCenter = !!center && n >= 2;
-  const xs = people.map((_, i) => 200 - gap * (n - 1) / 2 + gap * i);
-  if (hasCenter && n >= 2) { xs[0] -= 18; xs[1] += 18 * (n === 2 ? 1 : 0); }
+  return { sky, stars, sun, back, ground };
+}
+
+/* ---------- 한 폭 ---------- */
+let svgSeq = 0;
+function paintingSvg(r) {
+  const { scene, tone, people, title, center } = r;
+  const pose = r.pose || 'facing';
+  const uid = 'pt' + (++svgSeq);
+  const bd = backdrop(scene);
+  const lay = layoutFor(pose, center, scene, tone);
+  const n = people.length, sBase = .86;
   const labels = [];
-  const figs = people.map((p, i) => {
-    const x = xs[i], s = i < 2 ? sc * 1.05 : sc, y = 236 - (i % 2) * 4, tilt = ((hashStr(p.name) % 9) - 4) * 1.2;
-    labels.push({ x, y: y - 110 * s, name: p.name, rot: -tilt * 1.5 });
-    const opts = scene === 'battle' && i < 2 && tone === 'serious' ? { prop: 'sword', hat: 'helmet' } : {};
-    return `<g transform="translate(${x} ${y - 122 * s}) scale(${s}) rotate(${tilt} 0 100)">${figureSvg(p, opts)}</g>`;
+  // 뒤쪽 관중 (나머지 사람들)
+  const others = people.slice(2);
+  const crowd = others.map((p, i) => {
+    const k = others.length, xs = k === 1 ? [330] : Array.from({ length: k }, (_, j) => 40 + (320 / (k - 1)) * j);
+    let x = xs[i]; if (Math.abs(x - 200) < 34 && k > 1) x += x < 200 ? -34 : 34;
+    const pl = { x, y: 206 - (i % 2) * 4, s: .5, rot: ((i % 3) - 1) * 6, arms: lay.cheer ? 'up' : undefined, face: lay.cheer ? 'happy' : undefined, flip: x > 200 ? 1 : 0 };
+    labels.push(labelOf(p, pl, .5));
+    return placeFig(p, pl, .5);
   }).join('');
-  const cx = n >= 2 ? (xs[0] + xs[1]) / 2 : 200;
-  const mid = hasCenter ? centerProp(center, cx, 232) : '';
-  const svg = `<svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(label || '전생의 한 장면')}">
+  const centerKind = center && center !== 'flag' ? center : '';
+  const mid = centerKind && lay.c ? centerProp(centerKind, lay.c[0], lay.c[1]) : '';
+  const front = lay.front ? centerProp(lay.front, lay.c[0], lay.c[1]) : '';
+  const aFig = placeFig(people[0], lay.a, sBase), bFig = placeFig(people[1], lay.b, sBase);
+  labels.unshift(labelOf(people[0], lay.a, sBase), labelOf(people[1], lay.b, sBase));
+  const fx = lay.fx ? lay.fx() : '';
+  const svg = `<svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(title || '전생의 한 장면')}">
     <defs>
       <filter id="${uid}w" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="2" seed="11" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/></filter>
       <filter id="${uid}f" x="0" y="0" width="100%" height="100%">
@@ -513,10 +704,16 @@ function paintingSvg(scene, tone, people, label, center) {
       <radialGradient id="${uid}v" cx=".5" cy=".5" r=".75"><stop offset=".6" stop-color="#2a1806" stop-opacity="0"/><stop offset="1" stop-color="#2a1806" stop-opacity=".45"/></radialGradient>
       <pattern id="${uid}c" width="4" height="4" patternUnits="userSpaceOnUse"><path d="M0 0 H4 M0 0 V4" stroke="#000" stroke-opacity=".05" stroke-width=".6"/></pattern>
     </defs>
-    <g filter="url(#${uid}f)"><g filter="url(#${uid}w)"><rect width="400" height="260" fill="${sky}"/>${stars}${sun}${back}${ground}${mid}${figs}</g></g>
+    <g filter="url(#${uid}f)"><g filter="url(#${uid}w)"><rect width="400" height="260" fill="${bd.sky}"/>${bd.stars}${bd.sun}${bd.back}${bd.ground}${crowd}${mid}${aFig}${bFig}${front}${fx}</g></g>
     <rect width="400" height="260" fill="url(#${uid}c)"/><rect width="400" height="260" fill="url(#${uid}v)"/>
   </svg>`;
-  return { svg, labels: n <= 6 ? labels : labels.slice(0, 2) };
+  // 이름표: 액자 안으로 모으고, 겹치면 뒤쪽 사람 것부터 생략
+  const kept = [];
+  labels.forEach((l, i) => {
+    const c = { ...l, x: Math.min(380, Math.max(20, l.x)), y: Math.max(16, l.y) };
+    if (i < 2 || !kept.some(k => Math.abs(k.x - c.x) < 34 && Math.abs(k.y - c.y) < 16)) kept.push(c);
+  });
+  return { svg, labels: kept };
 }
 
 /* =========================================================
@@ -538,7 +735,7 @@ function generateBuiltin(people, seed, avoidTitle) {
     return { team: teamLabel(p.team), name: p.name.trim(), arc: arc.key, role: slot, trait: rng.pick(arc.ep) };
   });
   const v = { a: cast[0].name, b: cast[1].name };
-  return { title: sc.title, era: sc.era, scene: sc.scene, tone: sc.tone, center: sc.center || '', tag: sc.tag, quote: sc.quote, desc: fill(sc.desc, v), people: cast, source: 'builtin' };
+  return { title: sc.title, era: sc.era, scene: sc.scene, tone: sc.tone, center: sc.center || '', pose: sc.pose || 'facing', tag: sc.tag, quote: sc.quote, desc: fill(sc.desc, v), people: cast, source: 'builtin' };
 }
 
 /* =========================================================
@@ -553,9 +750,10 @@ const SYSTEM_PROMPT = `너는 '전생 체험관'의 이야기꾼이다. 회사 �
 async function generateAI(people, { apiKey, model, avoidTitle }) {
   const user = `등장인물(순서대로): ${JSON.stringify(people.map(p => ({ team: teamLabel(p.team), name: p.name.trim() })))}
 ${avoidTitle ? `직전 결과("${avoidTitle}")와는 완전히 다른 시대·장소·관계로.` : ''}
-그림 배경은 가장 어울리는 하나를 "scene"에: battle(전장·결투), clock(안개 도시·시계탑), palace(동양 궁궐·한옥·등불 거리), snow(설원·눈의 왕국), desert(사막·오아시스), library(바다 위 섬·탑), sea(항구·배).
-가운데 소품을 하나 고를 수 있으면 "center"에: ricecake(떡 접시), cat(고양이), pots(냄비), lunch(밥그릇), dragon(작은 용), map(보물지도), question(물음표), 없으면 "".
-JSON: {"title": "명화 제목(12자 이내)", "center": "...", "era": "장소 · 몇 년 전 (20자 이내)", "scene": "...", "tone": "serious 또는 funny", "tag": "관계 변화 꼬리표(예: 적국의 전사 → 평생의 맞수, 18자 이내)",
+그림 배경은 가장 어울리는 하나를 "scene"에: battle(들판·전장), arena(원형 경기장), clock(밤의 도시·시계탑), palace(한옥·등불 거리), indoor(실내·공방·부엌·시험장), forest(숲), snow(설원·산), desert(사막), pyramid(피라미드), library(바다 위 탑·폭풍), sea(항구·배).
+두 주인공의 동작 구도를 "pose"에: faceoff(칼끝 대치), facing(마주 보기), tug(줄다리기), chase(뒤쫓기), run(함께 달리기), collide(정면충돌 직전), shoulders(어깨 위에 올라타기), carry(업고 가기), jump(신나서 점프), recoil(깜짝 놀라 뒤로 젖히기), huddle(머리 맞대기), point(서로 삿대질), push(양쪽에서 밀기), aim(활 겨누기), blast(폭발에 날아가기), row(노 젓기), gesture(온몸 손짓), shout(함께 외치기), sneak(등 뒤에서 몰래).
+가운데 소품을 하나 고를 수 있으면 "center"에: ricecake(떡 접시), cat(고양이), pots(냄비), lunch(밥그릇), dragon(작은 용), map(보물지도), question(물음표), well(우물), books(날아다니는 책), fire(불길), block(큰 돌), acorns(도토리 더미), boom(폭발), easel(그림판), ball(공), bear(곰), 없으면 "".
+JSON: {"title": "명화 제목(12자 이내)", "center": "...", "pose": "...", "era": "장소 · 몇 년 전 (20자 이내)", "scene": "...", "tone": "serious 또는 funny", "tag": "관계 변화 꼬리표(예: 적국의 전사 → 평생의 맞수, 18자 이내)",
  "quote": "“ ”로 감싼 강렬한 대사 한 줄(22자 이내)", "desc": "장면 설명 1~2문장(합쳐서 90자 이내)",
  "people": [{"name": "이름", "team": "팀명", "role": "전생 신분(12자 이내, 예: 북국의 전사)", "trait": "그 팀의 결을 담은 짧은 명사구(8자 이내, 예: 묵묵함, 남다른 색감)"}]}`;
   const controller = new AbortController();
@@ -572,7 +770,7 @@ JSON: {"title": "명화 제목(12자 이내)", "center": "...", "era": "장소 �
     if (!o.title || !o.quote || !o.desc) throw new Error('응답 형식이 올바르지 않아요');
     const list = Array.isArray(o.people) ? o.people : [];
     return {
-      title: String(o.title), era: String(o.era || ''), scene: SCENE_KEYS.includes(o.scene) ? o.scene : 'clock', tone: o.tone === 'funny' ? 'funny' : 'serious', center: CENTERS.includes(o.center) ? o.center : '',
+      title: String(o.title), era: String(o.era || ''), scene: SCENE_KEYS.includes(o.scene) ? o.scene : 'clock', tone: o.tone === 'funny' ? 'funny' : 'serious', center: CENTERS.includes(o.center) ? o.center : '', pose: POSES.includes(o.pose) ? o.pose : 'facing',
       tag: String(o.tag || ''), quote: String(o.quote), desc: String(o.desc), source: 'ai', model,
       people: people.map((p, i) => { const hit = list.find(x => x && x.name === p.name.trim()) || list[i] || {}; const arc = detectArchetype(p.team); return { team: teamLabel(p.team), name: p.name.trim(), arc: arc.key, role: String(hit.role || '그 자리에 있던 동행'), trait: String(hit.trait || arc.ep[0]) }; })
     };
@@ -732,7 +930,7 @@ function renderResult(r, { notice = '', shared = false } = {}) {
 }
 
 function paintHtml(r) {
-  const { svg, labels } = paintingSvg(r.scene, r.tone, r.people, r.title, r.center);
+  const { svg, labels } = paintingSvg(r);
   return svg + labels.map(l => `<span class="scrawl" style="left:${(l.x / 400 * 100).toFixed(2)}%;top:${(l.y / 260 * 100).toFixed(2)}%;transform:translate(-50%,-100%) rotate(${l.rot.toFixed(1)}deg)">${esc(l.name)}</span>`).join('');
 }
 
@@ -769,7 +967,7 @@ async function saveImage(r, btn) {
   try {
     try { await document.fonts.ready; } catch {}
     const W = 1080, P = 90, serif = '"Gowun Batang", serif', latin = '"Cormorant Garamond", serif';
-    const pt = paintingSvg(r.scene, r.tone, r.people, r.title, r.center);
+    const pt = paintingSvg(r);
     const painting = await loadSvg(pt.svg);
     try { await document.fonts.load('40px "Nanum Pen Script"'); } catch {}
     const faces = await Promise.all(r.people.map(p => loadSvg(portraitSvg(p), 136, 136).catch(() => null)));
@@ -870,13 +1068,13 @@ async function unpack(str) {
   return JSON.parse(new TextDecoder().decode(bytes));
 }
 async function shareUrl(r) {
-  const o = { v: 4, t: r.title, e: r.era, k: r.scene, n: r.tone, c: r.center || '', g: r.tag, q: r.quote, d: r.desc, o: r.source, m: r.model || '', p: r.people.map(p => [p.team, p.name, p.arc, p.role, p.trait || '']) };
+  const o = { v: 4, t: r.title, e: r.era, k: r.scene, n: r.tone, c: r.center || '', po: r.pose || '', g: r.tag, q: r.quote, d: r.desc, o: r.source, m: r.model || '', p: r.people.map(p => [p.team, p.name, p.arc, p.role, p.trait || '']) };
   return `${location.origin}${location.pathname}#r=${await pack(o)}`;
 }
 function fromShared(o) {
   if (!o || o.v !== 4 || !Array.isArray(o.p) || !o.t) return null;
   const S = x => String(x ?? '');
-  return { title: S(o.t), era: S(o.e), scene: SCENE_KEYS.includes(o.k) ? o.k : 'clock', tone: o.n === 'funny' ? 'funny' : 'serious', center: CENTERS.includes(o.c) ? o.c : '', tag: S(o.g), quote: S(o.q), desc: S(o.d), source: o.o === 'ai' ? 'ai' : 'builtin', model: S(o.m),
+  return { title: S(o.t), era: S(o.e), scene: SCENE_KEYS.includes(o.k) ? o.k : 'clock', tone: o.n === 'funny' ? 'funny' : 'serious', center: CENTERS.includes(o.c) ? o.c : '', pose: POSES.includes(o.po) ? o.po : 'facing', tag: S(o.g), quote: S(o.q), desc: S(o.d), source: o.o === 'ai' ? 'ai' : 'builtin', model: S(o.m),
     people: o.p.slice(0, MAX).map(([team, name, arc, role, trait]) => ({ team: S(team), name: S(name), arc: S(arc), role: S(role), trait: S(trait) })) };
 }
 
