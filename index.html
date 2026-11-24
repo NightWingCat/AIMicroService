@@ -1,0 +1,1129 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>전생 동료 극장</title>
+<meta name="description" content="팀명과 이름만 넣으면, 우리가 어느 생에서 어떤 인연으로 같은 일을 했는지 한 편의 전생 단편 시나리오로 엮어 드립니다." />
+<meta property="og:title" content="전생 동료 극장" />
+<meta property="og:description" content="우리 팀은 어느 생에서 같은 일을 했을까? 팀명과 이름으로 엮는 전생 단편 시나리오." />
+<meta name="theme-color" content="#f5efe3" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='6' width='52' height='52' rx='8' fill='%23b4412c'/%3E%3Ctext x='32' y='45' font-size='34' text-anchor='middle' fill='white' font-family='serif'%3E緣%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<style>
+  :root {
+    --bg: #f5efe3;
+    --paper: #fffaf1;
+    --paper-2: #fbf4e6;
+    --ink: #1f1a14;
+    --ink-2: #554b3f;
+    --ink-3: #8b8070;
+    --line: #e4d9c5;
+    --line-2: #d6c8ae;
+    --accent: #b4412c;
+    --accent-2: #9c3522;
+    --accent-soft: #f6e1d8;
+    --gold: #94742c;
+    --chip: #f0e6d3;
+    --focus: rgba(180, 65, 44, .28);
+    --shadow: 0 1px 2px rgba(70, 45, 10, .05), 0 10px 30px rgba(70, 45, 10, .08);
+    --serif: "Gowun Batang", "Nanum Myeongjo", "AppleMyungjo", serif;
+    --sans: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #13110e;
+      --paper: #1c1915;
+      --paper-2: #221e19;
+      --ink: #f2eadb;
+      --ink-2: #c7bba7;
+      --ink-3: #8f8574;
+      --line: #322c24;
+      --line-2: #463e33;
+      --accent: #dc6a4f;
+      --accent-2: #e98168;
+      --accent-soft: #3a2119;
+      --gold: #cfa95a;
+      --chip: #29241e;
+      --focus: rgba(220, 106, 79, .35);
+      --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 32px rgba(0, 0, 0, .35);
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--sans); font-size: 15px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  button, input, select { font: inherit; color: inherit; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 40px 16px 80px; }
+
+  /* Header */
+  header.hero { text-align: center; margin-bottom: 28px; }
+  .seal {
+    display: inline-grid; place-items: center; width: 52px; height: 52px; border-radius: 10px;
+    background: var(--accent); color: #fff; font-family: var(--serif); font-size: 30px; font-weight: 700;
+    transform: rotate(-4deg); box-shadow: 0 6px 16px rgba(180, 65, 44, .25); margin-bottom: 14px;
+  }
+  .hero h1 { font-family: var(--serif); font-size: clamp(28px, 6vw, 38px); margin: 0; letter-spacing: -.5px; }
+  .hero p { color: var(--ink-2); margin: 8px 0 0; }
+  .hero .rules { margin-top: 12px; display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+  .tag { font-size: 12px; color: var(--ink-3); background: var(--chip); border-radius: 999px; padding: 3px 10px; }
+
+  /* Panels */
+  .panel {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 16px;
+    box-shadow: var(--shadow); padding: 20px; margin-bottom: 16px;
+  }
+  .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+  .panel-title { font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+  .step { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: var(--paper); font-size: 12px; }
+  .muted { color: var(--ink-3); font-size: 13px; }
+
+  /* AI key */
+  details.ai summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  details.ai summary::-webkit-details-marker { display: none; }
+  .mode-badge { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--chip); color: var(--ink-2); white-space: nowrap; }
+  .mode-badge.on { background: var(--accent-soft); color: var(--accent); }
+  .ai-body { margin-top: 14px; display: grid; gap: 10px; }
+  .ai-row { display: grid; grid-template-columns: 1fr 170px; gap: 8px; }
+  .check { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-2); }
+  .check input { accent-color: var(--accent); }
+
+  /* Inputs */
+  .field {
+    width: 100%; height: 44px; padding: 0 12px; border-radius: 10px;
+    border: 1px solid var(--line-2); background: var(--paper-2); outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .field::placeholder { color: var(--ink-3); }
+  .field:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--focus); }
+
+  .rows { display: grid; gap: 10px; }
+  .row { display: grid; grid-template-columns: 28px 1fr 1fr 40px; gap: 8px; align-items: start; }
+  .row .num { height: 44px; display: grid; place-items: center; font-family: var(--serif); color: var(--ink-3); font-weight: 700; }
+  .row .trait { grid-column: 2 / 4; font-size: 12px; color: var(--gold); margin-top: -4px; min-height: 0; }
+  .icon-btn {
+    width: 40px; height: 44px; border-radius: 10px; border: 1px solid var(--line-2); background: transparent;
+    cursor: pointer; color: var(--ink-3); display: grid; place-items: center; transition: .15s;
+  }
+  .icon-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .icon-btn:disabled { opacity: .35; cursor: not-allowed; }
+
+  .row-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .samples { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line-2); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chip {
+    border: 1px solid var(--line-2); background: var(--paper-2); border-radius: 999px; padding: 6px 12px;
+    font-size: 13px; cursor: pointer; transition: .15s; white-space: nowrap;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .chip.combo { background: var(--chip); border-style: dashed; }
+
+  .btn {
+    height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid var(--line-2); background: var(--paper);
+    cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: .15s;
+  }
+  .btn:hover { border-color: var(--ink-2); }
+  .btn.ghost { border-style: dashed; color: var(--ink-2); }
+  .btn.primary {
+    width: 100%; height: 54px; font-size: 16px; border: 0; background: var(--accent); color: #fff;
+    box-shadow: 0 8px 20px rgba(180, 65, 44, .25); font-family: var(--serif); letter-spacing: .5px;
+  }
+  .btn.primary:hover { background: var(--accent-2); }
+  .btn.primary:disabled { opacity: .7; cursor: progress; }
+  .btn:disabled { cursor: not-allowed; opacity: .5; }
+
+  .error { color: var(--accent); font-size: 13px; margin-top: 10px; min-height: 0; }
+
+  /* Result card */
+  #result { margin-top: 28px; scroll-margin-top: 16px; }
+  .shared-banner { text-align: center; font-size: 13px; color: var(--ink-2); background: var(--chip); border-radius: 10px; padding: 8px 12px; margin-bottom: 12px; }
+  .card {
+    position: relative; background: var(--paper); border-radius: 18px; padding: 34px 30px 28px;
+    border: 1px solid var(--line); box-shadow: var(--shadow); overflow: hidden;
+    animation: rise .5s ease both;
+  }
+  .card::before {
+    content: ""; position: absolute; inset: 10px; border: 1px solid var(--line-2); border-radius: 12px; pointer-events: none;
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .card .stamp {
+    position: absolute; top: 24px; right: 24px; width: 46px; height: 46px; border-radius: 8px;
+    border: 2px solid var(--accent); color: var(--accent); display: grid; place-items: center;
+    font-family: var(--serif); font-weight: 700; font-size: 24px; transform: rotate(6deg); opacity: .85;
+  }
+  .era { font-size: 12px; letter-spacing: 2px; color: var(--gold); font-weight: 600; }
+  .card h2 { font-family: var(--serif); font-size: clamp(22px, 5vw, 28px); line-height: 1.35; margin: 6px 56px 14px 0; word-break: keep-all; }
+  .snapshot {
+    font-family: var(--serif); font-size: 16px; color: var(--ink-2); padding: 12px 16px; border-left: 3px solid var(--accent);
+    background: var(--paper-2); border-radius: 0 10px 10px 0; margin: 0 0 22px; word-break: keep-all;
+  }
+  .label { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; color: var(--ink-3); margin: 0 0 10px; }
+  .cast { list-style: none; padding: 0; margin: 0 0 22px; display: grid; gap: 10px; }
+  .cast li { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: baseline; }
+  .who { font-weight: 700; white-space: nowrap; font-size: 14px; }
+  .who .team { color: var(--ink-3); font-weight: 500; }
+  .role { font-family: var(--serif); color: var(--ink); word-break: keep-all; }
+  .story { font-family: var(--serif); font-size: 16px; line-height: 1.95; margin: 0 0 18px; word-break: keep-all; }
+  .epilogue { font-family: var(--serif); text-align: center; color: var(--accent); font-size: 15px; padding-top: 16px; border-top: 1px dashed var(--line-2); word-break: keep-all; }
+  .source { text-align: right; font-size: 11px; color: var(--ink-3); margin-top: 14px; }
+
+  .actions { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
+  .actions .btn.reroll { height: 50px; font-family: var(--serif); font-size: 15px; background: var(--ink); color: var(--paper); border: 0; }
+  .actions .btn.reroll:hover { opacity: .9; }
+  .share-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .share-grid .btn { font-size: 13px; padding: 0 8px; }
+
+  .summary-box { margin-top: 12px; }
+  .summary-box textarea {
+    width: 100%; min-height: 130px; resize: vertical; padding: 12px; border-radius: 10px; border: 1px solid var(--line-2);
+    background: var(--paper-2); font-family: var(--sans); font-size: 13px; line-height: 1.6; color: var(--ink);
+  }
+
+  .loading { text-align: center; padding: 40px 16px; color: var(--ink-2); font-family: var(--serif); }
+  .spinner { width: 34px; height: 34px; margin: 0 auto 12px; border-radius: 50%; border: 3px solid var(--line-2); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+    background: var(--ink); color: var(--paper); padding: 10px 16px; border-radius: 999px; font-size: 14px;
+    transition: .25s; z-index: 10; max-width: calc(100% - 32px); text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  footer { text-align: center; color: var(--ink-3); font-size: 12px; margin-top: 40px; line-height: 1.8; }
+
+  @media (max-width: 560px) {
+    .wrap { padding-top: 28px; }
+    .panel { padding: 16px; }
+    .row { grid-template-columns: 1fr 1fr 40px; }
+    .row .num { display: none; }
+    .row .trait { grid-column: 1 / 3; }
+    .ai-row { grid-template-columns: 1fr; }
+    .card { padding: 28px 20px 22px; }
+    .card .stamp { top: 18px; right: 18px; width: 40px; height: 40px; font-size: 20px; }
+    .cast li { grid-template-columns: 1fr; gap: 0; }
+    .share-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="seal" aria-hidden="true">緣</div>
+    <h1>전생 동료 극장</h1>
+    <p>팀명과 이름만 적어 주세요. 우리가 어느 생에서, 어떤 인연으로<br />같은 일을 했는지 한 편의 단편으로 엮어 드릴게요.</p>
+    <div class="rules">
+      <span class="tag">연애·궁합 없음</span>
+      <span class="tag">개인정보 불필요</span>
+      <span class="tag">누구도 깎아내리지 않기</span>
+    </div>
+  </header>
+
+  <!-- AI key -->
+  <section class="panel">
+    <details class="ai" id="aiDetails">
+      <summary>
+        <span class="panel-title">✦ OpenAI API 키 <span class="muted" style="font-weight:400">(선택)</span></span>
+        <span class="mode-badge" id="modeBadge">내장 생성기 모드</span>
+      </summary>
+      <div class="ai-body">
+        <div class="ai-row">
+          <input class="field" id="apiKey" type="password" placeholder="sk-... 키가 있으면 실제 AI로 생성해요" autocomplete="off" spellcheck="false" />
+          <input class="field" id="model" list="modelList" value="gpt-4o-mini" aria-label="모델" spellcheck="false" />
+          <datalist id="modelList">
+            <option value="gpt-4o-mini"></option>
+            <option value="gpt-4.1-mini"></option>
+            <option value="gpt-4o"></option>
+            <option value="gpt-5-mini"></option>
+          </datalist>
+        </div>
+        <label class="check"><input type="checkbox" id="rememberKey" /> 이 브라우저에만 키 저장하기</label>
+        <div class="muted">키는 이 브라우저에서 OpenAI(api.openai.com)로만 바로 전송되며, 다른 서버에는 보내지 않아요. 키가 없거나 호출에 실패하면 내장 생성기가 즉시 대신 엮어 드려요.</div>
+      </div>
+    </details>
+  </section>
+
+  <!-- Cast form -->
+  <section class="panel">
+    <div class="panel-head">
+      <div class="panel-title"><span class="step">1</span> 등장인물</div>
+      <span class="muted" id="countLabel">1명</span>
+    </div>
+    <div class="rows" id="rows"></div>
+    <div class="row-actions">
+      <button class="btn ghost" id="addRow" type="button">＋ 인물 추가</button>
+      <button class="btn ghost" id="clearRows" type="button">전체 비우기</button>
+    </div>
+    <div class="samples">
+      <div class="muted">빠른 샘플 입력</div>
+      <div class="chips" id="chips"></div>
+    </div>
+    <datalist id="teamList"></datalist>
+  </section>
+
+  <button class="btn primary" id="generate" type="button">✦ 전생의 인연 엮기</button>
+  <div class="error" id="error" role="alert"></div>
+
+  <section id="result" aria-live="polite"></section>
+
+  <footer>
+    전생 동료 극장은 재미를 위한 창작 서비스예요. 모든 이야기는 지어낸 것이며,<br />입력한 팀명·이름은 이 브라우저 밖으로 저장되지 않아요.
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   1. 한국어 조사 처리
+   ========================================================= */
+const JOSA = {
+  '은': ['은', '는'], '는': ['은', '는'], '이': ['이', '가'], '가': ['이', '가'],
+  '을': ['을', '를'], '를': ['을', '를'], '과': ['과', '와'], '와': ['과', '와'],
+  '아': ['아', '야'], '야': ['아', '야'], '이라': ['이라', '라'], '라': ['이라', '라'],
+  '으로': ['으로', '로'], '로': ['으로', '로'], '도': ['도', '도'], '의': ['의', '의']
+};
+function lastJong(word) {
+  const s = String(word).replace(/[\s\)\]\}"'”’.!?~]+$/g, '');
+  const ch = s.charAt(s.length - 1);
+  const code = ch.charCodeAt(0);
+  if (code >= 0xac00 && code <= 0xd7a3) return (code - 0xac00) % 28;
+  if (/[0-9]/.test(ch)) return { 0: 21, 1: 8, 2: 0, 3: 16, 4: 0, 5: 0, 6: 1, 7: 8, 8: 8, 9: 0 }[ch];
+  if (/[lmnr]/i.test(ch)) return /[l]/i.test(ch) ? 8 : 4;
+  if (/[a-z]/i.test(ch)) return 0;
+  return -1;
+}
+function josa(word, j) {
+  const pair = JOSA[j];
+  if (!pair) return j;
+  const jong = lastJong(word);
+  if (jong === -1) return pair[0] === pair[1] ? pair[0] : `${pair[0]}(${pair[1]})`;
+  if (pair[0] === '으로') return (jong === 0 || jong === 8) ? '로' : '으로';
+  return jong > 0 ? pair[0] : pair[1];
+}
+function fill(tpl, vars) {
+  return tpl.replace(/\{(\w+)(?:\|([^}]+))?\}/g, (_, key, j) => {
+    const v = vars[key] ?? '';
+    return j ? v + josa(v, j) : v;
+  });
+}
+function joinKo(list, conj = '과') {
+  if (list.length <= 1) return list[0] || '';
+  if (list.length === 2) return list[0] + josa(list[0], conj) + ' ' + list[1];
+  return list.slice(0, -1).join(', ') + ', ' + list[list.length - 1];
+}
+
+/* =========================================================
+   2. 팀 성격 → 전생 원형(archetype)
+   ========================================================= */
+const ARCHETYPES = [
+  { key: 'sales', test: /영업|세일즈|sales|\bbd\b|사업개발|파트너|제휴|어카운트|비즈니스/, trait: '관계 · 신뢰 · 협상 · 발품', virtue: '신뢰',
+    roles: ['비단길을 오가며 낯선 나라와 거래를 트던 대상단 행수', '사람과 사람 사이를 이어 주던 장터 객주', '말 한마디로 막힌 거래를 풀어내던 역관', '먼 섬까지 봇짐을 지고 신의를 지키던 보부상'],
+    scenes: ['비단 꾸러미', '객주집 마루의 주판', '닳은 봇짐과 지팡이', '도장이 찍힌 거래 문서'],
+    contribs: ['{p|은} 발품을 팔아 먼 고을까지 찾아가, 굳게 닫혀 있던 문을 신뢰로 열어 냈다.', '{p|은} 서로 다른 말을 쓰는 사람들 사이에서, 양쪽 모두 고개를 끄덕일 약조를 만들어 냈다.', '{p|은} 한 번 맺은 약속은 끝까지 지킨다는 평판 하나로, 꼭 필요한 사람과 물건을 모아 왔다.'],
+    meets: ['{p|은} 그날도 봇짐을 지고 고개를 넘어 막 장터에 닿은 참이었다.', '{p|은} 그날도 객주집 마루에서 주판알을 튕기며 손님을 맞고 있었다.'],
+    titleWords: ['비단 꾸러미', '보부상의 봇짐', '약조', '주판'] },
+
+  { key: 'qa', test: /\bqa\b|품질|테스트|test|검수|검증|quality/, trait: '꼼꼼함 · 검증 · 안전 · 끈기', virtue: '끈기',
+    roles: ['성문을 나서는 모든 물건을 한 번 더 살피던 검수관', '다리를 놓기 전 돌 하나하나를 두드려 보던 석수', '수라간에 오르는 모든 음식을 먼저 살피던 검식관', '출항 전 밧줄 매듭을 빠짐없이 확인하던 선단 갑판장'],
+    scenes: ['돌을 두드리는 작은 망치', '검수 도장이 찍힌 꾸러미', '가지런히 묶인 밧줄 매듭', '빼곡히 표시된 점검 목록'],
+    contribs: ['{p|은} 모두가 끝났다고 말할 때 한 번 더 두드려 보고, 숨어 있던 금 간 돌을 찾아냈다.', '{p|은} 이상하다 싶은 곳을 끝까지 파고들어, 큰 사고가 될 뻔한 틈을 미리 메웠다.', '{p|은} 백 번을 되풀이해 확인한 뒤에야 비로소 출발 깃발을 올렸다.'],
+    meets: ['{p|은} 그날도 성문 앞에서 꾸러미를 하나하나 열어 보고 있었다.', '{p|은} 그날도 작은 망치로 다릿돌을 두드리며 소리를 듣고 있었다.'],
+    titleWords: ['검수 도장', '작은 망치', '매듭', '점검 목록'] },
+
+  { key: 'data', test: /데이터|data|분석|analytic|\bai\b|\bml\b|머신러닝|인공지능|리서치|research|인사이트|\bbi\b|통계/, trait: '관찰 · 패턴 · 예측 · 근거', virtue: '관찰력',
+    roles: ['구름의 모양으로 내일의 날씨를 읽던 관상감 측우관', '조수의 흐름을 기록해 물때를 맞히던 포구의 물때지기', '수천 권의 책을 엮어 지식의 지도를 그리던 집현전 학사', '별자리의 되풀이를 세어 절기를 정하던 역법가'],
+    scenes: ['측우기에 고인 빗물', '숫자가 빼곡한 관측 일지', '손때 묻은 책 더미', '별자리를 그린 성도'],
+    contribs: ['{p|은} 몇 해 치 관측 일지를 겹쳐 보다가, 아무도 몰랐던 되풀이의 무늬를 찾아냈다.', '{p|은} 짐작 대신 근거를 내밀어, 모두가 같은 숫자를 보며 결정하게 했다.', '{p|은} 구름과 바람의 기록을 읽어, 다가올 일을 한발 먼저 내다보았다.'],
+    meets: ['{p|은} 그날도 측우기 앞에 쪼그려 앉아 빗물의 눈금을 적고 있었다.', '{p|은} 그날도 서고 깊은 곳에서 오래된 기록을 대조하고 있었다.'],
+    titleWords: ['측우기', '관측 일지', '성도', '물때'] },
+
+  { key: 'infra', test: /인프라|infra|devops|\bsre\b|보안|security|네트워크|network|\bit\b|클라우드|cloud|정보보호|전산/, trait: '견고함 · 수호 · 안정 · 대비', virtue: '든든함',
+    roles: ['성벽의 무너진 곳을 밤새 메우던 성곽 수비대장', '물길과 둑을 지켜 마을을 큰물에서 구하던 제방 관리관', '봉수대를 이어 나라 끝까지 소식이 닿게 하던 봉수 감독관', '성문 열쇠를 지키며 드나드는 이를 살피던 수문장'],
+    scenes: ['성벽에서 내려온 횃불', '둑을 메울 모래 가마니', '봉수대의 부싯돌', '육중한 성문 열쇠'],
+    contribs: ['{p|은} 큰비가 쏟아지는 밤에도 둑을 지켜, 아무도 모르게 마을을 무사히 지켜 냈다.', '{p|은} 성벽의 약한 곳을 미리 찾아 보강해, 어떤 바람에도 무너지지 않게 했다.', '{p|은} 끊어진 봉수대를 다시 이어, 먼 곳의 소식이 하루 만에 닿게 만들었다.'],
+    meets: ['{p|은} 그날도 성벽 위를 돌며 횃불을 하나하나 살피고 있었다.', '{p|은} 그날도 둑 위에 서서 불어나는 물길을 지켜보고 있었다.'],
+    titleWords: ['성벽의 횃불', '둑', '빗장', '봉수대'] },
+
+  { key: 'sound', test: /사운드|sound|음악|오디오|audio|bgm|작곡|음향/, trait: '울림 · 장단 · 분위기', virtue: '장단 감각',
+    roles: ['궁중 연회의 장단을 맞추던 장악원 악공', '소리를 들어 가며 범종을 빚던 주종 장인', '바람 소리만 듣고도 피리를 깎던 대금 장인'],
+    scenes: ['가야금 줄 위의 손끝', '갓 주조한 범종', '대나무 피리'],
+    contribs: ['{p|은} 장단 하나를 바꾸어, 모두의 발걸음이 같은 박자로 움직이게 했다.', '{p|은} 소리의 울림을 다듬어, 먼 마을까지 같은 마음이 전해지게 했다.'],
+    meets: ['{p|은} 그날도 처마 밑에서 줄을 고르며 바람 소리를 듣고 있었다.'],
+    titleWords: ['범종', '가야금 장단', '대나무 피리'] },
+
+  { key: 'writing', test: /시나리오|스토리|라이터|writer|작가|에디터|editor|카피|copy|편집|번역|로컬|locali|문서|퍼블리싱|출판/, trait: '언어 · 서사 · 기록 · 맥락', virtue: '문장력',
+    roles: ['흩어진 전설을 모아 한 권으로 엮던 사관', '밤새 이야기를 지어 장터에 풀어놓던 전기수', '먼 나라의 책을 우리말로 옮기던 사역원 학사', '한 글자 한 글자 정성껏 경전을 베끼던 필경사'],
+    scenes: ['먹물이 마르지 않은 원고', '촛불 아래 펼쳐진 필사본', '두 나라 말이 나란히 적힌 책장'],
+    contribs: ['{p|은} 저마다의 이야기를 한 줄로 꿰어, 모두가 기억할 하나의 서사로 남겼다.', '{p|은} 꼭 맞는 단어 하나를 찾아, 엇갈리던 마음들을 같은 문장 위에 올려놓았다.'],
+    meets: ['{p|은} 그날도 촛불 아래에서 마지막 문장을 고쳐 쓰고 있었다.'],
+    titleWords: ['필사본', '먹물', '이야기꾼의 밤'] },
+
+  { key: 'art', test: /아트|\bart\b|원화|일러스트|그림|컨셉|concept|3d|모델링|애니|anima|이펙트|vfx|\bta\b|캐릭터/, trait: '상상 · 형상 · 생동감', virtue: '상상력',
+    roles: ['법당 벽에 신화 속 짐승을 그려 넣던 화승', '나무를 깎아 살아 움직일 듯한 탈을 빚던 탈 조각장', '그림자 인형에 숨을 불어넣던 그림자극 장인', '불꽃의 빛깔을 조합하던 화약 장인'],
+    scenes: ['벽화를 그리던 붓과 안료', '나무 탈과 조각칼', '가죽으로 오린 그림자 인형', '오색 화약 봉지'],
+    contribs: ['{p|은} 아무도 본 적 없는 모습을 그려 내, 모두가 같은 장면을 떠올리게 만들었다.', '{p|은} 칼끝으로 나무를 깎아, 멈춰 있던 것에 살아 있는 표정을 입혔다.', '{p|은} 빛과 그림자의 방향을 바꾸어, 평범한 장면을 잊히지 않는 순간으로 만들었다.'],
+    meets: ['{p|은} 그날도 법당 벽 앞 비계 위에서 붓을 놀리고 있었다.', '{p|은} 그날도 나뭇조각을 깎으며 새로운 얼굴을 찾고 있었다.'],
+    titleWords: ['벽화', '나무 탈', '그림자 인형', '오색 불꽃'] },
+
+  { key: 'design', test: /디자인|디자이너|design|\bux\b|\bui\b|\bgui\b|브랜딩|\bbx\b|그래픽|비주얼|visual|프로덕트디자인/, trait: '색채 · 비율 · 형태 · 직관', virtue: '미감',
+    roles: ['한 줄의 선으로 계절을 그려 내던 도화서 화공', '실의 빛깔을 겹쳐 하늘빛을 짜내던 직조 장인', '흙의 결을 손끝으로 읽어 그릇을 빚던 도예가', '돌 하나 놓을 자리까지 비율로 헤아리던 정원 설계자', '궁궐 처마의 빛깔을 고르던 단청장'],
+    scenes: ['물감이 번진 화첩', '오색 실이 걸린 베틀', '가마에서 막 꺼낸 청자', '정원 설계를 그린 비단 도면', '단청 안료가 담긴 작은 종지들'],
+    contribs: ['{p|은} 한참을 바라보다가, 단 하나의 빛깔을 바꾸어 전체의 분위기를 되살려 냈다.', '{p|은} 어수선하던 것들의 자리와 비율을 다시 매만져, 누구나 한눈에 알아보게 했다.', '{p|은} 손끝의 직감으로 모양을 다듬어, 쓰는 사람이 편안한 형태를 찾아냈다.', '{p|은} 붓을 들어, 모두가 머릿속에만 품고 있던 장면을 한 장의 그림으로 옮겼다.'],
+    meets: ['{p|은} 그날도 볕이 드는 툇마루에서 물감을 개고 있었다.', '{p|은} 그날도 베틀 앞에 앉아 어울리는 실 빛깔을 고르고 있었다.'],
+    titleWords: ['오색 실', '화첩', '청자의 곡선', '단청'] },
+
+  { key: 'legal', test: /법무|legal|컴플라이언스|compliance|감사|리스크|risk|준법/, trait: '원칙 · 공정 · 신중함', virtue: '원칙',
+    roles: ['옛 법전을 펼쳐 시비를 가리던 형조 율관', '마을의 약조문을 다듬던 향약 서기', '다툼을 조용히 중재하던 고을의 어른'],
+    scenes: ['펼쳐진 낡은 법전', '인장이 찍힌 약조문', '판결문을 쓰던 붓과 벼루'],
+    contribs: ['{p|은} 옛 법전을 뒤져, 모두를 지켜 줄 단단한 원칙 하나를 찾아냈다.', '{p|은} 어느 쪽에도 기울지 않는 문장으로 약조문을 다듬어, 다툼의 불씨를 미리 껐다.'],
+    meets: ['{p|은} 그날도 관아 서고에서 법전의 낡은 장을 넘기고 있었다.'],
+    titleWords: ['법전', '약조문', '인장'] },
+
+  { key: 'finance', test: /재무|회계|경영지원|총무|finance|재정|세무|자금|구매|어카운팅|accounting|정산/, trait: '균형 · 신중함 · 책임 · 살림', virtue: '꼼꼼한 셈',
+    roles: ['한 푼의 셈도 허투루 넘기지 않던 호조 회계관', '곳간 열쇠를 지키며 살림을 꾸리던 대갓집 곳간지기', '흉년에 대비해 곡식을 비축하던 상평창 관리', '저울 눈금으로 공정함을 지키던 시전의 평시서 관원'],
+    scenes: ['가지런한 엽전 꾸러미', '곳간의 커다란 열쇠꾸러미', '수평을 이룬 천칭 저울', '곡식이 가득 담긴 볏섬'],
+    contribs: ['{p|은} 곳간의 셈을 처음부터 다시 맞춰, 무엇이 얼마나 남았는지 한 치의 오차 없이 밝혀냈다.', '{p|은} 흉년을 대비해 쌓아 둔 곡식을 꺼내, 일이 멈추지 않도록 든든히 받쳐 주었다.', '{p|은} 저울을 꺼내 들고, 모두가 납득할 공정한 몫을 나눠 주었다.'],
+    meets: ['{p|은} 그날도 곳간 앞에서 장부와 열쇠꾸러미를 챙기고 있었다.', '{p|은} 그날도 엽전을 세며 계절의 살림을 헤아리고 있었다.'],
+    titleWords: ['곳간 열쇠', '천칭', '엽전 꾸러미', '상평창'] },
+
+  { key: 'hr', test: /인사|\bhr\b|피플|people|채용|조직문화|컬처|culture|교육|인재|러닝|learning|온보딩|복지/, trait: '사람 · 성장 · 연결 · 돌봄', virtue: '따뜻한 안목',
+    roles: ['떠도는 이들에게 저마다 맞는 자리를 찾아 주던 객잔 주인', '젊은 수련생들을 가르치고 길러 내던 서원의 훈장', '마을 사람들의 사정을 두루 살피던 향약의 도약정', '길 잃은 나그네를 맞아들이던 산중 주막 주인'],
+    scenes: ['김이 오르는 찻주전자', '수련생 이름이 적힌 명패들', '느티나무 잎이 끼워진 명부', '객잔 문간의 환한 등불'],
+    contribs: ['{p|은} 저마다의 재주를 먼저 알아보고, 각자에게 꼭 맞는 자리를 내어 주었다.', '{p|은} 지친 이들에게 따뜻한 국 한 그릇을 내어 주며, 다시 함께 걸을 힘을 북돋웠다.', '{p|은} 처음 보는 이들 사이에 다리를 놓아, 낯선 무리를 한 팀으로 묶어 냈다.'],
+    meets: ['{p|은} 그날도 객잔 문간에 등불을 걸며 오가는 이들을 맞이하고 있었다.', '{p|은} 그날도 서원 마루에서 수련생들의 이름을 하나하나 불러 주고 있었다.'],
+    titleWords: ['객잔의 등불', '느티나무', '서원', '따뜻한 국'] },
+
+  { key: 'cs', test: /\bcs\b|\bcx\b|고객|운영|커뮤니티|community|라이브|상담|지원|오퍼레이션|operation/, trait: '경청 · 응대 · 꾸준함 · 현장', virtue: '경청',
+    roles: ['주막 문간에서 길손들의 사정을 들어 주던 주막 주인', '안개 낀 강을 사람들을 무사히 건네주던 나루터 뱃사공', '지친 말과 사람을 돌보던 역참의 역리', '하룻밤도 불을 꺼뜨리지 않던 외딴섬 등대지기'],
+    scenes: ['김이 오르는 국밥 뚝배기', '나룻배의 낡은 노', '여물이 담긴 역참 바구니', '등대지기의 기름 등잔'],
+    contribs: ['{p|은} 찾아온 이들의 이야기를 끝까지 들어 주고, 정말 필요한 것이 무엇인지 가장 먼저 알아챘다.', '{p|은} 하룻밤도 불을 꺼뜨리지 않고 자리를 지켜, 길 잃은 배들이 돌아올 수 있게 했다.', '{p|은} 현장에서 들은 작은 목소리들을 모아, 무엇부터 고쳐야 할지 또렷하게 전해 주었다.'],
+    meets: ['{p|은} 그날도 나루터에서 마지막 배를 기다리는 사람들을 챙기고 있었다.', '{p|은} 그날도 주막 문간에서 지친 길손들에게 물 한 사발씩을 건네고 있었다.'],
+    titleWords: ['나룻배', '등댓불', '주막의 가마솥', '역참'] },
+
+  { key: 'marketing', test: /마케팅|marketing|홍보|\bpr\b|브랜드|brand|광고|그로스|growth|퍼포먼스|콘텐츠|content|sns|커뮤니케이션|소셜/, trait: '목소리 · 확산 · 공감 · 감각', virtue: '울림 있는 목소리',
+    roles: ['장터 한복판에서 이야기로 사람을 불러 모으던 이야기꾼', '봉화를 올려 소식을 산 너머로 보내던 봉수꾼', '꽹과리 하나로 장터 축제의 흥을 띄우던 풍물패 상쇠', '상단의 이름을 비단 깃발에 새겨 퍼뜨리던 깃발잡이'],
+    scenes: ['이야기꾼의 낡은 접부채', '봉화에 쓸 마른 쑥단', '붉은 술이 달린 꽹과리', '상단 이름을 수놓은 깃발'],
+    contribs: ['{p|은} 장터 한가운데 서서, 이 일을 사람들이 귀 기울일 이야기로 바꾸어 들려주었다.', '{p|은} 봉화를 올리듯 소식을 산 너머 마을까지 단숨에 퍼뜨렸다.', '{p|은} 사람들이 무엇에 웃고 어디서 발걸음을 멈추는지 먼저 알아채고, 바로 그 자리에 깃발을 꽂았다.'],
+    meets: ['{p|은} 그날도 장터 어귀에서 사람들을 불러 모으고 있었다.', '{p|은} 그날도 산마루 봉수대에서 바람의 방향을 읽고 있었다.'],
+    titleWords: ['봉화', '장터 이야기판', '펄럭이는 깃발', '꽹과리'] },
+
+  { key: 'planning', test: /기획|\bpm\b|\bpo\b|전략|사업|프로덕트|product|레벨|밸런스|plan|strategy|\bpmo\b/, trait: '구상 · 설계 · 조율 · 방향', virtue: '내다보는 눈',
+    roles: ['지도 한 장으로 원정의 길을 그리던 대상단 길잡이', '성의 구획을 가장 먼저 그려 놓던 축성 도감', '장기판 위에서 세 수 앞을 내다보던 책사', '잔치의 순서와 동선을 짜던 마을 잔치 도감'],
+    scenes: ['붉은 선이 그어진 낡은 지도', '바둑돌이 놓인 작전판', '깃발이 꽂힌 성곽 모형', '일정이 빼곡한 두루마리'],
+    contribs: ['{p|은} 흩어진 이야기를 한 장의 지도로 엮어, 어디서부터 걸어야 할지 길을 그었다.', '{p|은} 누가 무엇을 언제 맡을지 차례를 짜서, 엉켜 있던 일들의 실타래를 풀었다.', '{p|은} 세 걸음 앞의 갈림길을 미리 짚어, 모두가 같은 방향을 바라보게 했다.', '{p|은} 서로 다른 목소리를 모아 하나의 계획서로 다듬어 냈다.'],
+    meets: ['{p|은} 그날도 지도 위에 돌을 올려 가며 다음 길을 가늠하고 있었다.', '{p|은} 그날도 두루마리를 펴 놓고 일의 순서를 다시 짜고 있었다.'],
+    titleWords: ['낡은 지도', '작전판', '길잡이 별', '두루마리'] },
+
+  { key: 'lead', test: /대표|ceo|cto|cfo|coo|경영|임원|리더|lead|본부장|이사|사장|총괄|director|head/, trait: '방향 · 결단 · 책임 · 포용', virtue: '결단력',
+    roles: ['여러 상단을 한 깃발 아래 모은 대행수', '폭풍 속에서도 키를 놓지 않던 선단의 선장', '흩어진 마을을 하나로 묶은 고을의 좌장'],
+    scenes: ['큰 배의 키', '대행수의 깃발', '마을 회의를 알리는 북'],
+    contribs: ['{p|은} 모두가 머뭇거릴 때 먼저 키를 돌려, 배가 나아갈 방향을 정했다.', '{p|은} 각자의 재주를 믿고 맡겨, 흩어져 있던 힘이 한 방향으로 모이게 했다.'],
+    meets: ['{p|은} 그날도 뱃머리에 서서 먼 수평선을 살피고 있었다.'],
+    titleWords: ['선장의 키', '대행수의 깃발', '북소리'] },
+
+  { key: 'dev', test: /개발|dev|엔지니어|engineer|프론트|front|백엔드|back|서버|server|클라이언트|client|앱|app|플랫폼|platform|소프트웨어|software|프로그래|코딩|code|tech|테크|기술|모바일|웹|web|ios|android|게임플레이/, trait: '구조 · 원리 · 기록 · 정밀함', virtue: '정밀함',
+    roles: ['톱니 하나의 어긋남도 그냥 넘기지 않던 왕실 시계공', '밤새 별의 궤도를 숫자로 옮겨 적던 관상감 천문관', '불 앞에서 말없이 쇠를 두드려 뼈대를 세우던 대장장이', '한 글자의 오차도 없이 장부를 쌓아 올리던 기록관', '물길의 원리를 읽어 수차를 설계하던 장인'],
+    scenes: ['황동 톱니가 흩어진 작업대', '먹으로 빼곡한 천문 장부', '붉게 달아오른 모루', '물레방아의 설계 도면', '분해된 물시계의 부품들'],
+    contribs: ['{p|은} 말없이 장치를 뜯어 놓고, 어긋난 톱니부터 하나씩 바로잡았다.', '{p|은} 밤을 새워 지난 기록을 처음부터 다시 맞춰 보고, 엉킨 실마리의 시작점을 찾아냈다.', '{p|은} 무너지지 않을 뼈대부터 세워야 한다며 쇠를 달궈 단단한 이음쇠를 만들어 냈다.', '{p|은} 별의 움직임을 숫자로 풀어, 언제 무엇이 일어날지 정확히 짚어냈다.'],
+    meets: ['{p|은} 그날도 등잔 아래에서 장부의 마지막 줄을 맞추고 있었다.', '{p|은} 그날도 작업장 구석에서 멈춘 시계를 조용히 들여다보고 있었다.'],
+    titleWords: ['황동 톱니', '별의 장부', '쇠의 설계도', '혼천의'] }
+];
+const FALLBACK = { key: 'etc', trait: '성실 · 연결 · 꾸준함', virtue: '성실함',
+  roles: ['먼 길을 쉬지 않고 이어 달리던 역참의 파발꾼', '산길마다 이정표를 세우던 길 닦는 장인', '마을의 크고 작은 일을 두루 해결하던 손재주꾼', '새벽마다 우물가를 정비하던 우물지기'],
+  scenes: ['먼지 묻은 파발 통', '깎다 만 나무 이정표', '연장이 가지런한 망태기', '새벽 우물가의 두레박'],
+  contribs: ['{p|은} 누구보다 먼저 나와 누구보다 늦게 남아, 빈 곳을 소리 없이 채웠다.', '{p|은} 필요한 곳이라면 어디든 달려가, 끊어질 뻔한 길을 다시 이어 놓았다.', '{p|은} 손에 익은 연장을 꺼내 들고, 막혀 있던 일을 하나씩 풀어 나갔다.'],
+  meets: ['{p|은} 그날도 먼 길을 달려와 막 숨을 고르던 참이었다.', '{p|은} 그날도 새벽 우물가에서 하루를 준비하고 있었다.'],
+  titleWords: ['파발 통', '이정표', '두레박'] };
+
+function normalizeTeam(team) { return String(team || '').toLowerCase().replace(/\s+/g, ''); }
+function detectArchetype(team) {
+  const t = normalizeTeam(team);
+  if (!t) return FALLBACK;
+  return ARCHETYPES.find(a => a.test.test(t)) || FALLBACK;
+}
+
+/* =========================================================
+   3. 전생 세계관
+   ========================================================= */
+// 사건(incident)마다 짝이 맞는 결말(end)과 1인 결말(solo)을 둔다
+const WORLDS = [
+  { label: '신라 · 서라벌 첨성대', word: '첨성대', scene: '별자리 지도 조각',
+    openings: ['천 년 전 신라 서라벌, 첨성대 위로 유난히 별이 밝던 해였다.', '신라 서라벌, 밤마다 첨성대 꼭대기에서 별을 세는 불빛이 깜빡이던 시절이었다.'],
+    incidents: [
+      { text: '그해 가을, 왕실의 큰 별제를 사흘 앞두고 별자리 지도가 통째로 사라지는 일이 벌어졌다.',
+        end: '별제가 무사히 끝난 밤, {all|은} 첨성대 아래 나란히 앉아 다음 생에도 한 하늘 아래서 일하자고 약조했다.',
+        solo: '별제가 끝난 밤, {a|은} 첨성대에 올라 언젠가 이 일을 함께할 동료들을 만나게 해 달라고 별에게 빌었다.' },
+      { text: '보름달이 뜨기 전까지 월정교에 천 개의 등불을 밝히라는 왕명이 갑작스레 내려왔다.',
+        end: '천 개의 등불이 강물에 비치던 밤, {all|은} 말없이 서로의 어깨를 두드렸다.',
+        solo: '천 개의 등불이 강물에 비치던 밤, {a|은} 다음에는 이 불빛을 함께 밝힐 동료들이 곁에 있기를 바랐다.' }],
+    snaps: ['별빛이 쏟아지는 첨성대 아래, {sc1|과} {sc2|이} 한 등잔 불빛 아래 놓여 있다.', '새벽 이슬 맺힌 첨성대 돌계단 위, {sc1|과} {sc2|이} 나란히 놓여 있다.'],
+    titles: ['첨성대의 {tw1}', '{tw1|과} {tw2}, 서라벌의 밤', '별빛 아래의 {tw1}'] },
+
+  { label: '고려 · 벽란도 국제 항구', word: '벽란도', scene: '이국의 향신료 주머니',
+    openings: ['고려 벽란도, 먼 나라의 배들이 돛을 내리고 향신료 냄새가 바람에 실려 오던 항구였다.', '천 년 전 고려의 벽란도는 하루에도 수십 척의 배가 드나드는 바다의 장터였다.'],
+    incidents: [
+      { text: '그해 봄, 서역에서 실어 온 거대한 물시계가 부서진 채 도착했고, 사흘 안에 궁궐로 보내야 했다.',
+        end: '물시계가 다시 똑딱이기 시작한 날, {all|은} 항구 국밥집에서 그릇을 부딪치며 서로의 솜씨를 칭찬했다.',
+        solo: '물시계가 다시 똑딱이던 날, {a|은} 부두 끝에 서서 바다 너머 어딘가에 있을 다음 생의 동료들을 떠올렸다.' },
+      { text: '폭풍에 항구의 등대가 꺼지고, 돌아오지 못한 배들이 밤바다를 헤매기 시작했다.',
+        end: '마지막 배가 무사히 돌아온 새벽, {all|은} 부두에 걸터앉아 다음 생에도 한 배를 타자며 웃었다.',
+        solo: '마지막 배가 돌아온 새벽, {a|은} 다음에는 이 바다를 함께 지킬 동료들이 있기를 바랐다.' }],
+    snaps: ['짠 바닷바람 부는 벽란도 부두, {sc1|과} {sc2|이} 같은 나무 상자 위에 놓여 있다.', '돛이 겹겹이 내려앉은 항구의 등불 아래, {sc1|과} {sc2|이} 나란히 젖어 있다.'],
+    titles: ['벽란도의 {tw1}', '{tw1|과} {tw2}, 바다를 건너온 약속', '항구에 닿은 {tw1}'] },
+
+  { label: '조선 · 한양 운종가 장터', word: '운종가', scene: '청사초롱',
+    openings: ['조선 한양, 운종가 장터에 정월 대보름 대목이 다가오던 무렵이었다.', '조선 한양의 운종가는 해가 지지 않는 장터라 불릴 만큼 늘 북적였다.'],
+    incidents: [
+      { text: '그해, 백 년 만에 열리는 큰 장을 열흘 만에 준비하라는 방이 장터 어귀에 붙었다.',
+        end: '큰 장이 성황리에 끝난 밤, {all|은} 장터 국밥집에 둘러앉아 다음 생에도 한 작업장에서 만나자고 그릇을 부딪쳤다.',
+        solo: '장이 끝난 밤, {a|은} 달을 올려다보며 다음에는 이 솜씨를 함께 나눌 동료들이 곁에 있기를 바랐다.' },
+      { text: '장터 한가운데 세울 커다란 연등이 첫 시험에서 그만 바람 한 번에 주저앉고 말았다.',
+        end: '연등이 다시 우뚝 선 날, {all|은} 달을 올려다보며 "다음에도 같이 하자"고 짧게 약속했다.',
+        solo: '연등이 다시 우뚝 선 날, {a|은} 다음에는 이 등을 함께 세울 동료들을 만나고 싶다고 생각했다.' }],
+    snaps: ['청사초롱이 줄지어 걸린 운종가 골목, {sc1|과} {sc2|이} 한 좌판 위에 놓여 있다.', '대보름 달빛 아래 장터 한복판, {sc1|과} {sc2|이} 같은 불빛을 받고 있다.'],
+    titles: ['운종가의 {tw1}', '{tw1|과} {tw2}, 한양 장터 소동', '장터에 걸린 {tw1}'] },
+
+  { label: '비단길 · 사막 오아시스', word: '오아시스', scene: '낙타 방울',
+    openings: ['천 년 전 비단길, 모래바람 너머 오아시스에 여러 나라의 대상단이 모여들던 밤이었다.', '끝없는 사막 한가운데, 별과 우물 하나에 의지해 대상단이 쉬어 가던 오아시스가 있었다.'],
+    incidents: [
+      { text: '모래폭풍이 길을 지워 버리는 바람에, 서로 다른 대상단이 한 무리가 되어 사막을 건너야 하는 처지가 되었다.',
+        end: '마침내 다음 오아시스의 불빛이 보였을 때, {all|은} 모래 위에 나란히 주저앉아 한참을 웃었다.',
+        solo: '사막을 건넌 {a|은} 모닥불 앞에서, 다음 여정에는 함께 걸을 동료들이 있기를 별에게 빌었다.' },
+      { text: '오아시스의 유일한 우물이 말라 가기 시작했고, 이레 안에 새 물길을 찾아야 했다.',
+        end: '새 물길에서 첫 물이 솟던 날, {all|은} 다음 생에도 같은 길을 걷자며 물 한 바가지씩을 나눠 마셨다.',
+        solo: '첫 물이 솟던 날, {a|은} 다음에는 이 물을 함께 나눠 마실 동료들이 곁에 있기를 바랐다.' }],
+    snaps: ['모닥불이 타오르는 사막의 밤, {sc1|과} {sc2|이} 같은 양탄자 위에 놓여 있다.', '모래 언덕 너머 해가 뜨는 순간, {sc1|과} {sc2|이} 긴 그림자를 드리운다.'],
+    titles: ['오아시스의 {tw1}', '{tw1|과} {tw2}, 모래바람 너머', '사막을 건넌 {tw1}'] },
+
+  { label: '산중 사찰 · 대웅전 중창', word: '산사', scene: '처마 끝의 풍경(風磬)',
+    openings: ['깊은 산중의 오래된 절에서, 백 년 만에 대웅전을 새로 세우는 큰일이 시작된 해였다.', '안개가 걷히지 않는 산중 절집, 풍경 소리만이 아침을 알리던 곳이었다.'],
+    incidents: [
+      { text: '낙성식을 한 달 앞두고, 큰비에 기둥 하나가 기울어 모든 일이 멈춰 버렸다.',
+        end: '대웅전이 다시 우뚝 선 저녁, {all|은} 산문 앞 돌계단에 앉아 다음 생에도 함께 짓자고 약조했다.',
+        solo: '기둥이 다시 바로 선 저녁, {a|은} 다음 생에는 이 일을 함께 나눌 이들을 만나게 되기를 바랐다.' },
+      { text: '대웅전에 걸 범종과 단청을 한 계절 안에 모두 마쳐야 한다는 기별이 내려왔다.',
+        end: '낙성식 날 첫 종소리가 산을 울릴 때, {all|은} 마당 한편에서 조용히 서로에게 고개를 숙였다.',
+        solo: '첫 종소리를 들으며 {a|은}, 다음 생에는 이 종을 함께 울릴 동료들을 만나고 싶다고 생각했다.' }],
+    snaps: ['안개 낀 산사 마당, {sc1|과} {sc2|이} 갓 다듬은 기둥 곁에 놓여 있다.', '풍경 소리 울리는 처마 아래, {sc1|과} {sc2|이} 나란히 쉬고 있다.'],
+    titles: ['산사의 {tw1}', '{tw1|과} {tw2}, 대웅전을 세우던 해', '안개 속의 {tw1}'] },
+
+  { label: '남해 · 외딴섬 등대 마을', word: '등대섬', scene: '젖은 그물 한 자락',
+    openings: ['남쪽 바다 끝 작은 섬, 등대 하나에 온 마을의 뱃길이 걸려 있던 시절이었다.', '바람이 세기로 이름난 남해의 외딴섬, 사람들은 등댓불을 보고 하루를 시작했다.'],
+    incidents: [
+      { text: '어느 겨울밤, 등대의 불씨가 꺼지고 고깃배 열두 척이 돌아오지 못한 채 바다 위에 남겨졌다.',
+        end: '열두 척이 모두 돌아온 새벽, {all|은} 등대 계단에 나란히 앉아 젖은 옷을 말리며 오래 웃었다.',
+        solo: '불이 다시 켜진 밤, {a|은} 등대 꼭대기에서 언젠가 함께 이 불을 지킬 동료들을 떠올렸다.' },
+      { text: '봄 사리를 앞두고, 섬과 뭍을 잇는 오래된 나루가 거센 파도에 무너져 내렸다.',
+        end: '새 나루에 첫 배가 닿던 날, {all|은} 다음 생에도 한 섬에서 일하자며 바닷물에 손을 담가 약속했다.',
+        solo: '새 나루에 첫 배가 닿던 날, {a|은} 다음에는 이 나루를 함께 지킬 동료들이 있기를 바랐다.' }],
+    snaps: ['파도가 부서지는 등대 아래, {sc1|과} {sc2|이} 같은 등불 빛을 받고 있다.', '새벽 물안개 낀 섬 나루터, {sc1|과} {sc2|이} 나란히 놓여 있다.'],
+    titles: ['등대섬의 {tw1}', '{tw1|과} {tw2}, 파도가 높던 해', '파도 너머의 {tw1}'] },
+
+  { label: '북방 설원 · 국경 역참', word: '설원 역참', scene: '꽁꽁 언 파발 통',
+    openings: ['북방 끝 설원의 역참, 겨울이면 한 달 내내 눈이 그치지 않던 곳이었다.', '나라의 가장 북쪽, 눈보라 속에서도 불이 꺼지지 않는 역참이 하나 있었다.'],
+    incidents: [
+      { text: '급한 서신을 품은 파발이 눈보라에 길을 잃었고, 역참 사람들이 힘을 모아 길을 다시 내야 했다.',
+        end: '서신이 무사히 닿았다는 기별이 온 밤, {all|은} 화롯불 앞에 둘러앉아 언 손을 녹이며 다음 생을 기약했다.',
+        solo: '서신이 닿았다는 기별이 온 밤, {a|은} 다음 겨울에는 함께 길을 낼 동료들이 곁에 있기를 바랐다.' },
+      { text: '한겨울에 다리가 끊겨, 사흘 뒤 지나갈 사신 행렬을 위해 새 길을 놓아야 했다.',
+        end: '사신 행렬이 새 다리를 건너던 아침, {all|은} 눈밭에 서서 서로의 이름을 크게 불렀다.',
+        solo: '사신 행렬이 다리를 건너던 아침, {a|은} 다음에는 이 길을 함께 놓을 동료들을 만나고 싶었다.' }],
+    snaps: ['눈보라가 잦아든 설원 역참, {sc1|과} {sc2|이} 화롯불 곁에 놓여 있다.', '하얗게 얼어붙은 역참 마당, {sc1|과} {sc2|이} 나란히 눈을 맞고 있다.'],
+    titles: ['설원 역참의 {tw1}', '{tw1|과} {tw2}, 눈보라 속의 약속', '눈 속에 피운 {tw1}'] },
+
+  { label: '고려 · 강진 청자 가마골', word: '가마골', scene: '비취빛 청자 파편',
+    openings: ['고려 강진의 가마골, 마을 사람 모두가 불의 온도를 읽을 줄 알던 시절이었다.', '비취빛 청자가 처음 빛을 보던 무렵, 강진 바닷가 언덕에는 가마들이 줄지어 있었다.'],
+    incidents: [
+      { text: '왕실에 올릴 청자 백 점을 굽던 가마가 하룻밤 사이 갑자기 식어 버렸다.',
+        end: '백 점의 청자가 무사히 가마에서 나온 날, {all|은} 아직 따뜻한 그릇을 하나씩 들고 서로를 바라보며 웃었다.',
+        solo: '가마 불이 잦아들 무렵, {a|은} 다음 생에는 이 불을 함께 지킬 동료들을 만나고 싶다고 생각했다.' },
+      { text: '바닷길로 청자를 실어 보내야 할 날을 앞두고, 그릇을 담을 상자와 배편이 모두 엉켜 버렸다.',
+        end: '청자를 실은 배가 떠나던 아침, {all|은} 언덕 위에서 다음 생에도 한 가마 앞에 서자고 약조했다.',
+        solo: '배가 떠나던 아침, {a|은} 다음에는 이 길을 함께 꾸릴 동료들이 곁에 있기를 바랐다.' }],
+    snaps: ['연기가 피어오르는 가마 앞, {sc1|과} {sc2|이} 비취빛 그릇 사이에 놓여 있다.', '해 질 녘 가마골 언덕, {sc1|과} {sc2|이} 같은 불빛에 물들어 있다.'],
+    titles: ['가마골의 {tw1}', '{tw1|과} {tw2}, 비취빛 약속', '가마 불 앞의 {tw1}'] },
+
+  { label: '조선 · 궁궐 탄신 연회', word: '궁궐', scene: '금박 찍힌 연회 초대장',
+    openings: ['조선 궁궐, 임금의 탄신 연회를 앞두고 궁 안이 분주하던 늦가을이었다.', '연회를 앞둔 궁궐은 밤에도 등불이 꺼지지 않았다.'],
+    incidents: [
+      { text: '연회 사흘 전, 무대를 밝힐 거대한 등불 장치가 꿈쩍도 하지 않는다는 소식이 들려왔다.',
+        end: '연회가 무사히 끝난 밤, {all|은} 텅 빈 연회장 뒤편에 앉아 남은 떡을 나눠 먹으며 웃음을 터뜨렸다.',
+        solo: '연회의 불이 꺼진 뒤, {a|은} 다음에는 이 무대를 함께 만들 동료들이 있기를 조용히 바랐다.' },
+      { text: '먼 나라 사신단의 방문이 갑자기 연회와 겹치며, 모든 준비를 처음부터 다시 맞춰야 했다.',
+        end: '사신단이 감탄하며 돌아간 날, {all|은} 회랑 끝에서 다음 생에도 같은 무대를 만들자고 약조했다.',
+        solo: '사신단이 돌아간 날, {a|은} 다음에는 이 무대를 함께 꾸밀 동료들을 만나고 싶다고 생각했다.' }],
+    snaps: ['비단 휘장이 드리운 연회장 뒤편, {sc1|과} {sc2|이} 같은 소반 위에 놓여 있다.', '등불이 하나둘 켜지는 궁궐 회랑, {sc1|과} {sc2|이} 나란히 빛난다.'],
+    titles: ['궁궐 연회의 {tw1}', '{tw1|과} {tw2}, 사흘 남은 연회', '휘장 뒤의 {tw1}'] }
+];
+
+const GATHERS = [
+  '그 소식을 들은 {names|이} 하나둘 같은 작업장 앞으로 모여들었고, 그렇게 처음 서로의 얼굴을 마주했다.',
+  '서로 다른 길을 걷던 {names|은} 같은 방 한 장을 보고, 같은 날 같은 문을 두드렸다.',
+  '처음엔 각자 따로 해결해 보려 했지만, 결국 {names|은} 같은 등불 아래 머리를 맞대고 앉게 되었다.',
+  '{a|이} 도움을 청하러 나선 길에서, 마침 같은 문제를 붙들고 있던 {others|과} 마주친 것이 시작이었다.'
+];
+const CONNECTORS = ['그 곁에서 ', '한편 ', '그러자 ', '같은 시각, '];
+
+/* =========================================================
+   4. 내장 생성기
+   ========================================================= */
+function hashStr(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function makeRng(seed) {
+  const r = mulberry32(seed);
+  return {
+    pick: arr => arr[Math.floor(r() * arr.length)],
+    shuffle: arr => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+  };
+}
+
+function teamLabel(team) { return team && team.trim() ? team.trim() : '소속 미정'; }
+
+function generateBuiltin(people, seed, avoidWorld) {
+  const rng = makeRng(seed);
+  let worldPool = WORLDS.filter(w => w.label !== avoidWorld);
+  const world = rng.pick(worldPool.length ? worldPool : WORLDS);
+
+  // 같은 원형끼리는 역할·기여가 겹치지 않도록 섞은 뒤 차례로 꺼낸다
+  const decks = new Map();
+  const draw = (arc, field) => {
+    const k = arc.key + ':' + field;
+    if (!decks.has(k) || decks.get(k).length === 0) decks.set(k, rng.shuffle(arc[field]));
+    return decks.get(k).pop();
+  };
+
+  const cast = people.map(p => {
+    const arc = detectArchetype(p.team);
+    return { team: teamLabel(p.team), name: p.name.trim(), arc, role: draw(arc, 'roles'), scene: draw(arc, 'scenes'), tw: draw(arc, 'titleWords') };
+  });
+
+  const names = cast.map(c => c.name);
+  const a = cast[0];
+  const vars = {
+    a: a.name, names: joinKo(names), others: joinKo(names.slice(1)),
+    all: cast.length <= 3 ? joinKo(names) : '모두',
+    sc1: a.scene, sc2: cast[1] ? cast[1].scene : world.scene,
+    tw1: a.tw, tw2: cast[1] ? cast[1].tw : world.word
+  };
+
+  const incident = rng.pick(world.incidents);
+  const sentences = [rng.pick(world.openings)];
+  if (cast.length === 1) {
+    sentences.push(incident.text);
+    sentences.push('그 소식이 전해졌을 때, ' + fill(draw(a.arc, 'meets'), { p: a.name }));
+    sentences.push(fill(draw(a.arc, 'contribs'), { p: a.name }));
+    sentences.push(fill(incident.solo, vars));
+  } else {
+    sentences.push(incident.text);
+    sentences.push(fill(rng.pick(GATHERS), vars));
+    sentences.push(fill(draw(a.arc, 'contribs'), { p: a.name }));
+    const b = cast[1];
+    sentences.push(rng.pick(CONNECTORS) + fill(draw(b.arc, 'contribs'), { p: b.name }));
+    if (cast.length >= 3) {
+      const rest = cast.slice(2);
+      const virtues = [...new Set(rest.map(c => c.arc.virtue))];
+      const vText = joinKo(virtues);
+      const restNames = joinKo(rest.map(c => c.name));
+      sentences.push(`${restNames}${josa(restNames, '도')} 저마다의 ${vText}${josa(vText, '으로')} 남은 빈자리를 채웠다.`);
+    }
+    sentences.push(fill(incident.end, vars));
+  }
+
+  const teams = [...new Set(cast.map(c => c.team).filter(t => t !== '소속 미정'))];
+  const epilogue = cast.length === 1
+    ? `그리고 몇 번의 생을 건너 — 오늘, ${a.team === '소속 미정' ? '' : a.team + '의 '}${a.name}${josa(a.name, '으로')} 다시 태어나다.`
+    : teams.length
+      ? `그리고 몇 번의 생을 건너 — 오늘, ${joinKo(teams)}${teams.length > 1 ? '의 동료들' : ' 동료들'}로 다시 만나다.`
+      : '그리고 몇 번의 생을 건너 — 오늘, 같은 일터의 동료들로 다시 만나다.';
+
+  return {
+    title: fill(rng.pick(world.titles), vars),
+    era: world.label,
+    snapshot: fill(rng.pick(world.snaps), vars),
+    cast: cast.map(c => ({ team: c.team, name: c.name, role: c.role })),
+    story: sentences.join(' '),
+    epilogue,
+    source: 'builtin'
+  };
+}
+
+/* =========================================================
+   5. OpenAI 생성
+   ========================================================= */
+const SYSTEM_PROMPT = `너는 20대 후반~30대 직장인을 위한 웹서비스 '전생 동료 극장'의 시나리오 작가다.
+사용자가 준 (팀명, 이름) 목록의 인물들이 한 편의 전생 단편 시나리오 속 등장인물로 얽힌 이야기를 쓴다.
+
+[핵심]
+- 각 팀의 고유한 결·성격·작업 무드를 전생 세계관의 배역, 도구, 행동, 사건 속에 자연스럽게 녹인다.
+  예) 개발팀: 구조·원리·기록·정밀함·묵묵한 몰입 → 시계공, 천문관, 대장장이, 장부 기록자
+      디자이너팀: 색채·비율·형태·직관·미감 → 화공, 직조 장인, 도예가, 정원 설계자
+  처음 보는 팀명도 성격을 유추해 반영한다.
+- 현대 IT·회사 용어(코드, 서버, 배포, 버그, 회의, 슬랙, 피그마, KPI 등)를 그대로 쓰지 말고 전생 세계관의 언어로 번역한다.
+- 모든 인물이 사건 해결에 각자의 결로 의미 있게 기여한다. 따뜻하고 위트 있지만 과장되지 않은 한국어 문체.
+
+[금지]
+1. 연애·궁합·커플·썸·혼인·설렘 등 로맨스 요소 금지 (인연은 동료·동지·벗으로서의 인연)
+2. 개인정보·민감정보(나이, 성별, 외모, 연락처, 주소, 건강, 종교, 정치, 출신 등) 언급·추정·생성 금지. 성별을 추정하는 호칭(도령, 아씨, 상궁 등)도 쓰지 않는다.
+3. 업무 능력·성과·성향을 비하하거나 조롱하는 표현 금지. 누구도 실수의 원인이나 놀림감이 되지 않는다.
+
+[출력] 아래 JSON 객체 하나만 출력한다.
+{
+  "title": "시나리오 제목 (25자 이내)",
+  "era": "시대 · 장소 짧은 라벨 (예: 조선 · 한양 운종가 장터)",
+  "snapshot": "장면 묘사 한 줄, 짧고 선명한 이미지화 문장 (50자 이내)",
+  "cast": [{"team": "입력 팀명 그대로", "name": "입력 이름 그대로", "role": "전생 역할 한 줄 (35자 이내)"}],
+  "story": "이들이 어떤 계기·상황으로 만나 얽혔는지 3~6문장",
+  "epilogue": "'그리고 몇 번의 생을 건너 — 오늘, ...' 형식으로 현재 팀으로 다시 만났음을 말하는 한 줄"
+}`;
+
+async function generateAI(people, { apiKey, model, avoidTitle }) {
+  const userMsg = {
+    characters: people.map(p => ({ team: teamLabel(p.team), name: p.name.trim() })),
+    note: avoidTitle ? `직전 결과("${avoidTitle}")와는 완전히 다른 시대·장소·사건으로 새로 써 줘.` : '자유롭게 시대와 장소를 골라 줘.'
+  };
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 45000);
+  try {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      signal: controller.signal,
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        model: model || 'gpt-4o-mini',
+        response_format: { type: 'json_object' },
+        messages: [{ role: 'system', content: SYSTEM_PROMPT }, { role: 'user', content: JSON.stringify(userMsg) }]
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data?.error?.message || `HTTP ${res.status}`);
+    const out = JSON.parse(data.choices?.[0]?.message?.content || '{}');
+    if (!out.title || !out.story || !Array.isArray(out.cast)) throw new Error('응답 형식이 올바르지 않아요.');
+    // 입력 순서·표기를 그대로 보존
+    const cast = people.map((p, i) => {
+      const hit = out.cast.find(c => c && c.name === p.name.trim()) || out.cast[i] || {};
+      return { team: teamLabel(p.team), name: p.name.trim(), role: String(hit.role || detectArchetype(p.team).roles[0]) };
+    });
+    return {
+      title: String(out.title), era: String(out.era || ''), snapshot: String(out.snapshot || ''),
+      cast, story: String(out.story), epilogue: String(out.epilogue || ''), source: 'ai', model: model || 'gpt-4o-mini'
+    };
+  } finally { clearTimeout(timer); }
+}
+
+/* =========================================================
+   6. 상태 & 폼 UI
+   ========================================================= */
+const MAX_ROWS = 8;
+const TEAM_SUGGEST = ['개발팀', '디자이너팀', '기획팀', '마케팅팀', '영업팀', '인사팀', '재무팀', '데이터팀', 'QA팀', '인프라팀', 'CS팀', '아트팀', '사운드팀', '경영지원팀', '콘텐츠팀', '법무팀'];
+const SAMPLES = [
+  { team: '개발팀', name: '전수용' }, { team: '디자이너팀', name: '김하늘' }, { team: '기획팀', name: '박도윤' },
+  { team: '마케팅팀', name: '이서진' }, { team: 'QA팀', name: '최민준' }, { team: '데이터팀', name: '정예린' }, { team: 'CS팀', name: '한지우' }
+];
+const COMBOS = [
+  { label: '🎲 개발 × 디자인 듀오', rows: [SAMPLES[0], SAMPLES[1]] },
+  { label: '🎲 스쿼드 4인', rows: [SAMPLES[0], SAMPLES[1], SAMPLES[2], SAMPLES[3]] }
+];
+
+const state = { rows: [], attempt: 0, lastSig: '', result: null, busy: false, uid: 0 };
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+function newRow(team = '', name = '') { return { id: ++state.uid, team, name }; }
+
+function renderRows() {
+  const box = $('#rows');
+  box.innerHTML = '';
+  state.rows.forEach((r, i) => {
+    const el = document.createElement('div');
+    el.className = 'row';
+    el.innerHTML = `
+      <div class="num">${i + 1}</div>
+      <input class="field" data-k="team" maxlength="20" placeholder="팀명 (예: 개발팀)" list="teamList" value="${esc(r.team)}" aria-label="${i + 1}번 팀명" />
+      <input class="field" data-k="name" maxlength="20" placeholder="이름 (예: 전수용)" value="${esc(r.name)}" aria-label="${i + 1}번 이름" />
+      <button class="icon-btn" type="button" title="삭제" aria-label="${i + 1}번 인물 삭제" ${state.rows.length === 1 ? 'disabled' : ''}>✕</button>
+      <div class="trait"></div>`;
+    const trait = el.querySelector('.trait');
+    const updateTrait = () => {
+      const t = r.team.trim();
+      trait.textContent = t ? `↳ ${t}의 결 · ${detectArchetype(t).trait}` : '';
+    };
+    el.querySelectorAll('input').forEach(inp => {
+      inp.addEventListener('input', () => { r[inp.dataset.k] = inp.value; if (inp.dataset.k === 'team') updateTrait(); clearError(); });
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); onGenerate(false); } });
+    });
+    el.querySelector('.icon-btn').addEventListener('click', () => {
+      state.rows = state.rows.filter(x => x.id !== r.id);
+      if (!state.rows.length) state.rows.push(newRow());
+      renderRows();
+    });
+    updateTrait();
+    box.appendChild(el);
+  });
+  $('#countLabel').textContent = `${state.rows.length}명 / 최대 ${MAX_ROWS}명`;
+  $('#addRow').disabled = state.rows.length >= MAX_ROWS;
+}
+
+function addPerson(team, name) {
+  const empty = state.rows.find(r => !r.team.trim() && !r.name.trim());
+  if (empty) { empty.team = team; empty.name = name; }
+  else if (state.rows.length < MAX_ROWS) state.rows.push(newRow(team, name));
+  else return toast(`최대 ${MAX_ROWS}명까지 입력할 수 있어요`);
+  renderRows();
+}
+
+function renderChips() {
+  const box = $('#chips');
+  SAMPLES.forEach(s => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.textContent = `${s.team} · ${s.name}`;
+    b.addEventListener('click', () => addPerson(s.team, s.name));
+    box.appendChild(b);
+  });
+  COMBOS.forEach(c => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip combo'; b.textContent = c.label;
+    b.addEventListener('click', () => { state.rows = c.rows.map(r => newRow(r.team, r.name)); renderRows(); });
+    box.appendChild(b);
+  });
+  $('#teamList').innerHTML = TEAM_SUGGEST.map(t => `<option value="${t}"></option>`).join('');
+}
+
+/* =========================================================
+   7. 생성 흐름
+   ========================================================= */
+const SENSITIVE = [/\d{2,3}[-.\s]?\d{3,4}[-.\s]?\d{4}/, /[\w.+-]+@[\w-]+\.[\w.]+/, /\d{6}[-\s]?[1-4]\d{6}/];
+function validate() {
+  const people = state.rows.filter(r => r.name.trim() || r.team.trim());
+  if (!people.length) return { error: '등장인물을 한 명 이상 입력해 주세요.' };
+  if (people.some(p => !p.name.trim())) return { error: '이름이 비어 있는 행이 있어요. 이름을 적거나 행을 지워 주세요.' };
+  if (people.some(p => SENSITIVE.some(re => re.test(p.team + ' ' + p.name)))) return { error: '연락처·이메일 같은 개인정보로 보이는 내용은 입력할 수 없어요. 팀명과 이름만 적어 주세요.' };
+  return { people };
+}
+function signature(people) { return people.map(p => normalizeTeam(p.team) + '/' + p.name.trim()).join('|'); }
+
+function showError(msg) { $('#error').textContent = msg; }
+function clearError() { $('#error').textContent = ''; }
+
+async function onGenerate(reroll) {
+  if (state.busy) return;
+  const { people, error } = validate();
+  if (error) { showError(error); return; }
+  clearError();
+  const sig = signature(people);
+  if (reroll || sig === state.lastSig) state.attempt++; else state.attempt = 0;
+  state.lastSig = sig;
+
+  const apiKey = $('#apiKey').value.trim();
+  const model = $('#model').value.trim();
+  setBusy(true, apiKey ? 'AI가 전생의 기록을 뒤지는 중…' : '인연의 실을 엮는 중…');
+
+  const prev = state.result;
+  let result, notice = '';
+  try {
+    if (apiKey) {
+      try {
+        result = await generateAI(people, { apiKey, model, avoidTitle: reroll && prev ? prev.title : '' });
+      } catch (e) {
+        notice = `AI 생성에 실패해 내장 생성기로 엮었어요 (${e.name === 'AbortError' ? '응답 시간 초과' : e.message})`;
+      }
+    } else {
+      await new Promise(r => setTimeout(r, 650));
+    }
+    if (!result) result = generateBuiltin(people, hashStr(sig) + state.attempt * 7919, reroll && prev ? prev.era : '');
+  } finally {
+    setBusy(false);
+  }
+  state.result = result;
+  renderResult(result, { notice });
+}
+
+function setBusy(on, msg) {
+  state.busy = on;
+  const btn = $('#generate');
+  btn.disabled = on;
+  btn.textContent = on ? '엮는 중…' : '✦ 전생의 인연 엮기';
+  if (on) {
+    $('#result').innerHTML = `<div class="loading"><div class="spinner"></div>${esc(msg)}</div>`;
+    $('#result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+/* =========================================================
+   8. 결과 카드
+   ========================================================= */
+function renderResult(r, { notice = '', shared = false } = {}) {
+  const box = $('#result');
+  box.innerHTML = `
+    ${shared ? '<div class="shared-banner">✉️ 누군가 공유한 전생 시나리오예요. 아래에서 우리 팀 이야기도 엮어 보세요.</div>' : ''}
+    ${notice ? `<div class="shared-banner">${esc(notice)}</div>` : ''}
+    <article class="card" id="card">
+      <div class="stamp" aria-hidden="true">緣</div>
+      ${r.era ? `<div class="era">${esc(r.era)}</div>` : ''}
+      <h2>${esc(r.title)}</h2>
+      ${r.snapshot ? `<p class="snapshot">${esc(r.snapshot)}</p>` : ''}
+      <p class="label">등장인물</p>
+      <ul class="cast">
+        ${r.cast.map(c => `<li><span class="who"><span class="team">${esc(c.team)} /</span> ${esc(c.name)}</span><span class="role">${esc(c.role)}</span></li>`).join('')}
+      </ul>
+      <p class="label">인연 서사</p>
+      <p class="story">${esc(r.story)}</p>
+      ${r.epilogue ? `<div class="epilogue">${esc(r.epilogue)}</div>` : ''}
+      <div class="source">${r.source === 'ai' ? `AI 생성 · ${esc(r.model || '')}` : '내장 생성기'} · 전생 동료 극장</div>
+    </article>
+    <div class="actions">
+      <button class="btn reroll" id="reroll" type="button">↻ 다른 시나리오로 다시 엮기</button>
+      <div class="share-grid">
+        <button class="btn" id="copyFull" type="button">📋 전체 텍스트 복사</button>
+        <button class="btn" id="toggleSummary" type="button">🪪 공유용 요약</button>
+        <button class="btn" id="copyLink" type="button">🔗 링크 복사</button>
+        <button class="btn" id="saveImg" type="button">🖼 카드 이미지</button>
+      </div>
+    </div>
+    <div class="summary-box" id="summaryBox" hidden>
+      <textarea id="summaryText" readonly aria-label="공유용 카드 요약"></textarea>
+      <div class="row-actions">
+        <button class="btn" id="copySummary" type="button">요약 복사</button>
+        ${navigator.share ? '<button class="btn" id="nativeShare" type="button">다른 앱으로 공유</button>' : ''}
+      </div>
+    </div>`;
+
+  $('#reroll').addEventListener('click', () => {
+    if (shared && !state.lastSig) { state.rows = r.cast.map(c => newRow(c.team === '소속 미정' ? '' : c.team, c.name)); renderRows(); }
+    onGenerate(true);
+  });
+  $('#copyFull').addEventListener('click', () => copyText(fullText(r), '전체 시나리오를 복사했어요'));
+  $('#toggleSummary').addEventListener('click', () => {
+    const sb = $('#summaryBox');
+    sb.hidden = !sb.hidden;
+    if (!sb.hidden) { $('#summaryText').value = summaryText(r); }
+  });
+  $('#copySummary').addEventListener('click', () => copyText(summaryText(r), '공유용 요약을 복사했어요'));
+  $('#copyLink').addEventListener('click', () => copyText(shareUrl(r), '이 결과를 볼 수 있는 링크를 복사했어요'));
+  $('#saveImg').addEventListener('click', () => saveCardImage(r));
+  const ns = $('#nativeShare');
+  if (ns) ns.addEventListener('click', () => navigator.share({ title: r.title, text: summaryText(r), url: shareUrl(r) }).catch(() => {}));
+  if (!shared) box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function fullText(r) {
+  return [
+    `🎬 ${r.title}`,
+    r.era ? `(${r.era})` : '',
+    '',
+    `📸 ${r.snapshot}`,
+    '',
+    '👥 등장인물',
+    ...r.cast.map(c => `· ${c.team} / ${c.name} — ${c.role}`),
+    '',
+    '📜 인연 서사',
+    r.story,
+    '',
+    r.epilogue || '',
+    '',
+    '— 전생 동료 극장'
+  ].filter((l, i, a) => !(l === '' && a[i - 1] === '')).join('\n').trim();
+}
+function summaryText(r) {
+  return [
+    `🎬 「${r.title}」`,
+    `📸 ${r.snapshot}`,
+    `👥 ${r.cast.map(c => `${c.name}(${c.team})`).join(' · ')}`,
+    r.epilogue ? `✨ ${r.epilogue}` : '',
+    '',
+    `우리 팀의 전생도 엮어 보기 → ${location.origin}${location.pathname}`,
+    '#전생동료극장'
+  ].filter(Boolean).join('\n');
+}
+
+function b64urlEncode(str) {
+  const bytes = new TextEncoder().encode(str);
+  let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function b64urlDecode(s) {
+  const bin = atob(s.replace(/-/g, '+').replace(/_/g, '/'));
+  return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0)));
+}
+function shareUrl(r) {
+  const payload = { t: r.title, e: r.era, s: r.snapshot, c: r.cast.map(c => [c.team, c.name, c.role]), y: r.story, p: r.epilogue, o: r.source, m: r.model };
+  return `${location.origin}${location.pathname}#r=${b64urlEncode(JSON.stringify(payload))}`;
+}
+function readShared() {
+  const m = location.hash.match(/#r=([\w-]+)/);
+  if (!m) return null;
+  try {
+    const p = JSON.parse(b64urlDecode(m[1]));
+    if (!p.t || !Array.isArray(p.c)) return null;
+    return { title: p.t, era: p.e || '', snapshot: p.s || '', cast: p.c.map(([team, name, role]) => ({ team, name, role })), story: p.y || '', epilogue: p.p || '', source: p.o, model: p.m };
+  } catch { return null; }
+}
+
+async function copyText(text, msg) {
+  try { await navigator.clipboard.writeText(text); toast(msg); }
+  catch {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); toast(msg); } catch { toast('복사에 실패했어요. 직접 선택해 복사해 주세요'); }
+    ta.remove();
+  }
+}
+
+let toastTimer;
+function toast(msg) {
+  const t = $('#toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* =========================================================
+   9. 공유용 카드 이미지 (PNG)
+   ========================================================= */
+function wrapLines(ctx, text, maxW) {
+  const out = [];
+  String(text).split('\n').forEach(par => {
+    let line = '';
+    for (const word of par.split(' ')) {
+      const test = line ? line + ' ' + word : word;
+      if (ctx.measureText(test).width <= maxW) { line = test; continue; }
+      if (line) out.push(line);
+      if (ctx.measureText(word).width <= maxW) { line = word; continue; }
+      line = '';
+      for (const ch of word) { // 긴 단어는 글자 단위로 자르기
+        if (ctx.measureText(line + ch).width > maxW) { out.push(line); line = ch; } else line += ch;
+      }
+    }
+    out.push(line);
+  });
+  return out;
+}
+
+async function saveCardImage(r) {
+  try { await document.fonts.ready; } catch {}
+  const W = 1080, P = 96, inner = W - P * 2;
+  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const C = dark
+    ? { bg: '#1c1915', line: '#463e33', ink: '#f2eadb', ink2: '#c7bba7', ink3: '#8f8574', accent: '#dc6a4f', gold: '#cfa95a', soft: '#221e19' }
+    : { bg: '#fffaf1', line: '#d6c8ae', ink: '#1f1a14', ink2: '#554b3f', ink3: '#8b8070', accent: '#b4412c', gold: '#94742c', soft: '#fbf4e6' };
+  const serif = '"Gowun Batang", "AppleMyungjo", serif';
+  const sans = 'Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif';
+
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+
+  // 레이아웃을 두 번 수행: 1) 높이 측정 2) 그리기
+  const layout = (draw) => {
+    let y = P + 20;
+    const text = (str, font, color, lh, opts = {}) => {
+      ctx.font = font; ctx.fillStyle = color; ctx.textAlign = opts.align || 'left';
+      const x = opts.align === 'center' ? W / 2 : (opts.x || P);
+      const lines = wrapLines(ctx, str, opts.maxW || inner);
+      lines.forEach(l => { if (draw) ctx.fillText(l, x, y); y += lh; });
+    };
+    if (r.era) text(r.era, `600 26px ${sans}`, C.gold, 52);
+    y += 20;
+    text(r.title, `700 58px ${serif}`, C.ink, 78, { maxW: inner - 110 });
+    y += 16;
+    if (r.snapshot) {
+      ctx.font = `400 32px ${serif}`;
+      const lines = wrapLines(ctx, r.snapshot, inner - 50);
+      const h = lines.length * 50 + 40;
+      if (draw) { ctx.fillStyle = C.soft; ctx.fillRect(P, y - 8, inner, h); ctx.fillStyle = C.accent; ctx.fillRect(P, y - 8, 6, h); }
+      y += 38;
+      text(r.snapshot, `400 32px ${serif}`, C.ink2, 50, { x: P + 36, maxW: inner - 50 });
+      y += 22;
+    }
+    y += 30;
+    text('등장인물', `700 24px ${sans}`, C.ink3, 50);
+    r.cast.forEach(c => {
+      text(`${c.team} / ${c.name}`, `700 28px ${sans}`, C.ink, 42);
+      text(c.role, `400 30px ${serif}`, C.ink2, 44);
+      y += 12;
+    });
+    y += 24;
+    text('인연 서사', `700 24px ${sans}`, C.ink3, 50);
+    text(r.story, `400 32px ${serif}`, C.ink, 56);
+    if (r.epilogue) {
+      y += 24;
+      if (draw) { ctx.strokeStyle = C.line; ctx.setLineDash([8, 8]); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(P, y); ctx.lineTo(W - P, y); ctx.stroke(); ctx.setLineDash([]); }
+      y += 56;
+      text(r.epilogue, `400 30px ${serif}`, C.accent, 46, { align: 'center' });
+    }
+    y += 40;
+    text('전생 동료 극장', `600 22px ${sans}`, C.ink3, 30, { align: 'center' });
+    return y + P - 40;
+  };
+
+  canvas.width = W; canvas.height = 10;
+  const H = Math.max(1350, Math.ceil(layout(false)));
+  canvas.width = W; canvas.height = H;
+  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = C.line; ctx.lineWidth = 2; ctx.strokeRect(32, 32, W - 64, H - 64);
+  // 도장
+  ctx.save(); ctx.translate(W - P - 40, P + 70); ctx.rotate(6 * Math.PI / 180);
+  ctx.strokeStyle = C.accent; ctx.lineWidth = 4; ctx.strokeRect(-42, -42, 84, 84);
+  ctx.fillStyle = C.accent; ctx.font = `700 50px ${serif}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('緣', 0, 2);
+  ctx.restore(); ctx.textBaseline = 'alphabetic';
+  layout(true);
+
+  canvas.toBlob(blob => {
+    if (!blob) return toast('이미지를 만들지 못했어요');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `전생동료극장_${r.title.replace(/[\\/:*?"<>|\s]+/g, '_').slice(0, 30)}.png`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    toast('카드 이미지를 저장했어요');
+  }, 'image/png');
+}
+
+/* =========================================================
+   10. API 키 관리 & 초기화
+   ========================================================= */
+const LS_KEY = 'pastlife.openai.key', LS_MODEL = 'pastlife.openai.model';
+const ls = {
+  get: k => { try { return localStorage.getItem(k); } catch { return null; } },
+  set: (k, v) => { try { localStorage.setItem(k, v); } catch {} },
+  del: k => { try { localStorage.removeItem(k); } catch {} }
+};
+function updateBadge() {
+  const on = !!$('#apiKey').value.trim();
+  const b = $('#modeBadge');
+  b.textContent = on ? 'AI 모드 켜짐' : '내장 생성기 모드';
+  b.classList.toggle('on', on);
+}
+function initKey() {
+  const saved = ls.get(LS_KEY), model = ls.get(LS_MODEL);
+  if (saved) { $('#apiKey').value = saved; $('#rememberKey').checked = true; }
+  if (model) $('#model').value = model;
+  const persist = () => {
+    if ($('#rememberKey').checked && $('#apiKey').value.trim()) { ls.set(LS_KEY, $('#apiKey').value.trim()); ls.set(LS_MODEL, $('#model').value.trim()); }
+    else { ls.del(LS_KEY); ls.del(LS_MODEL); }
+    updateBadge();
+  };
+  ['input', 'change'].forEach(ev => { $('#apiKey').addEventListener(ev, persist); $('#model').addEventListener(ev, persist); });
+  $('#rememberKey').addEventListener('change', persist);
+  updateBadge();
+}
+
+function init() {
+  state.rows = [newRow()];
+  renderChips();
+  renderRows();
+  initKey();
+  $('#addRow').addEventListener('click', () => { if (state.rows.length < MAX_ROWS) { state.rows.push(newRow()); renderRows(); $('#rows').lastElementChild.querySelector('input').focus(); } });
+  $('#clearRows').addEventListener('click', () => { state.rows = [newRow()]; renderRows(); clearError(); });
+  $('#generate').addEventListener('click', () => onGenerate(false));
+  const shared = readShared();
+  if (shared) { state.result = shared; renderResult(shared, { shared: true }); }
+}
+init();
+</script>
+</body>
+</html>
