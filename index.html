@@ -11,7 +11,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='g'%3E%3Cstop offset='0' stop-color='%23fff6d8'/%3E%3Cstop offset='.45' stop-color='%23b9a6ff'/%3E%3Cstop offset='1' stop-color='%2307060f'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%2307060f'/%3E%3Ccircle cx='32' cy='32' r='22' fill='url(%23g)'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Nanum+Pen+Script&display=swap" rel="stylesheet" />
 <style>
   :root {
     --bg: #07060f;
@@ -130,6 +130,7 @@
   .frame::before { content: ""; position: absolute; inset: 6px; border: 2px dotted rgba(255, 236, 180, .55); pointer-events: none; }
   .canvas-wrap { position: relative; padding: 5px; background: #2a1c0e; box-shadow: inset 0 0 14px rgba(0,0,0,.9); }
   .canvas-wrap svg { display: block; width: 100%; height: auto; }
+  .scrawl { position: absolute; font-family: "Nanum Pen Script", cursive; font-size: clamp(15px, 3.6vw, 22px); line-height: 1; color: #1d1712; white-space: nowrap; pointer-events: none; text-shadow: 0 0 3px rgba(255,250,235,.9), 0 0 6px rgba(255,250,235,.6); }
   .plaque {
     display: table; max-width: 92%; margin: 16px auto 0; padding: 6px 16px 5px; border-radius: 3px; text-align: center; color: #2b1c08;
     background: linear-gradient(180deg, #f1dc9c, #b9913f); box-shadow: 0 3px 8px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.6);
@@ -297,189 +298,239 @@ const SCENARIOS = [
     quote: '“이름은 나중에! 일단 이것부터!”',
     desc: '폭풍이 섬의 대도서관을 덮친 밤, {a|과} {b|은} 서로의 등을 받치며 별의 기록을 끝까지 지켜 냈다. 이름은 새벽이 되어서야 처음 물었다.',
     roleA: '마지막까지 남은 사서', roleB: '뒤따라 들어온 낯선 이', extras: ['책을 나른 사슬의 고리', '등불을 든 안내자', '젖은 책을 말린 필경사', '탑 위의 파수꾼'] },
-  { tone: 'funny', scene: 'palace', era: '조선 · 한양 운종가 · 250년 전', title: '마지막 인절미', tag: '인절미 앙숙 → 30년 동업자',
+  { tone: 'funny', scene: 'palace', era: '조선 · 한양 운종가 · 250년 전', title: '마지막 인절미', center: 'ricecake', tag: '인절미 앙숙 → 30년 동업자',
     quote: '“이 인절미는… 내가 먼저 잡았소!”',
     desc: '{a|과} {b|은} 운종가의 마지막 인절미 한 접시를 두고 한 시진 동안 대치했다. 구경꾼이 너무 몰리자, 둘은 아예 떡집을 함께 차렸다.',
     roleA: '새벽부터 줄 선 손님', roleB: '같은 접시를 잡은 손님', extras: ['"반씩 나누시오!"를 외친 구경꾼', '식혜를 판 장사꾼', '동업 약조문을 써 준 서생', '떡집 주인'] },
-  { tone: 'funny', scene: 'sea', era: '고려 · 벽란도 항구 · 800년 전', title: '벽란도 고양이 추격전', tag: '고양이가 맺어 준 석 달 항해',
+  { tone: 'funny', scene: 'sea', era: '고려 · 벽란도 항구 · 800년 전', title: '벽란도 고양이 추격전', center: 'cat', tag: '고양이가 맺어 준 석 달 항해',
     quote: '“내 고양이야!” “아니, 내 고양이라고!”',
     desc: '같은 얼룩 고양이를 쫓던 {a|과} {b|은} 그대로 송나라행 배에 올라타 버렸다. 석 달 뒤, 고양이의 진짜 주인은 그 배의 요리사로 밝혀졌다.',
     roleA: '생선을 도둑맞은 상인', roleB: '고양이 주인이라 믿은 사람', extras: ['난감한 선원', '고양이 이름 짓기 회의 의장', '진짜 주인을 찾아 준 승객', '배의 요리사와 친한 사람'] },
-  { tone: 'funny', scene: 'desert', era: '비단길 오아시스 · 900년 전', title: '손짓으로 나눈 사흘', tag: '외국인인 줄 → 알고 보니 이웃',
+  { tone: 'funny', scene: 'desert', era: '비단길 오아시스 · 900년 전', title: '손짓으로 나눈 사흘', center: 'question', tag: '외국인인 줄 → 알고 보니 이웃',
     quote: '“…혹시, 고향이 어디요?”',
     desc: '{a|과} {b|은} 서로를 먼 나라 사람으로 알고 사흘 내내 손짓으로만 대화했다. 사흘째 밤, 같은 고향 노래를 흥얼거리다 한 골목 이웃이었음을 알았다.',
     roleA: '손짓에 진심인 여행자', roleB: '손짓으로 계약까지 한 상인', extras: ['엉터리 통역사', '웃음을 참던 숙소 주인', '잠꼬대를 들은 사람', '오해를 푼 낙타몰이꾼'] },
-  { tone: 'funny', scene: 'snow', era: '눈의 왕국 노르헤임 · 600년 전', title: '바뀐 냄비', tag: '냄비가 바뀐 공동 우승자',
+  { tone: 'funny', scene: 'snow', era: '눈의 왕국 노르헤임 · 600년 전', title: '바뀐 냄비', center: 'pots', tag: '냄비가 바뀐 공동 우승자',
     quote: '“잠깐… 이거 내 냄비 아니잖아?”',
     desc: '겨울 수프 대회에서 냄비가 뒤바뀐 {a|과} {b|은} 서로의 수프로 사상 첫 공동 우승을 차지했다. 이듬해부터는 아예 한 냄비로 출전했다.',
     roleA: '비법 수프의 요리사', roleB: '똑같은 냄비의 요리사', extras: ['만점을 준 심사위원', '냄비를 나란히 놓은 사람', '첫 시식 손님', '시상식 사회자'] },
-  { tone: 'funny', scene: 'battle', era: '어느 왕국의 기사 시험장 · 700년 전', title: '세 번 미뤄진 결투', tag: '결투 상대 → 평생 밥친구',
+  { tone: 'funny', scene: 'battle', era: '어느 왕국의 기사 시험장 · 700년 전', title: '세 번 미뤄진 결투', center: 'lunch', tag: '결투 상대 → 평생 밥친구',
     quote: '“결투는… 점심 먹고 합시다.”',
     desc: '기사 시험에서 결투 상대로 만난 {a|과} {b|은} 비 때문에, 점심 때문에, 낮잠 때문에 결투를 세 번 미뤘다. 결국 결투 대신 평생 같이 밥을 먹었다.',
-    roleA: '시험에 나선 기사 지망생', roleB: '맞은편 기사 지망생', extras: ['한숨 쉬는 심판', '도시락을 싸 온 시종', '구경 온 마을 사람', '결과를 기록한 서기'] }
+    roleA: '시험에 나선 기사 지망생', roleB: '맞은편 기사 지망생', extras: ['한숨 쉬는 심판', '도시락을 싸 온 시종', '구경 온 마을 사람', '결과를 기록한 서기'] },
+  { tone: 'funny', scene: 'snow', center: 'dragon', era: '용의 산맥 · 1100년 전', title: '생각보다 작은 용', tag: '용 사냥꾼 → 아기 용 공동 집사',
+    quote: '“…생각보다 용이 작은데요?”',
+    desc: '전설의 용을 잡으러 떠난 {a|과} {b|은} 사흘 만에 용을 찾았지만, 도마뱀만 한 아기 용이었다. 둘은 그 용을 데려와 평생 번갈아 밥을 챙겼다.',
+    roleA: '용 사냥에 나선 원정대장', roleB: '용 사냥에 따라나선 원정대원', extras: ['지도를 잘못 읽은 길잡이', '용 먹이를 구해 온 사냥꾼', '용 이름을 지어 준 시인', '원정 비용을 댄 마을 이장'] },
+  { tone: 'funny', scene: 'sea', center: 'map', era: '남쪽 바다의 섬들 · 450년 전', title: '엑스 표시의 비밀', tag: '보물 사냥꾼 → 엿 나눠 먹는 사이',
+    quote: '“엑스 표시가… 우리 집 마당인데?”',
+    desc: '{a|과} {b|은} 보물지도 한 장을 따라 십 년 동안 세 바다를 건넜다. 엑스 표시는 {a|의} 집 마당이었고, 파 보니 어릴 적 묻어 둔 엿 한 단지가 나왔다.',
+    roleA: '보물지도를 가진 선장', roleB: '보물지도를 해독한 항해사', extras: ['삽을 든 선원', '엿을 알아본 이웃', '십 년 내내 노를 저은 사공', '지도를 판 수상한 상인'] },
+  { tone: 'funny', scene: 'palace', center: 'question', era: '조선 · 궁궐 연회장 · 280년 전', title: '같은 시를 쓴 두 사람', tag: '표절 시비 → 평생의 글벗',
+    quote: '“…자네, 내 시를 훔쳐 갔는가?”',
+    desc: '왕의 연회 백일장에서 {a|과} {b|은} 토씨 하나 다르지 않은 시를 동시에 냈다. 사흘간 다툰 끝에, 둘 다 같은 꿈에서 그 시를 봤다는 걸 알았다.',
+    roleA: '백일장에 나선 선비', roleB: '같은 시를 낸 선비', extras: ['고개를 갸웃한 심사관', '두 시를 나란히 붙인 내관', '꿈 이야기를 믿어 준 왕', '구경하던 연회 손님'] }
 ];
 const SCENE_KEYS = ['battle', 'clock', 'palace', 'snow', 'desert', 'library', 'sea'];
+const CENTERS = ['ricecake', 'cat', 'pots', 'lunch', 'dragon', 'map', 'question'];
 const GENERIC_EXTRAS = ['그 자리에 있던 증인', '소식을 듣고 달려온 이웃', '이 일을 기록한 사람', '끝까지 곁을 지킨 동행'];
 
 /* =========================================================
-   4. 고전 명화풍 그림 (SVG)
+   4. 명화 액자 속 하찮은 그림 (SVG)
    ========================================================= */
-const OUT = '#2b2014';
-const SKIN = ['#f3d3b5', '#e9c09a', '#dcaa82', '#f6dcc4', '#cf9a72'];
-const HAIR = ['#3b2a20', '#5a3b28', '#1f1a17', '#7a4e2d', '#a0703f', '#2e2a3a'];
+const INK = '#1d1712';
+const SKIN = ['#f6d7b8', '#eec39c', '#e0ad84', '#f8dfc8', '#d29c74'];
+const HAIR = ['#2b1d14', '#4a2f1e', '#151110', '#6b4426', '#8a5a2e', '#2a2433'];
+const SK = `stroke="${INK}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"`;
+const SKt = `stroke="${INK}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"`;
+
 function propSvg(p) {
-  const s = `stroke="${OUT}" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"`;
   switch (p) {
-    case 'gear': return `<g transform="translate(25 80)"><circle r="8.5" fill="none" stroke="${OUT}" stroke-width="5" stroke-dasharray="3 2.6"/><circle r="7" fill="#c9a55a" ${s}/><circle r="2.4" fill="#fbf3e2" ${s}/></g>`;
-    case 'palette': return `<g transform="translate(25 82) rotate(-15)"><path d="M-10 0 C-10 -9 10 -10 11 -2 C12 4 4 3 4 7 C4 11 -10 9 -10 0Z" fill="#f0dfbd" ${s}/><circle cx="-5" cy="-3" r="1.8" fill="#c4413a"/><circle cx="0" cy="-5" r="1.8" fill="#3f6fb0"/><circle cx="5" cy="-3" r="1.8" fill="#e0b13c"/></g>`;
-    case 'brush': return `<g transform="translate(22 88) rotate(-35)"><rect x="-1.6" y="-26" width="3.2" height="22" fill="#a0703f" ${s}/><path d="M-3 -26 Q0 -36 3 -26Z" fill="#9b5f8e" ${s}/></g>`;
-    case 'map': return `<g transform="translate(26 82) rotate(-10)"><rect x="-10" y="-8" width="20" height="16" fill="#efe0bd" ${s}/><path d="M-6 3 L-1 -2 L3 2 L7 -4" fill="none" stroke="#a33" stroke-width="1.3" stroke-dasharray="2 1.6"/></g>`;
-    case 'horn': return `<g transform="translate(26 78) rotate(-25)"><path d="M-8 2 L8 -6 L8 8 Z" fill="#d4b065" ${s}/><rect x="-12" y="-1" width="5" height="4" fill="#d4b065" ${s}/></g>`;
-    case 'pouch': return `<g transform="translate(25 88)"><path d="M-8 -4 Q-11 10 0 10 Q11 10 8 -4 Z" fill="#b98a55" ${s}/><circle cx="0" cy="3" r="2" fill="#d4b065"/></g>`;
-    case 'bowl': return `<g transform="translate(25 84)"><path d="M-10 -2 Q-9 10 0 10 Q9 10 10 -2 Z" fill="#e7d1a8" ${s}/></g>`;
-    case 'scale': return `<g transform="translate(25 80)" fill="none" ${s}><path d="M0 -10 V10 M-10 -6 H10 M-10 -6 L-13 2 M-10 -6 L-7 2 M10 -6 L7 2 M10 -6 L13 2"/><path d="M-14 2 Q-10 7 -6 2Z M6 2 Q10 7 14 2Z" fill="#d4b065"/></g>`;
-    case 'book': return `<g transform="translate(25 84) rotate(-8)"><rect x="-9" y="-11" width="18" height="22" rx="1.5" fill="#4a4a6a" ${s}/><rect x="-6" y="-7" width="12" height="3" fill="#d4b065"/></g>`;
-    case 'lantern': return `<g transform="translate(26 82)"><circle r="13" fill="#ffd97a" opacity=".45"/><path d="M0 -14 V-10" ${s}/><rect x="-6" y="-10" width="12" height="15" rx="2" fill="#ffe7a0" ${s}/></g>`;
-    case 'telescope': return `<g transform="translate(24 80) rotate(-35)"><rect x="-4" y="-2" width="22" height="7" rx="1.5" fill="#c9a55a" ${s}/><rect x="-10" y="-1" width="7" height="5" fill="#8a6a3a" ${s}/></g>`;
-    case 'magnifier': return `<g transform="translate(25 80)"><path d="M5 5 L12 13" stroke="${OUT}" stroke-width="3.2" stroke-linecap="round"/><circle r="7.5" fill="#dff0f4" ${s}/></g>`;
-    case 'shield': return `<g transform="translate(25 84)"><path d="M-10 -11 H10 V0 Q10 9 0 13 Q-10 9 -10 0Z" fill="#7d8792" ${s}/><path d="M0 -8 V9 M-7 -2 H7" stroke="#d4b065" stroke-width="2"/></g>`;
-    case 'note': return `<g transform="translate(25 78)"><path d="M-3 8 V-10 L8 -13 V5" fill="none" ${s}/><ellipse cx="-6" cy="8" rx="3.6" ry="2.6" fill="${OUT}"/><ellipse cx="5" cy="5" rx="3.6" ry="2.6" fill="${OUT}"/></g>`;
-    case 'quill': return `<g transform="translate(24 86) rotate(25)"><path d="M0 8 C-8 -6 -4 -20 6 -26 C6 -12 4 -2 0 8Z" fill="#f4ecdc" ${s}/></g>`;
-    case 'flag': return `<g transform="translate(22 92)"><path d="M0 0 V-44" ${s}/><path d="M0 -44 L18 -38 L0 -32Z" fill="#b03a2e" ${s}/></g>`;
-    case 'sword': return `<g transform="translate(24 84) rotate(-30)"><rect x="-1.8" y="-34" width="3.6" height="30" fill="#d8dde3" ${s}/><rect x="-7" y="-5" width="14" height="3" fill="#b9913f" ${s}/><rect x="-1.6" y="-2" width="3.2" height="8" fill="#5a3b28" ${s}/></g>`;
-    default: return `<g transform="translate(23 96)"><path d="M0 14 L3 -36" stroke="#8a6a3a" stroke-width="3" stroke-linecap="round"/><circle cx="3" cy="-37" r="3" fill="#8a6a3a"/></g>`;
+    case 'gear': return `<g transform="translate(27 80)"><circle r="7" fill="#d9b44a" ${SK}/><path d="M0 -11 V-7 M0 7 V11 M-11 0 H-7 M7 0 H11 M-8 -8 L-5 -5 M8 8 L5 5" ${SK}/></g>`;
+    case 'palette': return `<g transform="translate(27 82)"><path d="M-10 0 Q-9 -10 3 -9 Q13 -7 10 2 Q8 9 -1 9 Q-11 8 -10 0Z" fill="#f2e2be" ${SK}/><circle cx="-4" cy="-3" r="2" fill="#e0402f"/><circle cx="2" cy="-4" r="2" fill="#2f6fe0"/><circle cx="5" cy="2" r="2" fill="#f2c02f"/></g>`;
+    case 'brush': return `<g transform="translate(24 86) rotate(-30)"><path d="M0 0 V-26" ${SK}/><path d="M-3 -26 Q0 -38 4 -27Z" fill="#c2399b" ${SKt}/></g>`;
+    case 'map': return `<g transform="translate(27 82) rotate(-8)"><rect x="-10" y="-8" width="20" height="16" fill="#f2e2be" ${SK}/><path d="M2 -3 L7 3 M7 -3 L2 3" stroke="#e0402f" stroke-width="2.4" stroke-linecap="round"/></g>`;
+    case 'horn': return `<g transform="translate(27 78) rotate(-20)"><path d="M-9 0 L9 -8 L9 8 Z" fill="#f2c02f" ${SK}/></g>`;
+    case 'pouch': return `<g transform="translate(26 88)"><circle r="8" fill="#c08850" ${SK}/><path d="M-4 -8 L0 -12 L4 -8" ${SKt} fill="none"/></g>`;
+    case 'bowl': return `<g transform="translate(27 84)"><path d="M-10 -2 Q0 14 10 -2 Z" fill="#f2e2be" ${SK}/><path d="M-2 -6 Q-5 -10 -1 -14 M4 -6 Q1 -10 5 -14" ${SKt} fill="none"/></g>`;
+    case 'scale': return `<g transform="translate(27 80)" fill="none" ${SK}><path d="M0 -10 V10 M-11 -6 H11"/><path d="M-14 2 Q-11 8 -7 2Z M7 2 Q11 8 14 2Z" fill="#f2c02f"/></g>`;
+    case 'book': return `<g transform="translate(27 84) rotate(-10)"><rect x="-8" y="-10" width="16" height="20" fill="#5a5ab0" ${SK}/></g>`;
+    case 'lantern': return `<g transform="translate(27 82)"><circle r="14" fill="#ffe27a" opacity=".55"/><rect x="-6" y="-9" width="12" height="15" fill="#ffd84a" ${SK}/></g>`;
+    case 'telescope': return `<g transform="translate(25 80) rotate(-35)"><rect x="-6" y="-3" width="24" height="7" fill="#d9b44a" ${SK}/></g>`;
+    case 'magnifier': return `<g transform="translate(26 80)"><path d="M5 5 L12 13" ${SK}/><circle r="7" fill="#cfeef6" ${SK}/></g>`;
+    case 'shield': return `<g transform="translate(27 84)"><path d="M-10 -11 H10 V0 Q10 9 0 13 Q-10 9 -10 0Z" fill="#9aa6b2" ${SK}/></g>`;
+    case 'note': return `<g transform="translate(27 78)"><path d="M-2 8 V-10 L7 -12 V5" fill="none" ${SK}/><circle cx="-5" cy="8" r="3.4" fill="${INK}"/><circle cx="4" cy="5" r="3.4" fill="${INK}"/></g>`;
+    case 'quill': return `<g transform="translate(25 86) rotate(25)"><path d="M0 8 Q-9 -8 5 -24 Q6 -6 0 8Z" fill="#fff6e2" ${SK}/></g>`;
+    case 'flag': return `<g transform="translate(24 94)"><path d="M0 0 V-46" ${SK}/><path d="M0 -46 L18 -40 L0 -34Z" fill="#e0402f" ${SK}/></g>`;
+    case 'sword': return `<g transform="translate(25 86) rotate(-35)"><path d="M0 0 V-34" stroke="#c9d1da" stroke-width="4.5" stroke-linecap="round"/><path d="M0 0 V-34" fill="none" stroke="${INK}" stroke-width="1.4"/><path d="M-7 -2 H7 M0 -2 V7" ${SK}/></g>`;
+    default: return `<path d="M24 100 L28 58" ${SK}/>`;
   }
 }
-function hatSvg(h, color) {
-  const s = `stroke="${OUT}" stroke-width="1.6" stroke-linejoin="round"`;
+function hatSvg(h, color, top) {
   switch (h) {
-    case 'captain': return `<path d="M-19 26 Q0 14 19 26 L16 18 Q0 4 -16 18Z" fill="#2c3444" ${s}/><circle cx="0" cy="15" r="2.4" fill="#d4b065"/>`;
-    case 'beret': return `<path d="M-17 26 Q-20 12 0 12 Q22 12 18 24 Q0 20 -17 26Z" fill="${color}" ${s}/>`;
-    case 'feather': return `<path d="M-18 26 Q-16 14 0 14 Q16 14 18 26Z" fill="#6b3b2a" ${s}/><path d="M10 16 Q24 0 28 -6 Q22 10 12 20" fill="#e0b13c" ${s}/>`;
-    case 'cap': return `<path d="M-18 27 Q-18 13 0 13 Q18 13 18 27Z" fill="#b98a55" ${s}/>`;
-    case 'goggles': return `<path d="M-17 28 H17" stroke="#5a3b28" stroke-width="3"/><circle cx="-7" cy="27" r="4.5" fill="#bfe3ea" ${s}/><circle cx="7" cy="27" r="4.5" fill="#bfe3ea" ${s}/>`;
-    case 'helmet': return `<path d="M-19 30 Q-20 10 0 9 Q20 10 19 30 L14 30 Q14 18 0 17 Q-14 18 -14 30Z" fill="#9aa3ad" ${s}/><path d="M0 9 Q6 0 2 -6" stroke="#b03a2e" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+    case 'helmet': return `<path d="M-17 ${top + 12} Q-16 ${top - 6} 0 ${top - 7} Q16 ${top - 6} 17 ${top + 12}Z" fill="#a9b3bd" ${SK}/><path d="M0 ${top - 7} Q4 ${top - 18} 10 ${top - 16}" stroke="#e0402f" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+    case 'beret': return `<path d="M-15 ${top + 6} Q-14 ${top - 6} 2 ${top - 6} Q17 ${top - 5} 15 ${top + 4} Q0 ${top + 1} -15 ${top + 6}Z" fill="${color}" ${SK}/>`;
+    case 'feather': return `<path d="M-14 ${top + 6} L0 ${top - 10} L14 ${top + 6}Z" fill="#7a4428" ${SK}/><path d="M6 ${top - 4} Q18 ${top - 20} 24 ${top - 22}" stroke="#f2c02f" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+    case 'captain': return `<path d="M-15 ${top + 6} L-11 ${top - 8} L11 ${top - 8} L15 ${top + 6}Z" fill="#2c3448" ${SK}/>`;
+    case 'cap': return `<path d="M-14 ${top + 6} Q0 ${top - 12} 14 ${top + 6}Z M14 ${top + 6} H24" fill="#c08850" ${SK}/>`;
+    case 'goggles': return `<circle cx="-7" cy="${top + 9}" r="5" fill="#bfe8f2" ${SKt}/><circle cx="7" cy="${top + 9}" r="5" fill="#bfe8f2" ${SKt}/><path d="M-2 ${top + 9} H2" ${SKt}/>`;
     default: return '';
   }
 }
+/* 하찮은 등장인물 한 명 · 중심 x=0, 발끝 y=122 */
 function figureSvg(p, opts = {}) {
   const arc = arcByKey(p.arc), h = hashStr(p.name + '|' + p.team);
-  const skin = SKIN[h % SKIN.length], hair = HAIR[(h >> 3) % HAIR.length], style = (h >> 6) % 5;
-  const s = `stroke="${OUT}" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"`;
+  const q = k => ((h >>> k) & 15) / 15;
+  const skin = SKIN[h % SKIN.length], hair = HAIR[(h >>> 3) % HAIR.length];
+  const bw = 13 + q(5) * 7, hx = q(9) * 4 - 2, hy = 38 + q(13) * 4, rx = 15 + q(4) * 6, ry = 13 + q(8) * 4;
+  const top = hy - ry;
+  const body = `<path d="M${-bw} 64 Q${-bw - 7} 90 ${-bw + 2} 108 Q0 ${113 + q(17) * 4} ${bw - 1} 107 Q${bw + 6} 88 ${bw} 63 Q0 ${55 + q(21) * 3} ${-bw} 64Z" fill="${arc.color}" ${SK}/>`;
+  const legs = `<path d="M-6 109 L${-9 - q(6) * 3} 122 H${-15 - q(6) * 3} M6 109 L${9 + q(7) * 3} 122 H${15 + q(7) * 3}" fill="none" ${SK}/>`;
+  const armL = `<path d="M${-bw + 1} 72 L${-bw - 11} ${82 + q(10) * 14}" ${SK}/>`;
+  const armR = `<path d="M${bw - 1} 72 L24 ${80 + q(11) * 4}" ${SK}/>`;
+  const head = `<ellipse cx="${hx}" cy="${hy}" rx="${rx}" ry="${ry}" fill="${skin}" ${SK}/>`;
+  const ex1 = hx - 6, ex2 = hx + 6 + q(15) * 2, ey = hy + 1;
+  const eyes = [
+    `<circle cx="${ex1}" cy="${ey}" r="2.2" fill="${INK}"/><circle cx="${ex2}" cy="${ey}" r="2.2" fill="${INK}"/>`,
+    `<circle cx="${ex1}" cy="${ey}" r="1.6" fill="${INK}"/><circle cx="${ex2}" cy="${ey - 1}" r="3.2" fill="${INK}"/>`,
+    `<path d="M${ex1 - 3} ${ey} H${ex1 + 3} M${ex2 - 3} ${ey} H${ex2 + 3}" ${SKt}/>`,
+    `<path d="M${ex1 - 3} ${ey - 3} L${ex1 + 2} ${ey} L${ex1 - 3} ${ey + 3} M${ex2 + 3} ${ey - 3} L${ex2 - 2} ${ey} L${ex2 + 3} ${ey + 3}" fill="none" ${SKt}/>`,
+    `<circle cx="${ex1}" cy="${ey}" r="2.2" fill="${INK}"/><path d="M${ex2 - 2.5} ${ey - 2.5} L${ex2 + 2.5} ${ey + 2.5} M${ex2 + 2.5} ${ey - 2.5} L${ex2 - 2.5} ${ey + 2.5}" ${SKt}/>`,
+    `<circle cx="${ex1}" cy="${ey}" r="3.4" fill="#fff" ${SKt}/><circle cx="${ex1 + .6}" cy="${ey}" r="1.3" fill="${INK}"/><circle cx="${ex2}" cy="${ey}" r="3.4" fill="#fff" ${SKt}/><circle cx="${ex2 - .6}" cy="${ey}" r="1.3" fill="${INK}"/>`
+  ][(h >>> 14) % 6];
+  const my = hy + 7, mx = hx + 1;
+  const mouth = [
+    `<path d="M${mx - 4} ${my} H${mx + 4}" ${SKt}/>`,
+    `<ellipse cx="${mx}" cy="${my}" rx="2.2" ry="2.8" fill="#7a2a22" ${SKt}/>`,
+    `<path d="M${mx - 5} ${my} q2.5 -2.5 5 0 q2.5 2.5 5 0" fill="none" ${SKt}/>`,
+    `<path d="M${mx - 3} ${my + 2} L${mx} ${my - 1} L${mx + 3} ${my + 2}" fill="none" ${SKt}/>`,
+    `<path d="M${mx - 5} ${my - 1} Q${mx} ${my + 6} ${mx + 5} ${my - 1}Z" fill="#7a2a22" ${SKt}/>`,
+    `<path d="M${mx - 3} ${my} Q${mx} ${my + 3} ${mx + 3} ${my}" fill="none" ${SKt}/>`
+  ][(h >>> 17) % 6];
   const hairs = [
-    `<path d="M-18 38 Q-19 15 0 15 Q19 15 18 38 Q13 25 0 25 Q-12 25 -18 38Z" fill="${hair}" ${s}/>`,
-    `<path d="M-20 47 Q-23 14 0 14 Q23 14 20 47 L14 47 Q15 27 0 26 Q-15 27 -14 47Z" fill="${hair}" ${s}/>`,
-    `<g fill="${hair}" ${s}><circle cx="-12" cy="25" r="7"/><circle cx="0" cy="19" r="8"/><circle cx="12" cy="25" r="7"/><circle cx="-16" cy="34" r="5"/><circle cx="16" cy="34" r="5"/></g>`,
-    `<circle cx="0" cy="13" r="6.5" fill="${hair}" ${s}/><path d="M-18 38 Q-19 16 0 16 Q19 16 18 38 Q12 26 0 26 Q-12 26 -18 38Z" fill="${hair}" ${s}/>`,
-    `<path d="M-18 36 L-15 20 L-8 24 L-3 15 L3 23 L9 16 L13 24 L18 22 L18 36 Q10 27 0 27 Q-10 27 -18 36Z" fill="${hair}" ${s}/>`
-  ];
+    `<path d="M${hx - 4} ${top + 1} L${hx - 7} ${top - 8} M${hx} ${top} L${hx + 1} ${top - 10} M${hx + 4} ${top + 1} L${hx + 8} ${top - 7}" stroke="${hair}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>`,
+    `<path d="M${hx - rx + 2} ${hy - 4} L${hx - rx + 6} ${top - 3} L${hx - 4} ${top + 3} L${hx} ${top - 4} L${hx + 5} ${top + 3} L${hx + rx - 5} ${top - 3} L${hx + rx - 2} ${hy - 4}" fill="none" stroke="${hair}" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/>`,
+    `<path d="M${hx - rx} ${hy - 1} Q${hx - rx} ${top - 4} ${hx} ${top - 4} Q${hx + rx} ${top - 4} ${hx + rx} ${hy - 1} Q${hx} ${hy - 9} ${hx - rx} ${hy - 1}Z" fill="${hair}" ${SK}/>`,
+    `<path d="M${hx} ${top} q-2 -8 4 -8 q5 0 3 5 q-1 3 -4 1" fill="none" stroke="${hair}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>`
+  ][(h >>> 20) % 4];
+  const blush = (h >>> 23) % 3 === 0 ? `<ellipse cx="${ex1 - 4}" cy="${ey + 6}" rx="3" ry="2" fill="#ff8a7a" opacity=".7"/><ellipse cx="${ex2 + 4}" cy="${ey + 6}" rx="3" ry="2" fill="#ff8a7a" opacity=".7"/>` : '';
   const prop = opts.prop || arc.prop, hat = opts.hat !== undefined ? opts.hat : arc.hat;
-  return `<ellipse cx="0" cy="120" rx="22" ry="4" fill="rgba(0,0,0,.4)"/>
-    <rect x="-10" y="106" width="7" height="13" rx="2" fill="#3a2c20" ${s}/><rect x="3" y="106" width="7" height="13" rx="2" fill="#3a2c20" ${s}/>
-    <path d="M-23 110 L-15 60 Q0 51 15 60 L23 110 Q0 116 -23 110Z" fill="${arc.color}" ${s}/>
-    <path d="M-7 58 L0 72 L7 58" fill="#f4ead2" ${s}/>
-    <circle cx="-19" cy="86" r="4.5" fill="${skin}" ${s}/>${propSvg(prop)}<circle cx="20" cy="84" r="4.5" fill="${skin}" ${s}/>
-    <circle cx="0" cy="38" r="18" fill="${skin}" ${s}/>${hairs[style]}
-    <circle cx="-6.5" cy="40" r="2" fill="${OUT}"/><circle cx="6.5" cy="40" r="2" fill="${OUT}"/>
-    <ellipse cx="-11" cy="46" rx="3.4" ry="2" fill="#e88f80" opacity=".5"/><ellipse cx="11" cy="46" rx="3.4" ry="2" fill="#e88f80" opacity=".5"/>
-    <path d="M-3.5 47.5 Q0 51 3.5 47.5" fill="none" ${s}/>${hatSvg(hat, arc.color)}`;
+  const hatPart = hat === 'helmet' || hat === 'captain' || hat === 'beret' || hat === 'feather' || hat === 'cap' ? hatSvg(hat, arc.color, top) : '';
+  return `<ellipse cx="0" cy="123" rx="20" ry="3.5" fill="rgba(0,0,0,.25)"/>${legs}${armL}${body}${armR}${propSvg(prop)}${head}${hatPart ? '' : hairs}${eyes}${mouth}${blush}${hatPart}${hat === 'goggles' ? hatSvg('goggles', arc.color, top) : ''}`;
 }
-const portraitSvg = p => `<svg viewBox="-32 6 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${figureSvg(p)}</svg>`;
+const portraitSvg = p => `<svg viewBox="-32 8 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${figureSvg(p)}</svg>`;
+
+/* 가운데 소품 (유쾌한 장면) */
+function centerProp(kind, x, y) {
+  const g = body => `<g transform="translate(${x} ${y})">${body}</g>`;
+  switch (kind) {
+    case 'ricecake': return g(`<ellipse cx="0" cy="0" rx="22" ry="7" fill="#fff" ${SK}/><g fill="#f2d27a" ${SKt}><ellipse cx="-8" cy="-5" rx="6" ry="4"/><ellipse cx="4" cy="-6" rx="6" ry="4"/><ellipse cx="-2" cy="-11" rx="6" ry="4"/></g>`);
+    case 'cat': return g(`<path d="M-14 0 Q-16 -16 0 -16 Q14 -16 12 0Z" fill="#f2a24a" ${SK}/><path d="M-10 -14 L-12 -24 L-4 -17 M4 -17 L10 -24 L9 -14" fill="#f2a24a" ${SK}/><circle cx="-5" cy="-9" r="1.6" fill="${INK}"/><circle cx="4" cy="-9" r="1.6" fill="${INK}"/><path d="M12 -4 Q22 -6 20 -16" fill="none" ${SK}/><path d="M-4 -4 L-14 -2 M-14 -2 l-4 -3 M-14 -2 l-4 3" ${SKt}/><path d="M-22 -1 L-14 -2" stroke="#9ac" stroke-width="5" stroke-linecap="round"/>`);
+    case 'pots': return g(`<g fill="#7d8792" ${SK}><path d="M-26 -14 H-6 V0 Q-16 6 -26 0Z"/><path d="M6 -14 H26 V0 Q16 6 6 0Z"/></g><path d="M-18 -18 q-3 -5 0 -9 q3 -4 0 -8 M16 -18 q-3 -5 0 -9 q3 -4 0 -8" fill="none" ${SKt}/>`);
+    case 'lunch': return g(`<path d="M-14 -8 Q-14 6 0 6 Q14 6 14 -8Z" fill="#c8553a" ${SK}/><path d="M-12 -8 Q0 -20 12 -8Z" fill="#fff" ${SK}/><path d="M8 -26 L16 -6 M13 -27 L19 -8" ${SKt}/>`);
+    case 'dragon': return g(`<path d="M-14 0 Q-12 -12 2 -10 Q12 -9 12 0Z" fill="#6cc46c" ${SK}/><path d="M10 -6 Q18 -10 20 -4 Q16 0 12 -2" fill="#6cc46c" ${SK}/><path d="M-4 -10 L0 -20 L4 -10" fill="#a8e0a8" ${SKt}/><circle cx="16" cy="-5" r="1.4" fill="${INK}"/><path d="M-14 -2 Q-22 -2 -24 -8" fill="none" ${SK}/><path d="M21 -4 q4 -2 7 0 q-3 2 -7 0" fill="#ff7a3a"/>`);
+    case 'map': return g(`<rect x="-16" y="-14" width="32" height="20" fill="#f2e2be" ${SK}/><path d="M-10 -2 q6 -8 12 -2 q4 3 6 -4" fill="none" stroke="#7a5a3a" stroke-width="1.6" stroke-dasharray="3 3"/><path d="M6 -10 L12 -4 M12 -10 L6 -4" stroke="#e0402f" stroke-width="2.6" stroke-linecap="round"/>`);
+    case 'question': return g(`<path d="M-14 -22 q0 -10 8 -10 q8 0 8 7 q0 5 -7 7 v4 M-6 -6 v1" fill="none" stroke="${INK}" stroke-width="3.2" stroke-linecap="round"/><path d="M8 -30 q0 -8 6 -8 q6 0 6 5 q0 4 -5 5 v3 M15 -17 v1" fill="none" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>`);
+    default: return '';
+  }
+}
 
 let svgSeq = 0;
-function paintingSvg(scene, tone, people, label) {
+function paintingSvg(scene, tone, people, label, center) {
   const uid = 'pt' + (++svgSeq);
-  const skies = {
-    battle: ['#5a6276', '#e0a868'], clock: ['#3a4058', '#9a8a8a'], palace: ['#3a3050', '#a07462'], snow: ['#4a5a78', '#c4c0c4'],
-    desert: ['#4a3e5e', '#e2a868'], library: ['#2c3c5c', '#8a90a0'], sea: ['#34405e', '#a8968a']
-  };
-  let [s1, s2] = skies[scene] || skies.clock;
-  if (tone === 'funny') s2 = '#e8b47a';
-  const sil = 'rgba(40,28,20,.82)', sil2 = 'rgba(80,60,50,.55)';
+  const sky = { battle: '#9cc6ea', clock: '#2c3a6a', palace: '#5a4a8a', snow: '#b8cde6', desert: '#f2b46a', library: '#3a4a7a', sea: '#8ec2e8' }[scene] || '#9cc6ea';
+  const night = ['clock', 'palace', 'library'].includes(scene);
+  const stars = night ? Array.from({ length: 9 }, (_, i) => { const x = 30 + i * 41 + (i % 3) * 7, y = 22 + (i * 29) % 70; return `<path d="M${x - 4} ${y} H${x + 4} M${x} ${y - 4} V${y + 4} M${x - 3} ${y - 3} L${x + 3} ${y + 3} M${x + 3} ${y - 3} L${x - 3} ${y + 3}" stroke="#fff3b0" stroke-width="1.6" stroke-linecap="round"/>`; }).join('') : '';
+  const sun = night
+    ? `<path d="M336 26 A20 20 0 1 0 352 62 A16 16 0 1 1 336 26Z" fill="#fff3b0" ${SK}/>`
+    : `<circle cx="66" cy="54" r="22" fill="#ffd84a" ${SK}/><circle cx="59" cy="51" r="2" fill="${INK}"/><circle cx="72" cy="51" r="2" fill="${INK}"/><path d="M60 60 Q66 65 72 60" fill="none" ${SKt}/><path d="M66 22 V14 M66 86 V94 M34 54 H26 M98 54 H106 M43 31 L38 26 M89 77 L94 82 M89 31 L94 26 M43 77 L38 82" ${SKt}/>`;
   let back = '', ground = '';
-  if (scene === 'battle') {
-    back = `<g fill="#f4e2c0" opacity=".22"><ellipse cx="90" cy="70" rx="110" ry="30"/><ellipse cx="300" cy="50" rx="130" ry="34"/><ellipse cx="220" cy="110" rx="160" ry="22"/></g>
-      <path d="M0 190 Q90 140 190 170 T400 150 V210 H0Z" fill="${sil2}"/>
-      <g stroke="${sil}" stroke-width="2">${Array.from({ length: 14 }, (_, i) => `<path d="M${20 + i * 28} 180 V${150 - (i % 3) * 8}"/>`).join('')}</g>
-      <path d="M40 200 V110" stroke="${sil}" stroke-width="3"/><path d="M40 110 Q70 118 96 110 Q70 128 40 130Z" fill="#7a2626"/>
-      <path d="M360 200 V100" stroke="${sil}" stroke-width="3"/><path d="M360 100 Q330 108 304 100 Q330 118 360 120Z" fill="#26407a"/>
-      <g fill="#cfc2a8" opacity=".25"><ellipse cx="200" cy="196" rx="200" ry="14"/></g>`;
-    ground = `<rect y="200" width="400" height="60" fill="#4a3826"/><path d="M0 218 Q100 210 200 220 T400 214" stroke="rgba(0,0,0,.25)" fill="none" stroke-width="3"/>`;
-  } else if (scene === 'clock') {
-    back = `<path d="M0 200 V150 H30 V130 L45 115 L60 130 V150 H85 V165 H110 V140 L125 128 L140 140 V200Z" fill="${sil2}"/>
-      <path d="M255 205 V70 L280 38 L305 70 V205Z" fill="${sil}"/><circle cx="280" cy="92" r="15" fill="#f1dfae" stroke="${OUT}" stroke-width="1.4"/>
-      <path d="M280 92 V82 M280 92 L287 96" stroke="${OUT}" stroke-width="1.6" stroke-linecap="round"/><path d="M320 205 V150 H345 V135 L360 122 L375 135 V205Z" fill="${sil2}"/>
-      <g fill="#efe4cc" opacity=".2"><ellipse cx="120" cy="196" rx="150" ry="18"/><ellipse cx="330" cy="200" rx="130" ry="16"/></g>`;
-    ground = `<rect y="200" width="400" height="60" fill="#3a2e28"/><path d="M0 214 H400 M0 230 H400 M0 246 H400" stroke="rgba(0,0,0,.2)" stroke-width="1.2"/>`;
-  } else if (scene === 'library') {
-    back = `<rect y="168" width="400" height="40" fill="#22304a"/><path d="M0 176 Q30 172 60 176 T120 176 T180 176 T240 176 T300 176 T360 176 T420 176" stroke="rgba(255,255,255,.15)" fill="none"/>
-      <path d="M220 205 Q290 150 380 205Z" fill="${sil2}"/><rect x="285" y="70" width="34" height="112" fill="${sil}"/><path d="M280 70 L302 44 L324 70Z" fill="${sil}"/>
-      <rect x="296" y="84" width="12" height="16" rx="6" fill="#ffd98a"/><rect x="296" y="112" width="12" height="14" rx="6" fill="#ffd98a" opacity=".8"/>`;
-    ground = `<rect y="200" width="400" height="60" fill="#34291f"/>`;
-  } else if (scene === 'desert') {
-    back = `<path d="M0 185 Q80 140 170 180 T400 170 V205 H0Z" fill="${sil2}"/>
-      <g fill="${sil}"><path d="M250 205 V150 Q262 120 274 150 V205Z"/><rect x="280" y="140" width="60" height="65"/><path d="M290 140 Q310 105 330 140Z"/></g>
-      <ellipse cx="200" cy="203" rx="40" ry="6" fill="#4d6b90" opacity=".7"/>
-      <path d="M90 200 Q94 170 100 160 M100 160 Q86 156 80 162 M100 160 Q112 152 118 158" stroke="${sil}" stroke-width="3" fill="none"/>`;
-    ground = `<rect y="200" width="400" height="60" fill="#8a6440"/>`;
-  } else if (scene === 'snow') {
-    back = `<path d="M0 190 L70 110 L130 170 L200 90 L280 175 L340 120 L400 170 V205 H0Z" fill="${sil2}"/>
-      <path d="M58 124 L70 110 L82 124 L74 120 L66 126Z M188 104 L200 90 L212 104 L204 100 L196 106Z M328 134 L340 120 L352 134Z" fill="#fff" opacity=".7"/>
-      <rect x="296" y="150" width="50" height="40" fill="${sil}"/><path d="M290 152 L321 128 L352 152Z" fill="${sil}"/><rect x="314" y="164" width="10" height="10" fill="#ffd98a"/>`;
-    ground = `<rect y="200" width="400" height="60" fill="#d8d2c4"/>`;
-  } else if (scene === 'palace') {
-    back = `<path d="M0 200 V170 H14 Q30 158 50 156 Q70 158 86 170 H100 V200Z" fill="${sil2}"/>
-      <rect x="226" y="128" width="130" height="74" fill="${sil}"/>
-      <path d="M196 134 Q214 128 224 114 L358 114 Q368 128 386 134 Q366 132 354 124 L228 124 Q214 132 196 134Z" fill="${sil}"/>
-      <path d="M240 114 Q250 108 256 96 L326 96 Q332 108 342 114Z" fill="${sil}"/>
-      <g fill="#ffd98a" opacity=".75"><rect x="246" y="148" width="16" height="22"/><rect x="283" y="148" width="16" height="22"/><rect x="320" y="148" width="16" height="22"/></g>
-      <g>${[40, 90, 140, 190, 240, 290, 350].map((x, i) => `<circle cx="${x}" cy="${104 + Math.sin(i) * 9}" r="10" fill="#ff9a6a" opacity=".25"/><circle cx="${x}" cy="${104 + Math.sin(i) * 9}" r="5" fill="#ffb38a"/>`).join('')}</g>`;
-    ground = `<rect y="200" width="400" height="60" fill="#3a2e26"/>`;
-  } else {
-    back = `<rect y="150" width="400" height="60" fill="#26304e"/><g stroke="rgba(255,255,255,.14)" fill="none"><path d="M0 164 Q20 160 40 164 T80 164 T120 164 T160 164 T200 164 T240 164 T280 164 T320 164 T360 164 T400 164"/></g>
-      <path d="M210 160 L340 160 L322 182 L228 182Z" fill="${sil}"/><path d="M272 160 V70" stroke="${sil}" stroke-width="4"/>
-      <path d="M276 76 Q318 104 276 150Z" fill="#ece0c4" opacity=".8"/><path d="M268 84 Q238 108 268 146Z" fill="#ece0c4" opacity=".6"/>`;
-    ground = `<rect y="204" width="400" height="56" fill="#4a3628"/><path d="M40 204 V260 M120 204 V260 M200 204 V260 M280 204 V260 M360 204 V260" stroke="rgba(0,0,0,.25)"/>`;
+  switch (scene) {
+    case 'battle':
+      back = `<path d="M0 170 Q70 130 150 160 Q240 130 320 155 Q370 140 400 150 V210 H0Z" fill="#7cc45a" ${SK}/>
+        <path d="M44 205 V112" ${SK}/><path d="M44 112 L84 122 L44 134Z" fill="#e0402f" ${SK}/>
+        <path d="M356 205 V108" ${SK}/><path d="M356 108 L316 118 L356 130Z" fill="#2f6fe0" ${SK}/>
+        <path d="M120 120 q10 -12 22 0 q12 -10 20 2 q-20 6 -42 -2Z" fill="#fff" ${SKt}/><path d="M250 90 q10 -12 22 0 q12 -10 20 2 q-20 6 -42 -2Z" fill="#fff" ${SKt}/>`;
+      ground = `<path d="M0 205 H400 V260 H0Z" fill="#a87a4a" ${SK}/><path d="M60 230 l4 -6 l4 6 M300 240 l4 -6 l4 6 M180 248 l4 -6 l4 6" ${SKt} fill="none"/>`;
+      break;
+    case 'clock':
+      back = `<path d="M10 205 V150 H60 V205 M80 205 V164 H118 V205" fill="#5a4a6a" ${SK}/><rect x="262" y="70" width="46" height="135" fill="#8a6a5a" ${SK}/><path d="M256 72 L285 32 L314 72Z" fill="#c8553a" ${SK}/>
+        <circle cx="285" cy="100" r="15" fill="#fff6e2" ${SK}/><path d="M285 100 V90 M285 100 L293 104" ${SKt}/><rect x="276" y="130" width="10" height="14" fill="#ffd84a" ${SKt}/>`;
+      ground = `<path d="M0 205 H400 V260 H0Z" fill="#7a7a8a" ${SK}/><path d="M30 225 h30 M120 238 h40 M250 226 h30 M320 244 h40" ${SKt}/>`;
+      break;
+    case 'palace':
+      back = `<rect x="230" y="128" width="130" height="77" fill="#c8553a" ${SK}/><path d="M204 132 Q222 124 232 108 H358 Q368 124 386 132 Q300 122 204 132Z" fill="#3a3a4a" ${SK}/>
+        <rect x="250" y="150" width="20" height="28" fill="#ffd84a" ${SKt}/><rect x="300" y="150" width="20" height="28" fill="#ffd84a" ${SKt}/>
+        <path d="M0 96 Q100 122 200 104 T400 98" fill="none" ${SKt}/>${[40, 100, 160, 220, 300, 360].map((x, i) => `<circle cx="${x}" cy="${103 + (i % 2) * 8}" r="7" fill="#ff6a4a" ${SKt}/>`).join('')}`;
+      ground = `<path d="M0 205 H400 V260 H0Z" fill="#b89a7a" ${SK}/>`;
+      break;
+    case 'snow':
+      back = `<path d="M0 200 L70 110 L130 170 L200 92 L280 175 L340 120 L400 180 V205 H0Z" fill="#8a9ab8" ${SK}/><path d="M58 126 L70 110 L82 126 L76 122 L70 128 L64 122Z M188 108 L200 92 L212 108 L206 104 L200 110 L194 104Z" fill="#fff" ${SKt}/>
+        <rect x="300" y="152" width="48" height="40" fill="#a0603a" ${SK}/><path d="M294 154 L324 128 L354 154Z" fill="#fff" ${SK}/>
+        ${Array.from({ length: 10 }, (_, i) => `<circle cx="${20 + i * 38}" cy="${30 + (i * 23) % 80}" r="2.6" fill="#fff" ${SKt}/>`).join('')}`;
+      ground = `<path d="M0 205 H400 V260 H0Z" fill="#fff" ${SK}/>`;
+      break;
+    case 'desert':
+      back = `<path d="M0 180 Q60 140 130 175 Q200 135 280 170 Q340 145 400 165 V210 H0Z" fill="#f2c27a" ${SK}/>
+        <path d="M330 205 V150 M330 150 q-14 -6 -22 2 M330 150 q14 -8 22 0 M330 150 q-4 -14 -14 -14 M330 150 q6 -14 16 -12" fill="none" ${SK}/>
+        <path d="M60 200 q-2 -24 14 -24 q6 -14 16 0 q8 -10 14 2 q10 0 8 22" fill="#c8904a" ${SK}/><path d="M66 200 v10 M100 200 v10" ${SK}/><circle cx="108" cy="178" r="1.6" fill="${INK}"/>`;
+      ground = `<path d="M0 205 H400 V260 H0Z" fill="#e8b46a" ${SK}/>`;
+      break;
+    case 'library':
+      back = `<path d="M0 168 H400 V208 H0Z" fill="#3a6ab0" ${SK}/><path d="M20 182 q10 -6 20 0 q10 6 20 0 M150 190 q10 -6 20 0 q10 6 20 0 M300 180 q10 -6 20 0 q10 6 20 0" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        <rect x="282" y="66" width="40" height="114" fill="#8a7a6a" ${SK}/><path d="M276 68 L302 36 L328 68Z" fill="#3a3a4a" ${SK}/><rect x="294" y="86" width="14" height="16" fill="#ffd84a" ${SKt}/><rect x="294" y="120" width="14" height="16" fill="#ffd84a" ${SKt}/>
+        <path d="M150 20 L138 48 H152 L140 76" fill="none" stroke="#ffe24a" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>`;
+      ground = `<path d="M0 205 H400 V260 H0Z" fill="#8a6a4a" ${SK}/>`;
+      break;
+    default:
+      back = `<path d="M0 150 H400 V208 H0Z" fill="#2f7ac8" ${SK}/><path d="M30 168 q10 -6 20 0 q10 6 20 0 M180 178 q10 -6 20 0 q10 6 20 0" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        <path d="M230 150 Q290 178 350 150Z" fill="#a0603a" ${SK}/><path d="M290 150 V76" ${SK}/><path d="M292 80 L330 140 H292Z" fill="#fff" ${SK}/>
+        <path d="M120 140 q8 -12 16 0 q-8 8 -16 0Z M136 140 l6 -4 v8z" fill="#f2a24a" ${SKt}/>`;
+      ground = `<path d="M0 205 H400 V260 H0Z" fill="#b08458" ${SK}/><path d="M80 205 V260 M160 205 V260 M240 205 V260 M320 205 V260" ${SKt}/>`;
   }
-  const moon = scene === 'battle' || scene === 'desert' ? `<circle cx="80" cy="64" r="26" fill="#ffe0a0" opacity=".55"/><circle cx="80" cy="64" r="44" fill="#ffd690" opacity=".18"/>` : `<circle cx="326" cy="48" r="16" fill="#f4e6bc"/><circle cx="326" cy="48" r="32" fill="#f4e6bc" opacity=".14"/>`;
-  const n = people.length, gap = Math.min(64, 330 / Math.max(n, 1)), sc = n > 4 ? .7 : .82;
-  const start = 200 - gap * (n - 1) / 2;
+  const n = people.length, gap = Math.min(70, 340 / Math.max(n, 1)), sc = n > 4 ? .66 : .8;
+  const hasCenter = !!center && n >= 2;
+  const xs = people.map((_, i) => 200 - gap * (n - 1) / 2 + gap * i);
+  if (hasCenter && n >= 2) { xs[0] -= 18; xs[1] += 18 * (n === 2 ? 1 : 0); }
+  const labels = [];
   const figs = people.map((p, i) => {
-    const x = start + gap * i, y = 238 - (i % 2) * 3, s = i < 2 ? sc * 1.06 : sc;
+    const x = xs[i], s = i < 2 ? sc * 1.05 : sc, y = 236 - (i % 2) * 4, tilt = ((hashStr(p.name) % 9) - 4) * 1.2;
+    labels.push({ x, y: y - 110 * s, name: p.name, rot: -tilt * 1.5 });
     const opts = scene === 'battle' && i < 2 && tone === 'serious' ? { prop: 'sword', hat: 'helmet' } : {};
-    return `<g transform="translate(${x} ${y - 120 * s}) scale(${s})">${figureSvg(p, opts)}</g>`;
+    return `<g transform="translate(${x} ${y - 122 * s}) scale(${s}) rotate(${tilt} 0 100)">${figureSvg(p, opts)}</g>`;
   }).join('');
-  return `<svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(label || '전생의 한 장면')}">
+  const cx = n >= 2 ? (xs[0] + xs[1]) / 2 : 200;
+  const mid = hasCenter ? centerProp(center, cx, 232) : '';
+  const svg = `<svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(label || '전생의 한 장면')}">
     <defs>
-      <linearGradient id="${uid}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${s1}"/><stop offset="1" stop-color="${s2}"/></linearGradient>
-      <radialGradient id="${uid}l" cx=".5" cy=".55" r=".55"><stop offset="0" stop-color="#ffe2b0" stop-opacity=".42"/><stop offset="1" stop-color="#ffdca0" stop-opacity="0"/></radialGradient>
-      <radialGradient id="${uid}v" cx=".5" cy=".5" r=".72"><stop offset=".55" stop-color="#140c04" stop-opacity="0"/><stop offset="1" stop-color="#140c04" stop-opacity=".6"/></radialGradient>
+      <filter id="${uid}w" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="2" seed="11" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/></filter>
       <filter id="${uid}f" x="0" y="0" width="100%" height="100%">
-        <feTurbulence type="fractalNoise" baseFrequency=".025" numOctaves="3" seed="7" result="n"/>
-        <feDisplacementMap in="SourceGraphic" in2="n" scale="5" result="d"/>
-        <feColorMatrix in="d" type="matrix" values=".86 .26 .06 0 .03  .2 .76 .1 0 .015  .1 .2 .52 0 0  0 0 0 1 0" result="w"/>
+        <feColorMatrix type="matrix" values=".9 .14 .04 0 .02  .08 .86 .06 0 .01  .05 .12 .72 0 0  0 0 0 1 0" result="w"/>
         <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="3" result="g"/>
         <feColorMatrix in="g" type="saturate" values="0" result="g2"/>
-        <feComposite in="w" in2="g2" operator="arithmetic" k1="0" k2="1.05" k3=".14" k4="-.05"/>
+        <feComposite in="w" in2="g2" operator="arithmetic" k1="0" k2="1" k3=".12" k4="-.05"/>
       </filter>
-      <pattern id="${uid}c" width="4" height="4" patternUnits="userSpaceOnUse"><path d="M0 0 H4 M0 0 V4" stroke="#000" stroke-opacity=".06" stroke-width=".6"/></pattern>
+      <radialGradient id="${uid}v" cx=".5" cy=".5" r=".75"><stop offset=".6" stop-color="#2a1806" stop-opacity="0"/><stop offset="1" stop-color="#2a1806" stop-opacity=".45"/></radialGradient>
+      <pattern id="${uid}c" width="4" height="4" patternUnits="userSpaceOnUse"><path d="M0 0 H4 M0 0 V4" stroke="#000" stroke-opacity=".05" stroke-width=".6"/></pattern>
     </defs>
-    <g filter="url(#${uid}f)"><rect width="400" height="260" fill="url(#${uid}s)"/>${moon}${back}${ground}${figs}</g>
-    <rect width="400" height="260" fill="url(#${uid}l)"/><rect width="400" height="260" fill="url(#${uid}c)"/><rect width="400" height="260" fill="url(#${uid}v)"/>
+    <g filter="url(#${uid}f)"><g filter="url(#${uid}w)"><rect width="400" height="260" fill="${sky}"/>${stars}${sun}${back}${ground}${mid}${figs}</g></g>
+    <rect width="400" height="260" fill="url(#${uid}c)"/><rect width="400" height="260" fill="url(#${uid}v)"/>
   </svg>`;
+  return { svg, labels: n <= 6 ? labels : labels.slice(0, 2) };
 }
 
 /* =========================================================
    5. 내장 이야기 엔진 (진중/유쾌는 매번 랜덤)
    ========================================================= */
 function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
-function makeRng(seed) { const r = mulberry32(seed >>> 0); return { pick: arr => arr[Math.floor(r() * arr.length)], shuffle: arr => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; } }; }
+function makeRng(seed) { const r = mulberry32(seed >>> 0); return { next: r, pick: arr => arr[Math.floor(r() * arr.length)], shuffle: arr => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; } }; }
 const teamLabel = t => (t && t.trim()) ? t.trim() : '소속 미정';
 
 function generateBuiltin(people, seed, avoidTitle) {
   const rng = makeRng(seed);
-  const fresh = SCENARIOS.filter(s => s.title !== avoidTitle);
-  const sc = rng.pick(fresh);
+  const tone = rng.next() < 0.7 ? 'funny' : 'serious';  // 유쾌한 장면이 더 자주
+  const pool = SCENARIOS.filter(s => s.title !== avoidTitle && s.tone === tone);
+  const sc = rng.pick(pool.length ? pool : SCENARIOS.filter(s => s.title !== avoidTitle));
   const extras = rng.shuffle(sc.extras).concat(rng.shuffle(GENERIC_EXTRAS));
   const cast = people.map((p, i) => {
     const arc = detectArchetype(p.team);
@@ -487,7 +538,7 @@ function generateBuiltin(people, seed, avoidTitle) {
     return { team: teamLabel(p.team), name: p.name.trim(), arc: arc.key, role: slot, trait: rng.pick(arc.ep) };
   });
   const v = { a: cast[0].name, b: cast[1].name };
-  return { title: sc.title, era: sc.era, scene: sc.scene, tone: sc.tone, tag: sc.tag, quote: sc.quote, desc: fill(sc.desc, v), people: cast, source: 'builtin' };
+  return { title: sc.title, era: sc.era, scene: sc.scene, tone: sc.tone, center: sc.center || '', tag: sc.tag, quote: sc.quote, desc: fill(sc.desc, v), people: cast, source: 'builtin' };
 }
 
 /* =========================================================
@@ -495,7 +546,7 @@ function generateBuiltin(people, seed, avoidTitle) {
    ========================================================= */
 const SYSTEM_PROMPT = `너는 '전생 체험관'의 이야기꾼이다. 회사 동료들의 (팀명, 이름) 목록을 받아, 이들이 전생에 어떤 사이였는지 고전 명화 한 폭처럼 보여 준다. 짧고 강렬해야 한다.
 [형식] 영화 포스터의 카피처럼: 인상적인 대사 한 줄(플레이버 텍스트) + 그 장면을 풀어 주는 설명 1~2문장. 길게 늘이지 않는다.
-[핵심] 처음 두 사람이 인연의 중심이고, 나머지는 그 장면에 함께 있던 인물이다. 각 팀의 결(예: 개발팀=묵묵함·정밀함, 디자이너팀=색채·미감)을 전생 역할의 수식어로 짧게 녹인다. 진중한 이야기와 유쾌한 이야기 중 하나를 고르되 매번 새롭게.
+[핵심] 처음 두 사람이 인연의 중심이고, 나머지는 그 장면에 함께 있던 인물이다. 각 팀의 결(예: 개발팀=묵묵함·정밀함, 디자이너팀=색채·미감)을 전생 역할의 수식어로 짧게 녹인다. 대체로(열에 일곱은) 유쾌하고 엉뚱한 이야기로, 가끔은 진중하게. 매번 새롭게.
 [금지] 연애·궁합·커플·설렘 등 로맨스 요소 / 나이·성별·외모·연락처 등 개인정보·민감정보의 언급이나 추정, 성별을 가정한 호칭 / 업무 능력·성향을 비하하거나 조롱하는 표현.
 이름과 팀명은 입력 그대로 쓰고, 반드시 JSON 객체 하나만 출력한다.`;
 
@@ -503,7 +554,8 @@ async function generateAI(people, { apiKey, model, avoidTitle }) {
   const user = `등장인물(순서대로): ${JSON.stringify(people.map(p => ({ team: teamLabel(p.team), name: p.name.trim() })))}
 ${avoidTitle ? `직전 결과("${avoidTitle}")와는 완전히 다른 시대·장소·관계로.` : ''}
 그림 배경은 가장 어울리는 하나를 "scene"에: battle(전장·결투), clock(안개 도시·시계탑), palace(동양 궁궐·한옥·등불 거리), snow(설원·눈의 왕국), desert(사막·오아시스), library(바다 위 섬·탑), sea(항구·배).
-JSON: {"title": "명화 제목(12자 이내)", "era": "장소 · 몇 년 전 (20자 이내)", "scene": "...", "tone": "serious 또는 funny", "tag": "관계 변화 꼬리표(예: 적국의 전사 → 평생의 맞수, 18자 이내)",
+가운데 소품을 하나 고를 수 있으면 "center"에: ricecake(떡 접시), cat(고양이), pots(냄비), lunch(밥그릇), dragon(작은 용), map(보물지도), question(물음표), 없으면 "".
+JSON: {"title": "명화 제목(12자 이내)", "center": "...", "era": "장소 · 몇 년 전 (20자 이내)", "scene": "...", "tone": "serious 또는 funny", "tag": "관계 변화 꼬리표(예: 적국의 전사 → 평생의 맞수, 18자 이내)",
  "quote": "“ ”로 감싼 강렬한 대사 한 줄(22자 이내)", "desc": "장면 설명 1~2문장(합쳐서 90자 이내)",
  "people": [{"name": "이름", "team": "팀명", "role": "전생 신분(12자 이내, 예: 북국의 전사)", "trait": "그 팀의 결을 담은 짧은 명사구(8자 이내, 예: 묵묵함, 남다른 색감)"}]}`;
   const controller = new AbortController();
@@ -520,7 +572,7 @@ JSON: {"title": "명화 제목(12자 이내)", "era": "장소 · 몇 년 전 (20
     if (!o.title || !o.quote || !o.desc) throw new Error('응답 형식이 올바르지 않아요');
     const list = Array.isArray(o.people) ? o.people : [];
     return {
-      title: String(o.title), era: String(o.era || ''), scene: SCENE_KEYS.includes(o.scene) ? o.scene : 'clock', tone: o.tone === 'funny' ? 'funny' : 'serious',
+      title: String(o.title), era: String(o.era || ''), scene: SCENE_KEYS.includes(o.scene) ? o.scene : 'clock', tone: o.tone === 'funny' ? 'funny' : 'serious', center: CENTERS.includes(o.center) ? o.center : '',
       tag: String(o.tag || ''), quote: String(o.quote), desc: String(o.desc), source: 'ai', model,
       people: people.map((p, i) => { const hit = list.find(x => x && x.name === p.name.trim()) || list[i] || {}; const arc = detectArchetype(p.team); return { team: teamLabel(p.team), name: p.name.trim(), arc: arc.key, role: String(hit.role || '그 자리에 있던 동행'), trait: String(hit.trait || arc.ep[0]) }; })
     };
@@ -649,7 +701,7 @@ function renderResult(r, { notice = '', shared = false } = {}) {
     ${shared ? '<div class="note">누군가 공유한 전생 한 폭이에요 · 위에서 우리 팀의 전생도 체험해 보세요</div>' : ''}
     ${notice ? `<div class="note">${esc(notice)}</div>` : ''}
     <article class="gallery" id="card">
-      <div class="frame"><div class="canvas-wrap">${paintingSvg(r.scene, r.tone, r.people, r.title)}</div></div>
+      <div class="frame"><div class="canvas-wrap">${paintHtml(r)}</div></div>
       <div class="plaque"><b>「${esc(r.title)}」</b><span>${esc(r.era)}</span></div>
       <p class="quote">${esc(r.quote)}</p>
       <p class="desc">${esc(r.desc)}</p>
@@ -677,6 +729,11 @@ function renderResult(r, { notice = '', shared = false } = {}) {
     else copyText(url, '링크를 복사했어요. 받은 사람은 이 그림을 그대로 볼 수 있어요');
   });
   setTimeout(() => box.scrollIntoView({ behavior: 'smooth', block: 'start' }), shared ? 0 : 120);
+}
+
+function paintHtml(r) {
+  const { svg, labels } = paintingSvg(r.scene, r.tone, r.people, r.title, r.center);
+  return svg + labels.map(l => `<span class="scrawl" style="left:${(l.x / 400 * 100).toFixed(2)}%;top:${(l.y / 260 * 100).toFixed(2)}%;transform:translate(-50%,-100%) rotate(${l.rot.toFixed(1)}deg)">${esc(l.name)}</span>`).join('');
 }
 
 function resultText(r) {
@@ -712,7 +769,9 @@ async function saveImage(r, btn) {
   try {
     try { await document.fonts.ready; } catch {}
     const W = 1080, P = 90, serif = '"Gowun Batang", serif', latin = '"Cormorant Garamond", serif';
-    const painting = await loadSvg(paintingSvg(r.scene, r.tone, r.people, r.title));
+    const pt = paintingSvg(r.scene, r.tone, r.people, r.title, r.center);
+    const painting = await loadSvg(pt.svg);
+    try { await document.fonts.load('40px "Nanum Pen Script"'); } catch {}
     const faces = await Promise.all(r.people.map(p => loadSvg(portraitSvg(p), 136, 136).catch(() => null)));
     const cv = document.createElement('canvas'), ctx = cv.getContext('2d');
     const layout = draw => {
@@ -725,6 +784,10 @@ async function saveImage(r, btn) {
         ctx.strokeStyle = 'rgba(255,236,180,.55)'; ctx.setLineDash([3, 5]); ctx.lineWidth = 3; ctx.strokeRect(P + 12, y + 12, fw - 24, fh - 24); ctx.setLineDash([]);
         ctx.fillStyle = '#2a1c0e'; ctx.fillRect(P + 26, y + 26, fw - 52, fh - 52);
         ctx.drawImage(painting, P + 32, y + 32, fw - 64, fh - 64);
+        const sx = (fw - 64) / 400, sy = (fh - 64) / 260;
+        ctx.font = `${Math.round(30 * sx / 2)}px "Nanum Pen Script", cursive`; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+        pt.labels.forEach(l => { ctx.save(); ctx.translate(P + 32 + l.x * sx, y + 32 + l.y * sy); ctx.rotate(l.rot * Math.PI / 180);
+          ctx.lineWidth = 6; ctx.strokeStyle = 'rgba(255,250,235,.85)'; ctx.lineJoin = 'round'; ctx.strokeText(l.name, 0, -4); ctx.fillStyle = '#1d1712'; ctx.fillText(l.name, 0, -4); ctx.restore(); });
       }
       y += fh + 26;
       ctx.font = `700 30px ${serif}`;
@@ -807,13 +870,13 @@ async function unpack(str) {
   return JSON.parse(new TextDecoder().decode(bytes));
 }
 async function shareUrl(r) {
-  const o = { v: 4, t: r.title, e: r.era, k: r.scene, n: r.tone, g: r.tag, q: r.quote, d: r.desc, o: r.source, m: r.model || '', p: r.people.map(p => [p.team, p.name, p.arc, p.role, p.trait || '']) };
+  const o = { v: 4, t: r.title, e: r.era, k: r.scene, n: r.tone, c: r.center || '', g: r.tag, q: r.quote, d: r.desc, o: r.source, m: r.model || '', p: r.people.map(p => [p.team, p.name, p.arc, p.role, p.trait || '']) };
   return `${location.origin}${location.pathname}#r=${await pack(o)}`;
 }
 function fromShared(o) {
   if (!o || o.v !== 4 || !Array.isArray(o.p) || !o.t) return null;
   const S = x => String(x ?? '');
-  return { title: S(o.t), era: S(o.e), scene: SCENE_KEYS.includes(o.k) ? o.k : 'clock', tone: o.n === 'funny' ? 'funny' : 'serious', tag: S(o.g), quote: S(o.q), desc: S(o.d), source: o.o === 'ai' ? 'ai' : 'builtin', model: S(o.m),
+  return { title: S(o.t), era: S(o.e), scene: SCENE_KEYS.includes(o.k) ? o.k : 'clock', tone: o.n === 'funny' ? 'funny' : 'serious', center: CENTERS.includes(o.c) ? o.c : '', tag: S(o.g), quote: S(o.q), desc: S(o.d), source: o.o === 'ai' ? 'ai' : 'builtin', model: S(o.m),
     people: o.p.slice(0, MAX).map(([team, name, arc, role, trait]) => ({ team: S(team), name: S(name), arc: S(arc), role: S(role), trait: S(trait) })) };
 }
 
