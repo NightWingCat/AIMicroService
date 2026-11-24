@@ -843,6 +843,12 @@ const FX = {
   circleArrow: (x, y) => `<path d="M${x - 22} ${y} a22 12 0 1 1 8 9" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/><path d="M${x - 16} ${y + 12} l2 -8 l-8 2" fill="none" ${SKt}/>`,
   notes: (x, y) => `<path d="M${x} ${y} v-14 l8 -2 v12" fill="none" ${SKt}/><circle cx="${x - 3}" cy="${y}" r="3" fill="${INK}"/><circle cx="${x + 5}" cy="${y - 2}" r="3" fill="${INK}"/>`,
   zz: (x, y) => `<path d="M${x} ${y} h8 l-8 8 h8 M${x + 12} ${y - 10} h6 l-6 6 h6" fill="none" ${SKt}/>`,
+  dizzy: (x, y) => `<ellipse cx="${x}" cy="${y}" rx="16" ry="5" fill="none" stroke="${INK}" stroke-width="1.2" stroke-dasharray="3 3"/>${[[-14, 0], [6, -4], [14, 2]].map(([dx, dy]) => `<path d="M${x + dx} ${y + dy - 4} l1.4 2.8 l3 .4 l-2.2 2 l.6 3 l-2.8 -1.5 l-2.8 1.5 l.6 -3 l-2.2 -2 l3 -.4z" fill="#f2c02f" stroke="${INK}" stroke-width=".8"/>`).join('')}`,
+  dots: (x, y) => `<g fill="${INK}"><circle cx="${x}" cy="${y}" r="2"/><circle cx="${x + 7}" cy="${y}" r="2"/><circle cx="${x + 14}" cy="${y}" r="2"/></g>`,
+  splash: (x, y) => `<g fill="#7ad0ff" stroke="${INK}" stroke-width="1">${[[0, 0], [10, -8], [20, -2], [-8, -6], [28, -12]].map(([dx, dy]) => `<path d="M${x + dx} ${y + dy} q-3 5 0 7 q3 -2 0 -7Z"/>`).join('')}</g>`,
+  smoke: (x, y) => `<g fill="#8a8a8a" opacity=".85" stroke="${INK}" stroke-width="1.6"><circle cx="${x - 16}" cy="${y}" r="12"/><circle cx="${x}" cy="${y - 8}" r="15"/><circle cx="${x + 18}" cy="${y}" r="11"/></g>`,
+  rope: (x1, y1, x2, y2) => `<path d="M${x1} ${y1} Q${(x1 + x2) / 2 + 8} ${(y1 + y2) / 2} ${x2} ${y2}" fill="none" stroke="#a07040" stroke-width="3" stroke-linecap="round"/>`,
+  soot: (x, y) => `<g fill="#2a2420" opacity=".55"><circle cx="${x - 6}" cy="${y}" r="3"/><circle cx="${x + 5}" cy="${y + 3}" r="2.4"/><circle cx="${x}" cy="${y - 5}" r="2"/></g>`,
   fireworks: () => [[70, 40], [320, 30], [210, 55]].map(([x, y], i) => `<g stroke="${['#f2c02f', '#e0402f', '#7ad0ff'][i]}" stroke-width="2.4" stroke-linecap="round">${[0, 60, 120, 180, 240, 300].map(a => { const r = a * Math.PI / 180; return `<path d="M${(x + Math.cos(r) * 5).toFixed(1)} ${(y + Math.sin(r) * 5).toFixed(1)} L${(x + Math.cos(r) * 14).toFixed(1)} ${(y + Math.sin(r) * 14).toFixed(1)}"/>`; }).join('')}</g>`).join('')
 };
 
@@ -888,7 +894,7 @@ function centerProp(kind, x, y) {
 }
 
 /* ---------- 구도 ---------- */
-function layoutFor(pose, center, scene, tone) {
+function layoutFor(pose, center, scene, tone, alt) {
   const G = 238;
   const L = {
     faceoff: () => ({ a: { x: 148, rot: 14, arms: 'reach', face: 'angry' }, b: { x: 252, rot: -14, flip: 1, arms: 'reach', face: 'angry' }, cheer: 1,
@@ -948,7 +954,63 @@ function layoutFor(pose, center, scene, tone) {
     cheers: () => ({ a: { x: 160, rot: 10, arms: 'reach', face: 'happy', prop: 'cup' }, b: { x: 240, rot: -10, flip: 1, arms: 'reach', face: 'happy', prop: 'cup' }, cheer: 1,
       fx: () => FX.spark(200, 146, 16) + `<g fill="#7ad0ff">${[[188, 128], [212, 126], [196, 118], [206, 134]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="2.4"/>`).join('')}</g>` })
   };
-  const fn = L[pose] || (() => ({ a: { x: 150 }, b: { x: 250, flip: 1 }, c: [200, 232] }));
+  // 같은 사건의 두 번째 연출 (구도 2배)
+  const ALT = {
+    faceoff: () => ({ a: { x: 150, y: 198, rot: 26, arms: 'reach', face: 'angry' }, b: { x: 250, y: 192, rot: -26, flip: 1, arms: 'reach', face: 'angry' }, cheer: 1,
+      fx: () => FX.spark(200, 118, 24) + FX.hop(150, 208) + FX.hop(250, 202) + FX.speed(104, 120, -1) + FX.speed(296, 120, 1) }),
+    facing: () => ({ a: { x: 166, rot: -5, flip: 1, arms: 'down' }, b: { x: 234, rot: 5, arms: 'down' }, c: [318, 234], fx: () => FX.dots(190, 92) }),
+    gesture: () => ({ a: { x: 150, y: 240, s: .7, rot: -32, arms: 'up', face: 'happy' }, b: { x: 252, rot: -6, flip: 1, arms: 'reach', face: 'shock' }, c: [204, 130],
+      fx: () => FX.sweat(272, 112) + FX.waves(120, 150, -1) }),
+    tug: () => ({ a: { x: 112, y: 236, rot: -80, arms: 'up', face: 'shock' }, b: { x: 288, y: 236, rot: 80, flip: 1, arms: 'up', face: 'shock' }, c: [200, 112], cheer: 1,
+      fx: () => FX.bang(196, 46) + FX.dust(150, 236) + FX.dust(250, 236) + FX.dizzy(70, 214) + FX.dizzy(330, 214) }),
+    chase: () => ({ a: { x: 124, rot: -16, flip: 1, arms: 'reach', face: 'shock' }, b: { x: 276, rot: 16, arms: 'reach', face: 'angry' }, c: [200, 232],
+      fx: () => FX.circleArrow(200, 120) + FX.speed(150, 150, 1) + FX.speed(250, 150, -1) + FX.dust(150, 236) + FX.dust(252, 236) }),
+    run: () => ({ a: { x: 156, y: 252, s: 1.04, arms: center === 'fire' ? 'reach' : 'up', face: 'shock', prop: center === 'fire' ? 'bucket' : undefined }, b: { x: 252, y: 246, s: .96, arms: center === 'fire' ? 'reach' : 'up', face: 'angry', prop: center === 'fire' ? 'bucket' : undefined },
+      c: center === 'fire' ? [330, 212] : [200, 86], fx: () => FX.speed(96, 160, -1) + FX.speed(310, 160, 1) + FX.sweat(188, 120) + FX.sweat(276, 116) }),
+    collide: () => ({ a: { x: 150, y: 236, rot: -84, arms: 'down', face: 'sleep' }, b: { x: 250, y: 236, rot: 84, flip: 1, arms: 'down', face: 'sleep' }, cheer: 1,
+      fx: () => FX.dizzy(66, 212) + FX.dizzy(334, 212) + FX.spark(200, 214, 12) }),
+    shoulders: () => ({ a: { x: 192, s: .9, rot: -12, face: 'shock', arms: 'up' }, b: { x: 176, y: 184, s: .78, rot: 20, arms: 'up', face: 'shock', prop: center === 'flag' ? 'flag' : 'telescope' }, cheer: 1,
+      fx: () => FX.bang(250, 60) + FX.sweat(214, 150) + FX.hop(192, 238) }),
+    carry: () => ({ a: { x: 202, rot: 10, arms: 'reach', face: 'angry' }, b: { x: 194, y: 202, s: .78, rot: -6, arms: 'up', face: 'happy' }, fx: () => FX.sweat(236, 140) + FX.sweat(160, 150) + FX.speed(156, 200, -1) }),
+    jump: () => ({ a: { x: 170, y: 206, rot: 20, arms: 'up', face: 'happy' }, b: { x: 230, y: 206, rot: -20, flip: 1, arms: 'up', face: 'happy' }, c: center === 'ball' ? [320, 96] : [320, 234], cheer: 1,
+      fx: () => FX.spark(200, 112, 16) + FX.hop(170, 216) + FX.hop(230, 216) + FX.confetti() }),
+    recoil: () => ({ a: { x: 150, y: 236, rot: -82, arms: 'up', face: 'sleep' }, b: { x: 250, y: 236, rot: 82, flip: 1, arms: 'up', face: 'sleep' }, c: [200, 232],
+      fx: () => FX.bang(196, 150) + FX.dizzy(68, 214) + FX.dizzy(332, 214) }),
+    huddle: () => ({ a: { x: 188, rot: 24, face: 'happy' }, b: { x: 236, rot: -4, flip: 1, face: 'shock' }, c: [110, 236], fx: () => FX.dots(212, 96) + FX.bang(262, 70) }),
+    point: () => ({ a: { x: 170, rot: -6, flip: 1, arms: 'down', face: 'angry' }, b: { x: 230, rot: 6, arms: 'down', face: 'angry' },
+      fx: () => FX.anger(140, 104) + FX.anger(262, 104) + FX.waves(120, 130, -1) + FX.waves(280, 130, 1) }),
+    push: () => ({ a: { x: 150, rot: 28, arms: 'reach', face: 'angry' }, b: { x: 104, rot: 30, arms: 'reach', face: 'angry' }, c: [244, 232],
+      fx: () => FX.speed(296, 200, 1) + FX.dust(130, 236) + FX.dust(84, 236) + FX.sweat(132, 118) }),
+    aim: () => ({ a: { x: 96, rot: -4, arms: 'reach', face: 'angry', prop: 'bow' }, b: { x: 300, rot: 18, arms: 'up', face: 'shock', hat: 'apple' },
+      fx: () => FX.arrow(150, 150, 246, 122) + FX.speed(272, 150, -1) + FX.dust(284, 236) + FX.bang(330, 64) }),
+    blast: () => ({ a: { x: 150, arms: 'down', face: 'shock' }, b: { x: 250, flip: 1, arms: 'down', face: 'shock' }, c: [200, 74], cScale: .6,
+      fx: () => FX.smoke(200, 110) + FX.soot(150, 140) + FX.soot(250, 140) + FX.fireworks() }),
+    row: () => ({ a: { x: 178, y: 220, s: .78, rot: -24, arms: 'up', face: 'shock', prop: 'oar' }, b: { x: 218, y: 224, s: .78, rot: -30, arms: 'up', face: 'shock', prop: 'oar' }, c: [200, 226], front: 'boat', frontRot: -9,
+      fx: () => FX.splash(290, 204) + FX.splash(110, 214) + FX.bang(196, 70) }),
+    shout: () => ({ a: { x: 178, rot: 14, arms: 'down', face: 'shout' }, b: { x: 222, rot: -14, flip: 1, arms: 'down', face: 'shout' }, cheer: 1,
+      fx: () => FX.waves(140, 120, -1) + FX.waves(260, 120, 1) + FX.spark(200, 96, 10) }),
+    sneak: () => ({ a: { x: 236, rot: 2, arms: 'reach', face: 'shock' }, b: { x: 156, y: 230, rot: 22, arms: 'reach', face: 'happy' }, c: [300, 236],
+      fx: () => FX.dots(130, 100) + FX.sweat(262, 116) }),
+    sleep: () => ({ a: { x: 180, rot: -10, flip: 1, arms: 'down', face: 'sleep' }, b: { x: 220, rot: 10, arms: 'down', face: 'sleep' }, fx: () => FX.zz(140, 110) + FX.zz(250, 106) }),
+    dance: () => ({ a: { x: 236, rot: 12, arms: 'reach', face: 'happy' }, b: { x: 172, y: 234, rot: 12, arms: 'reach', face: 'happy' }, cheer: 1,
+      fx: () => FX.notes(130, 96) + FX.notes(290, 88) + FX.hop(172, 238) + FX.hop(236, 238) }),
+    feast: () => ({ a: { x: 98, rot: 26, arms: 'reach', face: 'angry' }, b: { x: 302, rot: -26, flip: 1, arms: 'reach', face: 'angry' }, c: [200, 190], front: 'table', frontAt: [200, 214], cheer: 1,
+      fx: () => FX.speed(70, 150, -1) + FX.speed(330, 150, 1) + FX.sweat(80, 120) + FX.sweat(320, 120) }),
+    fishing: () => ({ a: { x: 150, rot: -20, arms: 'reach', face: 'angry', prop: 'rod' }, b: { x: 108, rot: -24, arms: 'reach', face: 'shock' }, c: [300, 150], cScale: 1.6,
+      fx: () => FX.rope(196, 96, 290, 150) + FX.sweat(132, 120) + FX.splash(300, 186) }),
+    climb: () => ({ a: { x: 238, y: 232, rot: -6, arms: 'up', face: 'angry', s: .82 }, b: { x: 292, y: 146, rot: -30, arms: 'reach', face: 'shock', s: .82 }, c: [258, 146], back: 1, crowdMax: 180,
+      fx: () => FX.rope(270, 112, 244, 160) + FX.sweat(214, 160) }),
+    hide: () => ({ a: { x: 200, y: 196, s: .7, face: 'shock' }, b: { x: 238, y: 238, s: .82, rot: 24, flip: 1, face: 'happy' }, front: 'barrel', frontAt: [200, 238],
+      fx: () => FX.bang(164, 120, '#f2c02f') + FX.dots(266, 112) }),
+    bow: () => ({ a: { x: 160, rot: 48, face: 'happy' }, b: { x: 222, rot: 48, face: 'happy' }, c: [320, 234], fx: () => FX.sweat(180, 150) + FX.spark(300, 196, 10) }),
+    race: () => ({ a: { x: 238, y: 226, rot: 72, arms: 'reach', face: 'angry' }, b: { x: 204, y: 232, rot: 66, arms: 'reach', face: 'shock' }, c: [300, 238], cheer: 1,
+      fx: () => FX.speed(150, 190, -1) + FX.dust(210, 238) + FX.dust(176, 238) }),
+    lift: () => ({ a: { x: 196, arms: 'up', face: 'angry' }, b: { x: 226, y: 122, s: .72, rot: -90, arms: 'up', face: 'happy' }, c: [310, 232], cheer: 1,
+      fx: () => FX.sweat(166, 120) + FX.hop(196, 238) }),
+    cheers: () => ({ a: { x: 172, arms: 'up', face: 'happy', prop: 'cup' }, b: { x: 228, flip: 1, arms: 'up', face: 'happy', prop: 'cup' }, cheer: 1,
+      fx: () => FX.confetti() + FX.spark(200, 64, 14) })
+  };
+  const fn = (alt && ALT[pose]) || L[pose] || (() => ({ a: { x: 150 }, b: { x: 250, flip: 1 }, c: [200, 232] }));
   const lay = fn();
   if (scene === 'battle' || scene === 'arena') {
     if (tone === 'serious' && pose === 'faceoff') { lay.a.prop = 'sword'; lay.a.hat = 'helmet'; lay.b.prop = 'sword'; lay.b.hat = 'helmet'; }
@@ -968,12 +1030,38 @@ function labelOf(p, pl, sBase) {
 }
 
 /* ---------- 배경 ---------- */
-function backdrop(scene) {
-  const night = ['clock', 'palace', 'library'].includes(scene);
+// 같은 장소의 두 번째 시간·날씨 (배경 2배)
+const ALT_BG = {
+  battle: { sky: '#e8a070', night: 0, over: () => [80, 120, 300].map((x, i) => `<path d="M${x} ${40 + i * 12} q5 -5 10 0 q5 -5 10 0" fill="none" ${SKt}/>`).join('') },
+  clock: { sky: '#3a4258', night: 1, over: () => rain() },
+  palace: { sky: '#2a2a4a', night: 1, over: () => snowfall(), swap: [['#b89a7a', '#f2f2f6']] },
+  snow: { sky: '#1e2a4a', night: 1, over: () => `<path d="M-10 60 Q100 10 200 50 T410 30" stroke="#7fe3b5" stroke-width="16" fill="none" opacity=".45"/><path d="M-10 80 Q110 30 210 66 T410 48" stroke="#b39ef0" stroke-width="10" fill="none" opacity=".35"/>` },
+  desert: { sky: '#26305a', night: 1, swap: [['#f2c27a', '#b08a6a'], ['#e8b46a', '#a07a5a']] },
+  library: { sky: '#f2c6a0', night: 0, swap: [['#ffe24a', 'none']] },
+  sea: { sky: '#f0a070', night: 0, sun: `<circle cx="300" cy="150" r="26" fill="#ff8a4a" ${SK}/>`, swap: [['#2f7ac8', '#3a5aa0']] },
+  arena: { sky: '#1e2448', night: 1, over: () => [40, 360].map(x => `<path d="M${x} 205 V150" ${SK}/><path d="M${x - 8} 150 Q${x} 128 ${x + 8} 150Z" fill="#ff7a2a" ${SKt}/>`).join('') },
+  forest: { sky: '#f2d8a8', night: 0, swap: [['#4caa5a', '#e0883a'], ['#5cc06a', '#f2b04a'], ['#7cc45a', '#c8a050']], over: () => leaves() },
+  indoor: { sky: '#8a6a50', night: 1, swap: [['#e8d2a8', '#a8865e'], ['#3a4a8a', '#1e2448']], over: () => `<circle cx="300" cy="110" r="60" fill="#ffcf6a" opacity=".22"/>` },
+  pyramid: { sky: '#d9b07a', night: 0, over: () => Array.from({ length: 8 }, (_, i) => `<path d="M${-20 + i * 60} ${60 + (i % 3) * 40} q30 -6 60 0" fill="none" stroke="#a87a4a" stroke-width="2" stroke-linecap="round" opacity=".6"/>`).join('') },
+  market: { sky: '#9aa4b0', night: 0, over: () => rain(), noSun: 1 },
+  castle: { sky: '#1e2448', night: 1, over: () => FX.fireworks() },
+  garden: { sky: '#f2dce8', night: 0, over: () => petals() },
+  mountain: { sky: '#f6c8a8', night: 0, behind: 1, over: () => `<path d="M0 170 Q50 150 100 168 Q150 146 200 166 Q250 148 300 166 Q350 150 400 164 V190 H0Z" fill="#fff" opacity=".85" ${SKt}/>` },
+  river: { sky: '#dfe6ea', night: 0, behind: 1, over: () => `<g fill="#fff" opacity=".55"><ellipse cx="100" cy="176" rx="140" ry="12"/><ellipse cx="320" cy="190" rx="130" ry="10"/></g>`, noSun: 1 },
+  cave: { sky: '#2a3448', night: 1, swap: [['#ffb84a', '#6ad0ff'], ['#ff7a2a', '#7ad0ff'], ['#4a4048', '#2a3448']] }
+};
+function rain() { return Array.from({ length: 34 }, (_, i) => { const x = (i * 37) % 410, y = (i * 53) % 230; return `<path d="M${x} ${y} l-5 14" stroke="#cfe4f2" stroke-width="1.6" stroke-linecap="round" opacity=".8"/>`; }).join(''); }
+function snowfall() { return Array.from({ length: 26 }, (_, i) => `<circle cx="${(i * 47) % 400}" cy="${(i * 29) % 240}" r="2.4" fill="#fff" ${SKt}/>`).join(''); }
+function petals() { return Array.from({ length: 20 }, (_, i) => `<ellipse cx="${(i * 43) % 400}" cy="${(i * 31) % 200}" rx="3.4" ry="2" fill="#f7a8c8" transform="rotate(${(i * 40) % 180} ${(i * 43) % 400} ${(i * 31) % 200})"/>`).join(''); }
+function leaves() { return Array.from({ length: 16 }, (_, i) => `<ellipse cx="${(i * 53) % 400}" cy="${(i * 37) % 210}" rx="4" ry="2.4" fill="${i % 2 ? '#e0883a' : '#d0502a'}" transform="rotate(${(i * 50) % 180} ${(i * 53) % 400} ${(i * 37) % 210})"/>`).join(''); }
+
+function backdrop(scene, alt) {
+  const ab = alt ? ALT_BG[scene] : null;
+  const night = ab ? !!ab.night : ['clock', 'palace', 'library'].includes(scene);
   const indoorish = scene === 'indoor' || scene === 'cave';
   const sky = { battle: '#9cc6ea', clock: '#2c3a6a', palace: '#5a4a8a', snow: '#b8cde6', desert: '#f2b46a', library: '#3a4a7a', sea: '#8ec2e8', arena: '#a8d0f0', forest: '#bfe0c8', indoor: '#e8d2a8', pyramid: '#f6c27a', market: '#bfe0f2', castle: '#a8cde8', garden: '#cfe8d8', mountain: '#c6dcf0', river: '#b8dcf0', cave: '#4a4048' }[scene] || '#9cc6ea';
   const stars = night ? Array.from({ length: 9 }, (_, i) => { const x = 30 + i * 41 + (i % 3) * 7, y = 22 + (i * 29) % 70; return `<path d="M${x - 4} ${y} H${x + 4} M${x} ${y - 4} V${y + 4} M${x - 3} ${y - 3} L${x + 3} ${y + 3} M${x + 3} ${y - 3} L${x - 3} ${y + 3}" stroke="#fff3b0" stroke-width="1.6" stroke-linecap="round"/>`; }).join('') : '';
-  const sun = indoorish ? '' : night
+  const sun = indoorish || (ab && ab.noSun) ? '' : (ab && ab.sun) ? ab.sun : night
     ? `<path d="M336 26 A20 20 0 1 0 352 62 A16 16 0 1 1 336 26Z" fill="#fff3b0" ${SK}/>`
     : `<circle cx="66" cy="54" r="22" fill="#ffd84a" ${SK}/><circle cx="59" cy="51" r="2" fill="${INK}"/><circle cx="72" cy="51" r="2" fill="${INK}"/><path d="M60 60 Q66 65 72 60" fill="none" ${SKt}/><path d="M66 22 V14 M66 86 V94 M34 54 H26 M98 54 H106 M43 31 L38 26 M89 77 L94 82 M89 31 L94 26 M43 77 L38 82" ${SKt}/>`;
   let back = '', ground = '';
@@ -1030,7 +1118,8 @@ function backdrop(scene) {
       back = `<path d="M150 200 L270 60 L390 200Z" fill="#e8c27a" ${SK}/><path d="M190 154 H350 M170 178 H370 M210 130 H330 M230 106 H310 M250 82 H290" ${SKt}/><path d="M262 66 L270 50 L278 66Z" fill="#f2c02f" ${SKt}/><path d="M20 200 L80 120 L140 200Z" fill="#e0b46a" ${SK}/>`;
       ground = `<path d="M0 200 H400 V260 H0Z" fill="#f0c88a" ${SK}/>`; break;
   }
-  return { sky, stars, sun, back, ground };
+  if (ab && ab.swap) ab.swap.forEach(([from, to]) => { back = back.split(from).join(to); ground = ground.split(from).join(to); });
+  return { sky: ab ? ab.sky : sky, stars, sun, back, ground, over: ab && ab.over && !ab.behind ? ab.over() : '', under: ab && ab.over && ab.behind ? ab.over() : '' };
 }
 
 /* ---------- 한 폭 ---------- */
@@ -1039,8 +1128,8 @@ function paintingSvg(r) {
   const { scene, tone, people, title, center } = r;
   const pose = r.pose || 'facing';
   const uid = 'pt' + (++svgSeq);
-  const bd = backdrop(scene);
-  const lay = layoutFor(pose, center, scene, tone);
+  const bd = backdrop(scene, !!r.bv);
+  const lay = layoutFor(pose, center, scene, tone, !!r.pv);
   const n = people.length, sBase = .86;
   const labels = [];
   // 뒤쪽 관중 (나머지 사람들)
@@ -1055,7 +1144,8 @@ function paintingSvg(r) {
   const centerKind = center && center !== 'flag' ? center : '';
   const mid = centerKind && lay.c ? (lay.cScale ? `<g transform="translate(${lay.c[0]} ${lay.c[1]}) scale(${lay.cScale}) translate(${-lay.c[0]} ${-lay.c[1]})">${centerProp(centerKind, lay.c[0], lay.c[1])}</g>` : centerProp(centerKind, lay.c[0], lay.c[1])) : '';
   const fAt = lay.frontAt || lay.c || [200, 232];
-  const front = lay.front ? centerProp(lay.front, fAt[0], fAt[1]) : '';
+  const frontRaw = lay.front ? centerProp(lay.front, fAt[0], fAt[1]) : '';
+  const front = frontRaw && lay.frontRot ? `<g transform="rotate(${lay.frontRot} ${fAt[0]} ${fAt[1]})">${frontRaw}</g>` : frontRaw;
   const aFig = placeFig(people[0], lay.a, sBase), bFig = placeFig(people[1], lay.b, sBase);
   labels.unshift(labelOf(people[0], lay.a, sBase), labelOf(people[1], lay.b, sBase));
   const fx = lay.fx ? lay.fx() : '';
@@ -1071,7 +1161,7 @@ function paintingSvg(r) {
       <radialGradient id="${uid}v" cx=".5" cy=".5" r=".75"><stop offset=".6" stop-color="#2a1806" stop-opacity="0"/><stop offset="1" stop-color="#2a1806" stop-opacity=".45"/></radialGradient>
       <pattern id="${uid}c" width="4" height="4" patternUnits="userSpaceOnUse"><path d="M0 0 H4 M0 0 V4" stroke="#000" stroke-opacity=".05" stroke-width=".6"/></pattern>
     </defs>
-    <g filter="url(#${uid}f)"><g filter="url(#${uid}w)"><rect width="400" height="260" fill="${bd.sky}"/>${bd.stars}${bd.sun}${bd.back}${bd.ground}${crowd}${lay.back ? mid : ''}${lay.front === 'table' ? '' : (lay.back ? '' : mid)}${aFig}${bFig}${front}${lay.front === 'table' ? mid : ''}${fx}</g></g>
+    <g filter="url(#${uid}f)"><g filter="url(#${uid}w)"><rect width="400" height="260" fill="${bd.sky}"/>${bd.stars}${bd.sun}${bd.back}${bd.ground}${bd.under}${crowd}${lay.back ? mid : ''}${lay.front === 'table' ? '' : (lay.back ? '' : mid)}${aFig}${bFig}${front}${lay.front === 'table' ? mid : ''}${fx}${bd.over}</g></g>
     <rect width="400" height="260" fill="url(#${uid}c)"/><rect width="400" height="260" fill="url(#${uid}v)"/>
   </svg>`;
   // 이름표: 액자 안으로 모으고, 겹치면 뒤쪽 사람 것부터 생략
@@ -1124,7 +1214,9 @@ function generateBuiltin(people, seed, avoidTitle) {
     } else parts = [parts[0], third, rest];
   }
   const desc = parts.filter(Boolean).join(' ');
-  return { title: sc.title, era: sc.era, scene: sc.scene, tone: sc.tone, center: sc.center || '', pose: sc.pose || 'facing', tag, quote: sc.quote, desc, people: cast, source: 'builtin' };
+  // 같은 이야기라도 구도·배경은 두 가지 중 하나로
+  const pv = rng.next() < 0.5 ? 1 : 0, bv = rng.next() < 0.5 ? 1 : 0;
+  return { title: sc.title, era: sc.era, scene: sc.scene, tone: sc.tone, center: sc.center || '', pose: sc.pose || 'facing', pv, bv, tag, quote: sc.quote, desc, people: cast, source: 'builtin' };
 }
 
 /* =========================================================
@@ -1160,7 +1252,7 @@ JSON: {"title": "명화 제목(12자 이내)", "center": "...", "pose": "...", "
     const list = Array.isArray(o.people) ? o.people : [];
     return {
       title: String(o.title), era: String(o.era || ''), scene: SCENE_KEYS.includes(o.scene) ? o.scene : 'clock', tone: o.tone === 'funny' ? 'funny' : 'serious', center: CENTERS.includes(o.center) ? o.center : '', pose: POSES.includes(o.pose) ? o.pose : 'facing',
-      tag: String(o.tag || ''), quote: String(o.quote), desc: ensureAllNames(String(o.desc), people.map(p => p.name.trim())), source: 'ai', model,
+      pv: Math.random() < .5 ? 1 : 0, bv: Math.random() < .5 ? 1 : 0, tag: String(o.tag || ''), quote: String(o.quote), desc: ensureAllNames(String(o.desc), people.map(p => p.name.trim())), source: 'ai', model,
       people: people.map((p, i) => { const hit = list.find(x => x && x.name === p.name.trim()) || list[i] || {}; const arc = detectArchetype(p.team); return { team: teamLabel(p.team), name: p.name.trim(), arc: arc.key, role: String(hit.role || '그 자리에 있던 동행'), trait: String(hit.trait || arc.ep[0]) }; })
     };
   } catch (e) { throw e.name === 'AbortError' ? new Error('응답 시간이 초과됐어요') : e; }
@@ -1484,13 +1576,13 @@ async function unpack(str) {
   return JSON.parse(new TextDecoder().decode(bytes));
 }
 async function shareUrl(r) {
-  const o = { v: 4, t: r.title, e: r.era, k: r.scene, n: r.tone, c: r.center || '', po: r.pose || '', g: r.tag, q: r.quote, d: r.desc, o: r.source, m: r.model || '', p: r.people.map(p => [p.team, p.name, p.arc, p.role, p.trait || '']) };
+  const o = { v: 4, t: r.title, e: r.era, k: r.scene, n: r.tone, c: r.center || '', po: r.pose || '', pv: r.pv ? 1 : 0, bv: r.bv ? 1 : 0, g: r.tag, q: r.quote, d: r.desc, o: r.source, m: r.model || '', p: r.people.map(p => [p.team, p.name, p.arc, p.role, p.trait || '']) };
   return `${location.origin}${location.pathname}#r=${await pack(o)}`;
 }
 function fromShared(o) {
   if (!o || o.v !== 4 || !Array.isArray(o.p) || !o.t) return null;
   const S = x => String(x ?? '');
-  return { title: S(o.t), era: S(o.e), scene: SCENE_KEYS.includes(o.k) ? o.k : 'clock', tone: o.n === 'funny' ? 'funny' : 'serious', center: CENTERS.includes(o.c) ? o.c : '', pose: POSES.includes(o.po) ? o.po : 'facing', tag: S(o.g), quote: S(o.q), desc: S(o.d), source: o.o === 'ai' ? 'ai' : 'builtin', model: S(o.m),
+  return { title: S(o.t), era: S(o.e), scene: SCENE_KEYS.includes(o.k) ? o.k : 'clock', tone: o.n === 'funny' ? 'funny' : 'serious', center: CENTERS.includes(o.c) ? o.c : '', pose: POSES.includes(o.po) ? o.po : 'facing', pv: o.pv ? 1 : 0, bv: o.bv ? 1 : 0, tag: S(o.g), quote: S(o.q), desc: S(o.d), source: o.o === 'ai' ? 'ai' : 'builtin', model: S(o.m),
     people: o.p.slice(0, MAX).map(([team, name, arc, role, trait]) => ({ team: S(team), name: S(name), arc: S(arc), role: S(role), trait: S(trait) })) };
 }
 
