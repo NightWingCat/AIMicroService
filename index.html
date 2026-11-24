@@ -673,6 +673,12 @@ const GROUP_OUTCOMES = [
   { tone: 'serious', after: '함께 새겨진 이름들', text: '{short}의 오래된 비석에는 지금도 {all|의} 이름이 나란히 남아 있다.' }
 ];
 const COUNT_WORD = ['', '한', '두', '세', '네', '다섯', '여섯', '일곱', '여덟'];
+function ensureAllNames(desc, names) {
+  const missing = names.filter(n => n && !desc.includes(n));
+  if (!missing.length) return desc;
+  const who = joinNames(missing);
+  return `${desc} ${who}${josa(who, '도')} 그날 그 자리에 함께 있었다.`;
+}
 function joinNames(list) {
   if (list.length <= 1) return list[0] || '';
   if (list.length === 2) return list[0] + josa(list[0], '과') + ' ' + list[1];
@@ -1110,7 +1116,7 @@ function generateBuiltin(people, seed, avoidTitle) {
     const rest = n >= 4 ? fill(rng.pick(REST_LINES), v) : '';
     if (sc.descParts) {
       let out = parts[1];
-      if (rng.next() < 0.4) {
+      if (rng.next() < 0.75) {
         const g = rng.pick(GROUP_OUTCOMES.filter(o => o.tone === sc.tone));
         out = fill(g.text, v); tag = `${sc.beforeTag} → ${fill(g.after, v)}`;
       }
@@ -1126,7 +1132,7 @@ function generateBuiltin(people, seed, avoidTitle) {
    ========================================================= */
 const SYSTEM_PROMPT = `너는 '전생 체험관'의 이야기꾼이다. 회사 동료들의 (팀명, 이름) 목록을 받아, 이들이 전생에 어떤 사이였는지 고전 명화 한 폭처럼 보여 준다. 짧고 강렬해야 한다.
 [형식] 영화 포스터의 카피처럼: 인상적인 대사 한 줄(플레이버 텍스트) + 그 장면을 풀어 주는 설명 1~2문장. 길게 늘이지 않는다.
-[핵심] 처음 두 사람이 인연의 중심이고, 나머지는 그 장면에 함께 있던 인물이다. 각 팀의 결(예: 개발팀=묵묵함·정밀함, 디자이너팀=색채·미감)을 전생 역할의 수식어로 짧게 녹인다. 대체로(열에 일곱은) 유쾌하고 엉뚱한 이야기로, 가끔은 진중하게. 매번 새롭게.
+[핵심] 처음 두 사람이 인연의 중심이고, 나머지는 그 장면에 함께 있던 인물이다. 단, 입력된 모든 사람의 이름이 설명(desc)에 반드시 한 번 이상 자연스럽게 등장해야 한다. 이름은 문장 맨 앞에만 몰지 말고 문장 중간중간에 녹인다. 각 팀의 결(예: 개발팀=묵묵함·정밀함, 디자이너팀=색채·미감)을 전생 역할의 수식어로 짧게 녹인다. 대체로(열에 일곱은) 유쾌하고 엉뚱한 이야기로, 가끔은 진중하게. 매번 새롭게.
 [금지] 연애·궁합·커플·설렘 등 로맨스 요소 / 나이·성별·외모·연락처 등 개인정보·민감정보의 언급이나 추정, 성별을 가정한 호칭 / 업무 능력·성향을 비하하거나 조롱하는 표현.
 이름과 팀명은 입력 그대로 쓰고, 반드시 JSON 객체 하나만 출력한다.`;
 
@@ -1137,7 +1143,7 @@ ${avoidTitle ? `직전 결과("${avoidTitle}")와는 완전히 다른 시대·�
 두 주인공의 동작 구도를 "pose"에: faceoff(칼끝 대치), facing(마주 보기), tug(줄다리기), chase(뒤쫓기), run(함께 달리기), collide(정면충돌 직전), shoulders(어깨 위에 올라타기), carry(업고 가기), jump(신나서 점프), recoil(깜짝 놀라 뒤로 젖히기), huddle(머리 맞대기), point(서로 삿대질), push(양쪽에서 밀기), aim(활 겨누기), blast(폭발에 날아가기), row(노 젓기), gesture(온몸 손짓), shout(함께 외치기), sneak(등 뒤에서 몰래), sleep(나란히 잠들기), dance(엇박자 춤), feast(잔칫상 젓가락 대결), fishing(같은 물고기 낚기), climb(절벽에서 끌어올리기), hide(통 뒤에 숨기), bow(인사하다 박치기), race(달리기 시합), lift(함께 번쩍 들기), cheers(건배).
 가운데 소품을 하나 고를 수 있으면 "center"에: ricecake(떡 접시), cat(고양이), pots(냄비), lunch(밥그릇), dragon(작은 용), map(보물지도), question(물음표), well(우물), books(날아다니는 책), fire(불길), block(큰 돌), acorns(도토리 더미), boom(폭발), easel(그림판), ball(공), bear(곰), pie(파이), fish(물고기), egg(황금 알), chest(보물 상자), crown(왕관), trophy(술잔), lamp(램프), scroll(두루마리), key(열쇠), bell(종), vase(도자기), goose(거위), 없으면 "".
 JSON: {"title": "명화 제목(12자 이내)", "center": "...", "pose": "...", "era": "장소 · 몇 년 전 (20자 이내)", "scene": "...", "tone": "serious 또는 funny", "tag": "관계 변화 꼬리표(예: 적국의 전사 → 평생의 맞수, 18자 이내)",
- "quote": "“ ”로 감싼 강렬한 대사 한 줄(22자 이내)", "desc": "장면 설명 1~2문장(합쳐서 90자 이내)",
+ "quote": "“ ”로 감싼 강렬한 대사 한 줄(22자 이내)", "desc": "장면 설명. 2명이면 2~3문장, 3명 이상이면 인원에 맞춰 3~5문장으로 늘려 모든 사람의 이름과 역할을 포함",
  "people": [{"name": "이름", "team": "팀명", "role": "전생 신분(12자 이내, 예: 북국의 전사)", "trait": "그 팀의 결을 담은 짧은 명사구(8자 이내, 예: 묵묵함, 남다른 색감)"}]}`;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 40000);
@@ -1154,7 +1160,7 @@ JSON: {"title": "명화 제목(12자 이내)", "center": "...", "pose": "...", "
     const list = Array.isArray(o.people) ? o.people : [];
     return {
       title: String(o.title), era: String(o.era || ''), scene: SCENE_KEYS.includes(o.scene) ? o.scene : 'clock', tone: o.tone === 'funny' ? 'funny' : 'serious', center: CENTERS.includes(o.center) ? o.center : '', pose: POSES.includes(o.pose) ? o.pose : 'facing',
-      tag: String(o.tag || ''), quote: String(o.quote), desc: String(o.desc), source: 'ai', model,
+      tag: String(o.tag || ''), quote: String(o.quote), desc: ensureAllNames(String(o.desc), people.map(p => p.name.trim())), source: 'ai', model,
       people: people.map((p, i) => { const hit = list.find(x => x && x.name === p.name.trim()) || list[i] || {}; const arc = detectArchetype(p.team); return { team: teamLabel(p.team), name: p.name.trim(), arc: arc.key, role: String(hit.role || '그 자리에 있던 동행'), trait: String(hit.trait || arc.ep[0]) }; })
     };
   } catch (e) { throw e.name === 'AbortError' ? new Error('응답 시간이 초과됐어요') : e; }
